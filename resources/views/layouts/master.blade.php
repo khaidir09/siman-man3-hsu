@@ -27,7 +27,7 @@
 <body>
   <div id="app">
     <div class="main-wrapper main-wrapper-1">
-    @include('admin.layouts.sidebar')
+    @include('layouts.sidebar')
 
       <!-- Main Content -->
       <div class="main-content">
