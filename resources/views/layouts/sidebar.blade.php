@@ -16,16 +16,17 @@
                 <a href="" class="nav-link"><i class="fas fa-fire"></i><span>Dasbor</span></a>
             </li>
 
-            {{-- <li><a class="nav-link" href="blank.html"><i class="far fa-square"></i> <span>Blank Page</span></a></li> --}}
-
-            {{-- <li class="dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Forms</span></a>
+            @if (Auth::user()->hasRole('kepala madrasah'))
+            <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Data Master</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="forms-advanced-form.html">Advanced Form</a></li>
-                    <li><a class="nav-link" href="forms-editor.html">Editor</a></li>
-                    <li><a class="nav-link" href="forms-validation.html">Validation</a></li>
+                    <li><a class="nav-link" href="">Pengguna</a></li>
+                    <li><a class="nav-link" href="">Jurusan</a></li>
+                    <li><a class="nav-link" href="">Kelas</a></li>
+                    <li><a class="nav-link" href="">TP/Semester</a></li>
                 </ul>
-            </li> --}}
+            </li>
+            @endif
 
         </ul>
     </aside>
