@@ -28,9 +28,11 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('wakamad kesiswaan') || Auth::user()->hasRole('kepala madrasah'))
             <li class="{{ Route::is('prestasi-akademik*') ? 'active' : '' }}">
                 <a href="{{ route('prestasi-akademik.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Prestasi Akademik</span></a>
             </li>
+            @endif
 
         </ul>
     </aside>
