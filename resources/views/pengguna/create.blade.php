@@ -47,6 +47,9 @@
                         <label for="" class="mt-3">Kelas</label>
                         <select name="classes_id" class="form-control">
                             <option value="">Pilih Kelas</option>
+                            @foreach ($rooms as $room)
+                                <option value="{{ $room->id }}" class="text-uppercase">{{ $room->tingkat }} {{ $room->rombongan }} {{ $room->nama_jurusan }}</option>
+                            @endforeach
                         </select>
                         @error('classes_id')
                             <p class="text-danger">{{ $message }}</p>

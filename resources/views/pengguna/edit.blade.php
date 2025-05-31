@@ -50,7 +50,14 @@
 
                         <label for="" class="mt-3">Kelas</label>
                         <select name="classes_id" class="form-control">
-                            <option value="">Pilih Kelas</option>
+                            <option value="">Tidak ada kelas</option>
+                            @foreach ($rooms as $room)
+                                <option value="{{ $room->id }}"
+                                    {{-- Ambil role pertama user (jika ada) dan bandingkan ID-nya --}}
+                                    {{ $user->classes_id == $room->id ? 'selected' : '' }}>
+                                    {{ $room->tingkat}} {{ $room->rombongan}} {{ $room->nama_jurusan}}
+                                </option>
+                            @endforeach
                         </select>
                         @error('classes_id')
                             <p class="text-danger">{{ $message }}</p>

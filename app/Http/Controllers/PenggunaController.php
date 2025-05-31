@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -26,7 +27,8 @@ class PenggunaController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('pengguna.create', compact('roles'));
+        $rooms = Room::with('major')->get();
+        return view('pengguna.create', compact('roles', 'rooms'));
     }
 
     /**
@@ -47,6 +49,7 @@ class PenggunaController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
+            'classes_id' => $request->input('classes_id'),
         ]);
 
         $roleId = $validatedData['role'];
@@ -78,8 +81,9 @@ class PenggunaController extends Controller
     {
         $user = User::findOrFail($id);
         $roles = Role::all();
+        $rooms = Room::with('major')->get();
 
-        return view('pengguna.edit', compact('user', 'roles'));
+        return view('pengguna.edit', compact('user', 'roles', 'rooms'));
     }
 
     /**
@@ -98,6 +102,7 @@ class PenggunaController extends Controller
         // Update user details
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+        $user->classes_id = $request->input('classes_id');
         $user->roles()->sync($request->input('role', [])); // Sync roles
 
 
