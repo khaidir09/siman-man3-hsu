@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>Dasbor SIMAN</title>
 
   <!-- General CSS Files -->
@@ -71,5 +72,74 @@
   <!-- Template JS File -->
   <script src="{{ asset('admin/assets/js/scripts.js') }}"></script>
   <script src="{{ asset('admin/assets/js/custom.js') }}"></script>
+  <script>
+    // Add csrf token in ajax request
+    $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+    /** Handle Dynamic delete **/
+    $(document).ready(function() {
+
+    $('.delete-item').on('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "Anda tidak dapat mengembalikannya!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Ya, hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let url = $(this).attr('href');
+                console.log(url);
+                $.ajax({
+                    method: 'DELETE',
+                    url: url,
+                    success: function(data) {
+                        if (data.status === 'success') {
+                            Swal.fire(
+                                'Terhapus!',
+                                data.message,
+                                'success'
+                            )
+                            window.location.reload();
+                        } else if (data.status === 'error') {
+                            Swal.fire(
+                                'Error!',
+                                data.message,
+                                'error'
+                            )
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+
+
+            }
+        })
+    })
+    })
+  </script>
+  
 </body>
 </html>
