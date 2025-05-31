@@ -8,7 +8,7 @@
 
         <div class="card card-primary">
             <div class="card-header">
-                <h4>Buat Jurusan</h4>
+                <h4>Perbarui Jurusan</h4>
 
             </div>
             <div class="card-body">

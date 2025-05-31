@@ -8,7 +8,7 @@
 
         <div class="card card-primary">
             <div class="card-header">
-                <h4>Buat Pengguna</h4>
+                <h4>Perbarui Pengguna</h4>
 
             </div>
             <div class="card-body">
