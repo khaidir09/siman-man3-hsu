@@ -42,11 +42,15 @@ class KelasController extends Controller
             'majors_id' => 'nullable'
         ]);
 
+        $namaJurusan = Major::find($request->input('majors_id'));
+
+
         // Create a new major
         Room::create([
             'tingkat' => $request->input('tingkat'),
             'rombongan' => $request->input('rombongan'),
             'majors_id' => $request->input('majors_id'),
+            'nama_jurusan' => $namaJurusan ? $namaJurusan->nama_jurusan : null,
         ]);
 
         toast('Kelas berhasil dibuat.', 'success')->width('350');
