@@ -28,6 +28,10 @@
             </li>
             @endif
 
+            <li class="{{ Route::is('prestasi-akademik*') ? 'active' : '' }}">
+                <a href="{{ route('prestasi-akademik.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Prestasi Akademik</span></a>
+            </li>
+
         </ul>
     </aside>
 </div>
