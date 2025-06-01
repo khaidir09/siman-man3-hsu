@@ -16,19 +16,19 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label for="">Nama</span></label>
+                        <label for="">Nama</label>
                         <input name="name" type="text" value="{{ $user->name }}" class="form-control" >
                         @error('name')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Alamat Email</span></label>
+                        <label for="" class="mt-3">Alamat Email</label>
                         <input name="email" type="email" value="{{ $user->email }}" class="form-control" >
                         @error('email')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Kata Sandi</span></label>
+                        <label for="" class="mt-3">Kata Sandi</label>
                         <input name="password" type="password" class="form-control" >
                         @error('password')
                             <p class="text-danger">{{ $message }}</p>

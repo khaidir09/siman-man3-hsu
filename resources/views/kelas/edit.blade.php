@@ -16,13 +16,13 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label for="">Tingkat</span></label>
+                        <label for="">Tingkat</label>
                         <input name="tingkat" type="text" value="{{ $room->tingkat }}" class="form-control" >
                         @error('tingkat')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Rombongan</span></label>
+                        <label for="" class="mt-3">Rombongan</label>
                         <input name="rombongan" type="text" value="{{ $room->rombongan }}" class="form-control" >
                         @error('rombongan')
                             <p class="text-danger">{{ $message }}</p>

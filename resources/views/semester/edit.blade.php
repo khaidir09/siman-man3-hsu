@@ -16,7 +16,7 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label for="">Tahun Ajaran</span></label>
+                        <label for="">Tahun Ajaran</label>
                         <input name="tahun_ajaran" type="text" value="{{ $period->tahun_ajaran }}" class="form-control" >
                         @error('tahun_ajaran')
                             <p class="text-danger">{{ $message }}</p>
