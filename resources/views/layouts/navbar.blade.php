@@ -13,8 +13,8 @@
                     <img alt="image" src="assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
                 @endif
                 <div class="d-sm-none d-lg-inline-block">{{ __('admin.Hi') }}, {{ auth()->guard('admin')->user()->name }}</div> --}}
-                <img alt="image" src="assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
-                <div class="d-sm-none d-lg-inline-block">Hi, Admin</div>
+                <img alt="image" src="{{ asset('images/avatar-1.png') }}" class="rounded-circle mr-1">
+                <div class="d-sm-none d-lg-inline-block">{{ Auth::user()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
 
