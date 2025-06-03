@@ -38,6 +38,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('wali kelas') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('kehadiran*') ? 'active' : '' }}">
+                <a href="{{ route('kehadiran.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Kehadiran Siswa</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>
