@@ -7,6 +7,7 @@ use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\KesehatanController;
 use App\Http\Controllers\KonselingController;
+use App\Http\Controllers\KoperasiController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PrestasiAkademikController;
 use App\Http\Controllers\SemesterController;
@@ -26,6 +27,7 @@ Route::resource('kehadiran', KehadiranController::class);
 Route::resource('konseling', KonselingController::class);
 Route::resource('inventaris', InventarisController::class);
 Route::resource('kesehatan', KesehatanController::class);
+Route::resource('unit-usaha', KoperasiController::class);
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

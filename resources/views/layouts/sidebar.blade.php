@@ -62,6 +62,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('koperasi') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('unit-usaha*') ? 'active' : '' }}">
+                <a href="{{ route('unit-usaha.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Unit Usaha</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>
