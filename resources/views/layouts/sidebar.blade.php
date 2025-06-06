@@ -50,6 +50,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('wakamad sarpras') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('inventaris*') ? 'active' : '' }}">
+                <a href="{{ route('inventaris.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Inventaris</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>

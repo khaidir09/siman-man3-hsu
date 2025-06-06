@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KedisiplinanController;
 use App\Http\Controllers\KehadiranController;
@@ -22,6 +23,7 @@ Route::resource('prestasi-akademik', PrestasiAkademikController::class);
 Route::resource('terlambat', KedisiplinanController::class);
 Route::resource('kehadiran', KehadiranController::class);
 Route::resource('konseling', KonselingController::class);
+Route::resource('inventaris', InventarisController::class);
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
