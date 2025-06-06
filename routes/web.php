@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KedisiplinanController;
@@ -28,6 +29,7 @@ Route::resource('konseling', KonselingController::class);
 Route::resource('inventaris', InventarisController::class);
 Route::resource('kesehatan', KesehatanController::class);
 Route::resource('unit-usaha', KoperasiController::class);
+Route::resource('alumni', AlumniController::class);
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

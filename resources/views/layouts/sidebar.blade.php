@@ -36,6 +36,10 @@
             <li class="{{ Route::is('terlambat*') ? 'active' : '' }}">
                 <a href="{{ route('terlambat.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Pelanggaran Kedisiplinan</span></a>
             </li>
+
+            <li class="{{ Route::is('alumni*') ? 'active' : '' }}">
+                <a href="{{ route('alumni.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Alumni</span></a>
+            </li>
             @endif
 
             @if (Auth::user()->hasRole('wali kelas') || Auth::user()->hasRole('kepala madrasah'))
