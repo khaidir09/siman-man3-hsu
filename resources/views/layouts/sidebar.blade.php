@@ -56,6 +56,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('uks') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('kesehatan*') ? 'active' : '' }}">
+                <a href="{{ route('kesehatan.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>UKS</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>
