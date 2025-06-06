@@ -4,6 +4,7 @@ use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KedisiplinanController;
 use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KelasController;
+use App\Http\Controllers\KonselingController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PrestasiAkademikController;
 use App\Http\Controllers\SemesterController;
@@ -20,6 +21,7 @@ Route::resource('semester', SemesterController::class);
 Route::resource('prestasi-akademik', PrestasiAkademikController::class);
 Route::resource('terlambat', KedisiplinanController::class);
 Route::resource('kehadiran', KehadiranController::class);
+Route::resource('konseling', KonselingController::class);
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

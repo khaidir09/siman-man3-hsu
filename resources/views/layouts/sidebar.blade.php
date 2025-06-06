@@ -44,6 +44,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('guru bk') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('konseling*') ? 'active' : '' }}">
+                <a href="{{ route('konseling.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Bimbingan Konseling</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>
