@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KedisiplinanController;
@@ -30,6 +31,15 @@ Route::resource('inventaris', InventarisController::class);
 Route::resource('kesehatan', KesehatanController::class);
 Route::resource('unit-usaha', KoperasiController::class);
 Route::resource('alumni', AlumniController::class);
+Route::resource('ekstrakurikuler', ExtracurricularController::class);
+// Route untuk menambah anggota
+Route::post('ekstrakurikuler/{ekstrakurikuler}/add-member', [ExtracurricularController::class, 'addMember'])
+    ->name('ekstrakurikuler.addMember')->middleware('auth');
+
+// Route untuk menghapus anggota
+Route::delete('ekstrakurikuler/{ekstrakurikuler}/remove-member/{student}', [ExtracurricularController::class, 'removeMember'])
+    ->name('ekstrakurikuler.removeMember')->middleware('auth');
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

@@ -72,6 +72,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('pembina ekskul') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('ekstrakurikuler*') ? 'active' : '' }}">
+                <a href="{{ route('ekstrakurikuler.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Ekstrakurikuler</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>
