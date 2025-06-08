@@ -13,6 +13,7 @@ use App\Http\Controllers\KoperasiController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PrestasiAkademikController;
 use App\Http\Controllers\SemesterController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,6 +32,7 @@ Route::resource('inventaris', InventarisController::class);
 Route::resource('kesehatan', KesehatanController::class);
 Route::resource('unit-usaha', KoperasiController::class);
 Route::resource('alumni', AlumniController::class);
+Route::resource('siswa', StudentController::class);
 Route::resource('ekstrakurikuler', ExtracurricularController::class);
 // Route untuk menambah anggota
 Route::post('ekstrakurikuler/{ekstrakurikuler}/add-member', [ExtracurricularController::class, 'addMember'])
