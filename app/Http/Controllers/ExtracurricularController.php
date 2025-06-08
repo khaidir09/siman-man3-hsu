@@ -124,7 +124,8 @@ class ExtracurricularController extends Controller
     public function addMember(Request $request, Extracurricular $ekstrakurikuler)
     {
         $request->validate([
-            'student_id' => 'required|exists:students,id'
+            'student_id' => 'required|exists:students,id',
+            'jabatan' => 'required|string|max:100'
         ]);
 
         // Cek apakah siswa sudah menjadi anggota
@@ -135,11 +136,28 @@ class ExtracurricularController extends Controller
 
         // Tambahkan siswa ke tabel pivot
         $ekstrakurikuler->students()->attach($request->student_id, [
-            'jabatan' => 'Anggota', // Jabatan default
+            'jabatan' => $request->jabatan,
             'tanggal_bergabung' => now()
         ]);
 
         toast('Anggota berhasil ditambahkan.', 'success');
+        return redirect()->back();
+    }
+
+    public function updateMember(Request $request, Extracurricular $ekstrakurikuler, Student $student)
+    {
+        $validated = $request->validate([
+            'jabatan' => 'required|string|max:100',
+            'nilai' => ['nullable', 'string', Rule::in(['A', 'B', 'C', 'D', 'E'])],
+        ]);
+
+        // Gunakan updateExistingPivot() untuk mengubah data di tabel pivot
+        $ekstrakurikuler->students()->updateExistingPivot($student->id, [
+            'jabatan' => $validated['jabatan'],
+            'nilai' => $request->input('nilai'),
+        ]);
+
+        toast('Data keanggotaan berhasil diperbarui.', 'success');
         return redirect()->back();
     }
 

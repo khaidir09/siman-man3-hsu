@@ -49,18 +49,34 @@
                             {{-- FORM TAMBAH ANGGOTA --}}
                             <form action="{{ route('ekstrakurikuler.addMember', $ekstrakurikuler->id) }}" method="POST" class="mb-4">
                                 @csrf
-                                <div class="input-group">
-                                    <select name="student_id" class="form-control" required>
-                                        <option value="">Pilih Siswa untuk Ditambahkan</option>
-                                        @foreach ($studentsForAdding as $student)
-                                            <option value="{{ $student->id }}">{{ $student->nama_lengkap }} ({{ $student->nisn }})</option>
-                                        @endforeach
-                                    </select>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit">Tambah Anggota</button>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>Pilih Siswa</label>
+                                        <select name="student_id" class="form-control" required>
+                                            <option value="">Pilih Siswa untuk Ditambahkan</option>
+                                            @foreach ($studentsForAdding as $student)
+                                                <option value="{{ $student->id }}">{{ $student->nama_lengkap }} ({{ $student->nisn }})</option>
+                                            @endforeach
+                                        </select>
+                                         @error('student_id') <p class="text-danger mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label>Pilih Jabatan</label>
+                                        <select name="jabatan" class="form-control" required>
+                                            <option value="Anggota">Anggota</option>
+                                            <option value="Ketua">Ketua</option>
+                                            <option value="Wakil Ketua">Wakil Ketua</option>
+                                            <option value="Sekretaris">Sekretaris</option>
+                                            <option value="Bendahara">Bendahara</option>
+                                            <option value="Lainnya">Lainnya</option>
+                                        </select>
+                                        @error('jabatan') <p class="text-danger mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>&nbsp;</label>
+                                        <button class="btn btn-primary btn-block" type="submit">Tambah</button>
                                     </div>
                                 </div>
-                                @error('student_id') <p class="text-danger mt-1">{{ $message }}</p> @enderror
                             </form>
 
                             {{-- TABEL ANGGOTA --}}
@@ -72,7 +88,8 @@
                                             <th>Nama Siswa</th>
                                             <th>Kelas</th>
                                             <th>Jabatan</th>
-                                            <th>Aksi</th>
+                                            <th>Nilai</th>
+                                            <th width="15%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -81,24 +98,52 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $student->nama_lengkap }}</td>
                                                 <td>{{ $student->room->tingkat ?? '' }}-{{ $student->room->rombongan ?? '' }}</td>
-                                                <td>{{ $student->pivot->jabatan }}</td>
-                                                <td>
-                                                    {{-- FORM HAPUS ANGGOTA --}}
-                                                    <form action="{{ route('ekstrakurikuler.removeMember', [$ekstrakurikuler->id, $student->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus anggota ini?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="btn btn-danger btn-sm" data-toggle="tooltip" title="Hapus Anggota"><i class="fas fa-user-times"></i></button>
-                                                    </form>
-                                                </td>
+                                                {{-- Form untuk Update Jabatan dan Nilai --}}
+                                                <form action="{{ route('ekstrakurikuler.updateMember', [$ekstrakurikuler->id, $student->id]) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <td>
+                                                        <select name="jabatan" class="form-control form-control-sm">
+                                                            <option value="Anggota" {{ $student->pivot->jabatan == 'Anggota' ? 'selected' : '' }}>Anggota</option>
+                                                            <option value="Ketua" {{ $student->pivot->jabatan == 'Ketua' ? 'selected' : '' }}>Ketua</option>
+                                                            <option value="Wakil Ketua" {{ $student->pivot->jabatan == 'Wakil Ketua' ? 'selected' : '' }}>Wakil Ketua</option>
+                                                            <option value="Sekretaris" {{ $student->pivot->jabatan == 'Sekretaris' ? 'selected' : '' }}>Sekretaris</option>
+                                                            <option value="Bendahara" {{ $student->pivot->jabatan == 'Bendahara' ? 'selected' : '' }}>Bendahara</option>
+                                                            <option value="Lainnya" {{ $student->pivot->jabatan == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="nilai" class="form-control form-control-sm">
+                                                            <option value="">-- Beri Nilai --</option>
+                                                            <option value="A" {{ $student->pivot->nilai == 'A' ? 'selected' : '' }}>A (Sangat Baik)</option>
+                                                            <option value="B" {{ $student->pivot->nilai == 'B' ? 'selected' : '' }}>B (Baik)</option>
+                                                            <option value="C" {{ $student->pivot->nilai == 'C' ? 'selected' : '' }}>C (Cukup)</option>
+                                                            <option value="D" {{ $student->pivot->nilai == 'D' ? 'selected' : '' }}>D (Kurang)</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Simpan Perubahan"><i class="fas fa-save"></i></button>
+                                                </form> {{-- Form update ditutup di sini, SEBELUM form hapus --}}
+                            
+                                                {{-- Form untuk Hapus Anggota (sekarang berada di luar form update) --}}
+                                                <form action="{{ route('ekstrakurikuler.removeMember', [$ekstrakurikuler->id, $student->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus anggota ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger ml-2" data-toggle="tooltip" title="Hapus Anggota"><i class="fas fa-user-times"></i></button>
+                                                </form>
+                                                        </div>
+                                                    </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="5" class="text-center">Belum ada anggota yang terdaftar.</td>
+                                                <td colspan="6" class="text-center">Belum ada anggota yang terdaftar.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

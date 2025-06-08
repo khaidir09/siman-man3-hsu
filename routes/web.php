@@ -42,7 +42,8 @@ Route::post('ekstrakurikuler/{ekstrakurikuler}/add-member', [ExtracurricularCont
 Route::delete('ekstrakurikuler/{ekstrakurikuler}/remove-member/{student}', [ExtracurricularController::class, 'removeMember'])
     ->name('ekstrakurikuler.removeMember')->middleware('auth');
 
-
+Route::put('ekstrakurikuler/{ekstrakurikuler}/update-member/{student}', [ExtracurricularController::class, 'updateMember'])
+    ->name('ekstrakurikuler.updateMember')->middleware('auth');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');

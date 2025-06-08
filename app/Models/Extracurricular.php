@@ -25,7 +25,10 @@ class Extracurricular extends Model
 
     public function students()
     {
-        return $this->belongsToMany(Student::class, 'extracurricular_students', 'extracurricular_id', 'student_id');
+        // Format: belongsToMany(ModelTujuan, 'nama_tabel_pivot', 'foreign_key_model_ini', 'foreign_key_model_tujuan')
+        return $this->belongsToMany(Student::class, 'extracurricular_students', 'extracurricular_id', 'student_id')
+            ->withPivot('jabatan', 'nilai', 'tanggal_bergabung') // PENTING!
+            ->withTimestamps();
     }
 
     public function achievements()
