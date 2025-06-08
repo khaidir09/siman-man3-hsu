@@ -53,7 +53,7 @@
                                     <select name="student_id" class="form-control" required>
                                         <option value="">Pilih Siswa untuk Ditambahkan</option>
                                         @foreach ($studentsForAdding as $student)
-                                            <option value="{{ $student->id }}">{{ $student->nama_lengkap }} ({{ $student->nis }})</option>
+                                            <option value="{{ $student->id }}">{{ $student->nama_lengkap }} ({{ $student->nisn }})</option>
                                         @endforeach
                                     </select>
                                     <div class="input-group-append">
