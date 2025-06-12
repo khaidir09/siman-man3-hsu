@@ -176,15 +176,26 @@ class ExtracurricularController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Extracurricular $ekstrakurikuler)
+    public function destroy(string $id)
     {
-        // Hapus record
-        // Jika Anda menggunakan onDelete('cascade') pada migrasi,
-        // data di tabel pivot (extracurricular_student) akan ikut terhapus.
-        $ekstrakurikuler->delete();
+        $ekstrakurikuler = Extracurricular::findOrFail($id);
 
-        toast('Data Ekstrakurikuler berhasil dihapus.', 'success')->width('350');
+        try {
+            // Hapus record dari database
+            $ekstrakurikuler->delete();
 
-        return redirect()->back();
+            // Kembalikan respons dalam format JSON
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Kelas Berhasil Dihapus!'
+            ]);
+        } catch (\Exception $e) {
+            // Jika terjadi error saat menghapus, kirim respons error
+            // Log::error($e); // Opsional: catat error ke log
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghapus data. Terjadi kesalahan.'
+            ], 500); // 500 = Internal Server Error
+        }
     }
 }

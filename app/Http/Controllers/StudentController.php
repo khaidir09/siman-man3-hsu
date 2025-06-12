@@ -100,11 +100,22 @@ class StudentController extends Controller
     {
         $student = Student::findOrFail($id);
 
-        // Hapus record siswa
-        $student->delete();
+        try {
+            // Hapus record dari database
+            $student->delete();
 
-        toast('Data Siswa berhasil dihapus.', 'success')->width('350');
-
-        return redirect()->back();
+            // Kembalikan respons dalam format JSON
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Kelas Berhasil Dihapus!'
+            ]);
+        } catch (\Exception $e) {
+            // Jika terjadi error saat menghapus, kirim respons error
+            // Log::error($e); // Opsional: catat error ke log
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghapus data. Terjadi kesalahan.'
+            ], 500); // 500 = Internal Server Error
+        }
     }
 }

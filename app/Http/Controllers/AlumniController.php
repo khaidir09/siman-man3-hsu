@@ -103,13 +103,25 @@ class AlumniController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Alumni $alumni)
+    public function destroy(string $id)
     {
-        // Hapus record
-        $alumni->delete();
+        $alumni = Alumni::findOrFail($id);
+        try {
+            // Hapus record dari database
+            $alumni->delete();
 
-        toast('Data Alumni berhasil dihapus.', 'success')->width('350');
-
-        return redirect()->back();
+            // Kembalikan respons dalam format JSON
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Kelas Berhasil Dihapus!'
+            ]);
+        } catch (\Exception $e) {
+            // Jika terjadi error saat menghapus, kirim respons error
+            // Log::error($e); // Opsional: catat error ke log
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghapus data. Terjadi kesalahan.'
+            ], 500); // 500 = Internal Server Error
+        }
     }
 }
