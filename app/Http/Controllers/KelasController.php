@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Major;
 use App\Models\Room;
+use App\Models\User;
+use App\Models\Major;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -27,7 +28,9 @@ class KelasController extends Controller
     public function create()
     {
         $majors = Major::all();
-        return view('kelas.create', compact('majors'));
+        $teachers = User::role('guru')->orderBy('name')->get();
+
+        return view('kelas.create', compact('majors', 'teachers'));
     }
 
     /**
@@ -39,11 +42,11 @@ class KelasController extends Controller
         $request->validate([
             'tingkat' => 'required|string|max:255',
             'rombongan' => 'required|string|max:255',
-            'majors_id' => 'nullable'
+            'majors_id' => 'nullable',
+            'wali_kelas_id' => 'nullable|exists:users,id'
         ]);
 
         $namaJurusan = Major::find($request->input('majors_id'));
-
 
         // Create a new major
         Room::create([
@@ -51,6 +54,7 @@ class KelasController extends Controller
             'rombongan' => $request->input('rombongan'),
             'majors_id' => $request->input('majors_id'),
             'nama_jurusan' => $namaJurusan ? $namaJurusan->nama_jurusan : null,
+            'wali_kelas_id' => $request->input('wali_kelas_id'),
         ]);
 
         toast('Kelas berhasil dibuat.', 'success')->width('350');
@@ -74,7 +78,19 @@ class KelasController extends Controller
         $room = Room::findOrFail($id);
         $majors = Major::all();
 
-        return view('kelas.edit', compact('room', 'majors'));
+        // Ambil ID wali kelas saat ini untuk kelas yang sedang diedit.
+        $currentWaliKelasId = $room->wali_kelas_id;
+
+        $teachers = User::role('guru') // 1. Ambil semua user dengan peran 'guru'
+            ->where(function ($query) use ($currentWaliKelasId) {
+                // 2. Terapkan kondisi:
+                $query->whereDoesntHave('roomClass') // a. Pilih guru yang BELUM punya homeroomClass (belum jadi wali kelas)
+                    ->orWhere('id', $currentWaliKelasId); // b. ATAU yang ID-nya SAMA DENGAN wali kelas saat ini
+            })
+            ->orderBy('name')
+            ->get();
+
+        return view('kelas.edit', compact('room', 'majors', 'teachers'));
     }
 
     /**
@@ -88,7 +104,8 @@ class KelasController extends Controller
         $request->validate([
             'tingkat' => 'required|string|max:255',
             'rombongan' => 'required|string|max:255',
-            'majors_id' => 'nullable'
+            'majors_id' => 'nullable',
+            'wali_kelas_id' => 'nullable|exists:users,id'
         ]);
 
         // Create a new major
@@ -96,6 +113,7 @@ class KelasController extends Controller
             'tingkat' => $request->input('tingkat'),
             'rombongan' => $request->input('rombongan'),
             'majors_id' => $request->input('majors_id'),
+            'wali_kelas_id' => $request->input('wali_kelas_id'),
         ]);
 
         toast('Kelas berhasil diperbarui.', 'success')->width('350');

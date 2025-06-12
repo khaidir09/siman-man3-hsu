@@ -12,4 +12,9 @@ class Room extends Model
     {
         return $this->belongsTo(Major::class, 'majors_id', 'id');
     }
+
+    public function waliKelas()
+    {
+        return $this->belongsTo(User::class, 'wali_kelas_id');
+    }
 }

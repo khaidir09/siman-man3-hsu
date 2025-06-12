@@ -27,6 +27,7 @@
                                 <th>Tingkat</th>
                                 <th>Rombongan</th>
                                 <th>Jurusan</th>
+                                <th>Wali Kelas</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -37,6 +38,7 @@
                                     <td>{{ $item->tingkat }}</td>
                                     <td>{{ $item->rombongan }}</td>
                                     <td>{{ $item->major?->nama_jurusan ?? '-' }}</td>
+                                    <td>{{ $item->waliKelas?->name ?? '-' }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('kelas.edit', $item->id) }}"
