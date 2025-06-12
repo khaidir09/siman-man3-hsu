@@ -76,6 +76,9 @@
             <li class="{{ Route::is('ekstrakurikuler*') ? 'active' : '' }}">
                 <a href="{{ route('ekstrakurikuler.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Ekstrakurikuler</span></a>
             </li>
+            <li class="{{ Route::is('prestasi-ekskul*') ? 'active' : '' }}">
+                <a href="{{ route('prestasi-ekskul.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Prestasi Ekstrakurikuler</span></a>
+            </li>
             <li class="{{ Route::is('siswa*') ? 'active' : '' }}">
                 <a href="{{ route('siswa.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Siswa</span></a>
             </li>

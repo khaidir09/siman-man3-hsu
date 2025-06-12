@@ -157,7 +157,7 @@
                             <h4>Prestasi yang Diraih</h4>
                              <div class="card-header-action">
                                 {{-- Tombol ini bisa diarahkan ke form tambah prestasi --}}
-                                <a href="{{ route('prestasi-ekskul.create', ['ekskul_id' => $ekstrakurikuler->id]) }}" class="btn btn-primary">
+                                <a href="{{ route('achievements.create', ['ekskul_id' => $ekstrakurikuler->id]) }}" class="btn btn-primary">
                                     Tambah Prestasi
                                 </a>
                             </div>
@@ -167,10 +167,8 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
                                             <th>Tahun</th>
                                             <th>Nama Prestasi</th>
-                                            <th>Siswa</th>
                                             <th>Tingkat</th>
                                             <th>Penyelenggara</th>
                                         </tr>
@@ -178,16 +176,14 @@
                                      <tbody>
                                          @forelse ($ekstrakurikuler->achievements as $achievement)
                                              <tr>
-                                                <td>{{ $loop->iteration }}</td>
                                                  <td>{{ $achievement->tahun }}</td>
-                                                 <td>{{ $achievement->peringkat }} {{ $achievement->nama_lomba }}</td>
-                                                 <td>{{ $achievement->student->nama_lengkap }} ({{ $achievement->student->room->tingkat }}-{{ $achievement->student->room->rombongan }} {{ $achievement->student->room->major->nama_jurusan }})</td>
+                                                 <td>{{ $achievement->nama_prestasi }}</td>
                                                  <td>{{ $achievement->tingkat }}</td>
                                                  <td>{{ $achievement->penyelenggara }}</td>
                                              </tr>
                                          @empty
                                              <tr>
-                                                 <td colspan="6" class="text-center">Belum ada prestasi yang dicatat.</td>
+                                                 <td colspan="4" class="text-center">Belum ada prestasi yang dicatat.</td>
                                              </tr>
                                          @endforelse
                                      </tbody>

@@ -19,4 +19,9 @@ class Student extends Model
             ->withPivot('jabatan', 'nilai', 'tanggal_bergabung')
             ->withTimestamps();
     }
+
+    public function achievements()
+    {
+        return $this->hasMany(ExtracurricularAchievement::class, 'student_id', 'id');
+    }
 }

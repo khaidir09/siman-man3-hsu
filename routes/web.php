@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\InventarisController;
@@ -44,8 +45,10 @@ Route::delete('ekstrakurikuler/{ekstrakurikuler}/remove-member/{student}', [Extr
 
 Route::put('ekstrakurikuler/{ekstrakurikuler}/update-member/{student}', [ExtracurricularController::class, 'updateMember'])
     ->name('ekstrakurikuler.updateMember')->middleware('auth');
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::resource('prestasi-ekskul', AchievementController::class);
+
+Route::get('/get-ekskul-members/{ekskul}', [AchievementController::class, 'getMembersAjax'])
+    ->name('ekskul.getMembers')->middleware('auth');
 
 require __DIR__ . '/auth.php';
