@@ -84,6 +84,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('wakamad kurikulum') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('mapel*') ? 'active' : '' }}">
+                <a href="{{ route('mapel.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Mata Pelajaran</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>

@@ -11,6 +11,7 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\KesehatanController;
 use App\Http\Controllers\KonselingController;
 use App\Http\Controllers\KoperasiController;
+use App\Http\Controllers\MapelController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PrestasiAkademikController;
 use App\Http\Controllers\SemesterController;
@@ -50,5 +51,7 @@ Route::resource('prestasi-ekskul', AchievementController::class);
 
 Route::get('/get-ekskul-members/{ekskul}', [AchievementController::class, 'getMembersAjax'])
     ->name('ekskul.getMembers')->middleware('auth');
+
+Route::resource('mapel', MapelController::class);
 
 require __DIR__ . '/auth.php';
