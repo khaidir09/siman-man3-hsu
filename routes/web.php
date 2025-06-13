@@ -14,6 +14,7 @@ use App\Http\Controllers\KoperasiController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PrestasiAkademikController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\WaktuMapelController;
@@ -55,5 +56,7 @@ Route::get('/get-ekskul-members/{ekskul}', [AchievementController::class, 'getMe
 
 Route::resource('mapel', MapelController::class);
 Route::resource('waktu-mapel', WaktuMapelController::class);
+Route::resource('jadwal', ScheduleController::class);
+Route::post('/jadwal/{schedule}/clone', [ScheduleController::class, 'clone'])->name('jadwal.clone')->middleware('auth');
 
 require __DIR__ . '/auth.php';
