@@ -39,7 +39,7 @@
                             <option value="">Pilih Kelompok</option>
                             {{-- Kondisi untuk memilih kelompok yang sesuai --}}
                             <option value="A" {{ old('kelompok_mapel', $subject->kelompok_mapel) == 'A' ? 'selected' : '' }}>A - Umum</option>
-                            <option value="B" {{ old('kelompok_mapel', $subject->kelompok_mapel) == 'B' ? 'selected' : '' }}>B - Kejuruan</option>
+                            <option value="B" {{ old('kelompok_mapel', $subject->kelompok_mapel) == 'B' ? 'selected' : '' }}>B - Pilihan</option>
                             <option value="C" {{ old('kelompok_mapel', $subject->kelompok_mapel) == 'C' ? 'selected' : '' }}>C - Peminatan</option>
                         </select>
                         @error('kelompok_mapel')

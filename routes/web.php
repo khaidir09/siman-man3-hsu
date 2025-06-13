@@ -16,6 +16,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PrestasiAkademikController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\WaktuMapelController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -53,5 +54,6 @@ Route::get('/get-ekskul-members/{ekskul}', [AchievementController::class, 'getMe
     ->name('ekskul.getMembers')->middleware('auth');
 
 Route::resource('mapel', MapelController::class);
+Route::resource('waktu-mapel', WaktuMapelController::class);
 
 require __DIR__ . '/auth.php';

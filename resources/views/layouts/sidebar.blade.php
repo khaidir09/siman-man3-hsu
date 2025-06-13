@@ -88,6 +88,9 @@
             <li class="{{ Route::is('mapel*') ? 'active' : '' }}">
                 <a href="{{ route('mapel.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Mata Pelajaran</span></a>
             </li>
+            <li class="{{ Route::is('waktu-mapel*') ? 'active' : '' }}">
+                <a href="{{ route('waktu-mapel.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Jam Pelajaran</span></a>
+            </li>
             @endif
 
         </ul>
