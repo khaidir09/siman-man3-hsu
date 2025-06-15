@@ -103,17 +103,20 @@
                                                 </td>
                                                 @foreach ($days as $day)
                                                     <td>
-                                                        {{-- Cek apakah ada jadwal di slot ini --}}
-                                                        @if(isset($schedules[$room->id][$day][$timeSlot->id]))
+                                                        @if(isset($generalEvents[$day][$timeSlot->id]))
+                                                            <div class="schedule-entry" style="background-color: #fff3cd;"> {{-- Beri warna berbeda --}}
+                                                                <span class="subject">{{ $generalEvents[$day][$timeSlot->id] }}</span>
+                                                                <span class="teacher"></span>
+                                                            </div>
+
+                                                        {{-- 2. Jika tidak ada, baru cek Jadwal Pelajaran biasa --}}
+                                                        @elseif(isset($schedules[$room->id][$day][$timeSlot->id]))
                                                             @php
-                                                                // Ambil data jadwal pertama (seharusnya hanya ada satu)
                                                                 $schedule = $schedules[$room->id][$day][$timeSlot->id]->first();
                                                             @endphp
                                                             <div class="schedule-entry">
                                                                 <span class="subject">{{ $schedule->subject->nama_mapel ?? 'N/A' }}</span>
                                                                 <span class="teacher">{{ $schedule->teacher->name ?? 'N/A' }}</span>
-
-                                                                {{-- Tombol Aksi untuk Jadwal Spesifik Ini --}}
                                                                 <div class="schedule-actions">
                                                                     <div class="btn-group" role="group">
                                                                         <a href="{{ route('jadwal.edit', $schedule->id) }}" class="btn btn-sm btn-light" title="Edit"><i class="fas fa-pencil-alt"></i></a>
@@ -130,8 +133,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            
                                                         @else
-                                                            {{-- Jika slot kosong, tampilkan strip --}}
+                                                            {{-- Jika slot kosong --}}
                                                             -
                                                         @endif
                                                     </td>

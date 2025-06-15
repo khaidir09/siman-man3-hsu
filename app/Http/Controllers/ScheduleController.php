@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Schedule;
 use App\Models\Room;
-use App\Models\Subject;
 use App\Models\User;
+use App\Models\Subject;
+use App\Models\Schedule;
 use App\Models\TimeSlot;
-use App\Models\AcademicPeriod;
 use Illuminate\Http\Request;
+use App\Models\AcademicPeriod;
+use App\Models\GeneralSchedule;
 use Illuminate\Validation\Rule;
 
 class ScheduleController extends Controller
@@ -19,18 +20,27 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        // Ambil data yang diperlukan untuk menampilkan jadwal
-        $academicPeriods = AcademicPeriod::all();
-        $rooms = Room::with('waliKelas')->orderBy('tingkat')->get();
-        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
-        $timeSlots = TimeSlot::orderBy('jam_ke')->get();
 
-        // Ambil semua jadwal dan kelompokkan berdasarkan ID kelas, hari, dan ID jam pelajaran
+        $rooms = Room::with('waliKelas')->orderBy('tingkat')->get();
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        $timeSlots = TimeSlot::orderBy('jam_ke')->get();
         $schedules = Schedule::with(['subject', 'teacher'])
             ->get()
             ->groupBy(['room_id', 'hari', 'time_slot_id']);
 
-        return view('jadwal.index', compact('rooms', 'days', 'timeSlots', 'schedules', 'academicPeriods'));
+        // --- TAMBAHAN BARU ---
+        // Ambil semua jadwal umum
+        $generalSchedules = GeneralSchedule::all();
+        $generalEvents = [];
+
+        // Proses data jadwal umum agar mudah diakses di view
+        foreach ($generalSchedules as $event) {
+            for ($i = $event->time_slot_id_mulai; $i <= $event->time_slot_id_selesai; $i++) {
+                $generalEvents[$event->hari][$i] = $event->nama_kegiatan;
+            }
+        }
+
+        return view('jadwal.index', compact('rooms', 'days', 'timeSlots', 'schedules', 'generalEvents'));
     }
 
     /**

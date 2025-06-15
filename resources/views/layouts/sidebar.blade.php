@@ -91,6 +91,9 @@
             <li class="{{ Route::is('waktu-mapel*') ? 'active' : '' }}">
                 <a href="{{ route('waktu-mapel.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Jam Pelajaran</span></a>
             </li>
+            <li class="{{ Route::is('jadwal-umum*') ? 'active' : '' }}">
+                <a href="{{ route('jadwal-umum.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Jadwal Umum</span></a>
+            </li>
             <li class="{{ Route::is('jadwal*') ? 'active' : '' }}">
                 <a href="{{ route('jadwal.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Jadwal Pelajaran</span></a>
             </li>

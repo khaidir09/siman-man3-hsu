@@ -3,7 +3,9 @@
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\ExtracurricularController;
+use App\Http\Controllers\GeneralScheduleController;
 use App\Http\Controllers\InventarisController;
+use App\Http\Controllers\JadwalUmumController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KedisiplinanController;
 use App\Http\Controllers\KehadiranController;
@@ -58,5 +60,7 @@ Route::resource('mapel', MapelController::class);
 Route::resource('waktu-mapel', WaktuMapelController::class);
 Route::resource('jadwal', ScheduleController::class);
 Route::post('/jadwal/{schedule}/clone', [ScheduleController::class, 'clone'])->name('jadwal.clone')->middleware('auth');
+
+Route::resource('jadwal-umum', JadwalUmumController::class);
 
 require __DIR__ . '/auth.php';
