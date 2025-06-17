@@ -12,10 +12,10 @@
                     </div>
                     <div class="card-wrap">
                         <div class="card-header">
-                        <h4>Total Prestasi Non Akademik</h4>
+                        <h4>Guru</h4>
                         </div>
                         <div class="card-body">
-                        59
+                        {{ $guru }}
                         </div>
                     </div>
                 </div>
@@ -27,10 +27,10 @@
                     </div>
                     <div class="card-wrap">
                         <div class="card-header">
-                        <h4>Total Pelanggaran</h4>
+                        <h4>Jurusan</h4>
                         </div>
                         <div class="card-body">
-                        59
+                        {{ $jurusan }}
                         </div>
                     </div>
                 </div>
@@ -42,10 +42,10 @@
                     </div>
                     <div class="card-wrap">
                         <div class="card-header">
-                        <h4>Total Konseling</h4>
+                        <h4>Kelas</h4>
                         </div>
                         <div class="card-body">
-                        59
+                        {{ $kelas }}
                         </div>
                     </div>
                 </div>
@@ -57,10 +57,10 @@
                     </div>
                     <div class="card-wrap">
                         <div class="card-header">
-                        <h4>Total Inventaris</h4>
+                        <h4>Prestasi Akademik</h4>
                         </div>
                         <div class="card-body">
-                        59
+                            {{ $prestasiAkademik }}
                         </div>
                     </div>
                 </div>
@@ -72,10 +72,10 @@
                     </div>
                     <div class="card-wrap">
                         <div class="card-header">
-                        <h4>Total Kesehatan</h4>
+                        <h4>Pelanggaran</h4>
                         </div>
                         <div class="card-body">
-                        59
+                            {{ $pelanggaran }}
                         </div>
                     </div>
                 </div>
@@ -87,25 +87,10 @@
                     </div>
                     <div class="card-wrap">
                         <div class="card-header">
-                        <h4>Total Kas Operasi</h4>
+                        <h4>Alumni</h4>
                         </div>
                         <div class="card-body">
-                        59
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
-                        <i class="fas fa-archive"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                        <h4>Total Alumni</h4>
-                        </div>
-                        <div class="card-body">
-                        59
+                            {{ $alumni }}
                         </div>
                     </div>
                 </div>
