@@ -27,7 +27,8 @@
                                 <th>Nomor Induk</th>
                                 <th>Nama</th>
                                 <th>Kelas Terakhir</th>
-                                <th>Melanjutkan Ke</th>
+                                <th>Melanjutkan</th>
+                                <th>Nama Tempat</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -47,6 +48,7 @@
                                         {{ $item->room->tingkat ?? '' }}-{{ $item->room->rombongan ?? '' }} {{ $item->room->major->nama_jurusan ?? '' }}
                                     </td>
                                     <td>{{ $item->melanjutkan }}</td>
+                                    <td>{{ $item->nama_tempat }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             {{-- Mengarahkan ke route edit untuk alumni --}}

@@ -80,14 +80,34 @@
                         @enderror
                     </div>
 
-                     <div class="form-group">
-                        <label for="melanjutkan">Melanjutkan Ke <span class="text-danger">*</span></label>
-                        <input name="melanjutkan" id="melanjutkan" type="text" class="form-control" value="{{ old('melanjutkan') }}" placeholder="Contoh: Universitas Indonesia, Bekerja, dll.">
+                    <div class="form-group">
+                        <div class="mt-3 mb-1">
+                            <label for="melanjutkan">Melanjutkan <span class="text-danger">*</span></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="melanjutkan" id="" value="Kuliah" checked>
+                            <label class="form-check-label">Kuliah</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="melanjutkan" id="" value="Bekerja">
+                            <label class="form-check-label">Bekerja</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="melanjutkan" id="" value="Tidak Ada">
+                            <label class="form-check-label">Tidak Ada</label>
+                        </div>
                         @error('melanjutkan')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
+                    <div class="form-group">
+                        <label for="nama_tempat">Nama Tempat</label>
+                        <input name="nama_tempat" id="nama_tempat" type="text" class="form-control" value="{{ old('nama_tempat') }}">
+                        @error('nama_tempat')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     <button type="submit" class="btn btn-primary">Buat</button>
                 </form>

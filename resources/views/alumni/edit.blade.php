@@ -82,10 +82,32 @@
                         @enderror
                     </div>
 
-                     <div class="form-group">
-                        <label for="melanjutkan">Melanjutkan Ke</label>
-                        <input name="melanjutkan" id="melanjutkan" type="text" class="form-control" value="{{ old('melanjutkan', $alumni->melanjutkan) }}" placeholder="Contoh: Universitas Gadjah Mada, Bekerja, dll.">
+                    <div class="form-group">
+                        <div class="mt-3 mb-1">
+                            <label for="melanjutkan">Melanjutkan</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="melanjutkan" id="" value="Kuliah" {{ $alumni->melanjutkan === 'Kuliah' ? 'checked' : '' }}>
+                            <label class="form-check-label">Kuliah</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="melanjutkan" id="" value="Bekerja" {{ $alumni->melanjutkan === 'Bekerja' ? 'checked' : '' }}>
+                            <label class="form-check-label">Bekerja</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="melanjutkan" id="" value="Tidak Ada" {{ $alumni->melanjutkan === 'Tidak Ada' ? 'checked' : '' }}>
+                            <label class="form-check-label">Tidak Ada</label>
+                        </div>
                         @error('melanjutkan')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+                        
+
+                     <div class="form-group">
+                        <label for="nama_tempat">Nama Tempat</label>
+                        <input name="nama_tempat" id="nama_tempat" type="text" class="form-control" value="{{ old('nama_tempat', $alumni->nama_tempat) }}">
+                        @error('nama_tempat')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>

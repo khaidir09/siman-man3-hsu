@@ -44,6 +44,7 @@ class AlumniController extends Controller
             'tanggal_lahir' => 'required|date',
             'academic_periods_id' => 'required|exists:academic_periods,id',
             'melanjutkan' => 'required|string|max:255',
+            'nama_tempat' => 'string|max:255',
         ]);
 
         // Buat record baru menggunakan model Alumni
@@ -90,6 +91,7 @@ class AlumniController extends Controller
             'tanggal_lahir' => 'required|date',
             'academic_periods_id' => 'required|exists:academic_periods,id',
             'melanjutkan' => 'required|string|max:255',
+            'nama_tempat' => 'string|max:255',
         ]);
 
         // Update record alumni
