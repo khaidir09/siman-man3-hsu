@@ -25,6 +25,8 @@
   <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/assets/css/components.css') }}">
 
+  @stack('style')
+</head>
 <body>
   <div id="app">
     <div class="main-wrapper main-wrapper-1">

@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExtracurricularController;
-use App\Http\Controllers\GeneralScheduleController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\JadwalUmumController;
 use App\Http\Controllers\JurusanController;
@@ -22,18 +22,18 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\WaktuMapelController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('dashboard.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('pengguna', PenggunaController::class);
 Route::resource('jurusan', JurusanController::class);
 Route::resource('kelas', KelasController::class);
 Route::resource('semester', SemesterController::class);
 Route::resource('prestasi-akademik', PrestasiAkademikController::class);
+Route::post('/laporan/prestasi-akademik/cetak', [PrestasiAkademikController::class, 'cetakPrestasiAkademik'])->name('prestasi.cetak');
 Route::resource('terlambat', KedisiplinanController::class);
 Route::resource('kehadiran', KehadiranController::class);
 Route::resource('konseling', KonselingController::class);
+Route::post('/laporan/konseling/cetak', [KonselingController::class, 'cetakKonseling'])->name('konseling.cetak');
 Route::resource('inventaris', InventarisController::class);
 Route::resource('kesehatan', KesehatanController::class);
 Route::resource('unit-usaha', KoperasiController::class);

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CounselingGuidance;
+use Carbon\Carbon;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\CounselingGuidance;
 
 class KonselingController extends Controller
 {
@@ -15,6 +18,57 @@ class KonselingController extends Controller
     {
         $guidances = CounselingGuidance::all();
         return view('konseling.index', compact('guidances'));
+    }
+
+    public function cetakKonseling(Request $request)
+    {
+        $imagePath = public_path('images/kemenag.png');
+        // 1. Validasi input dari form modal
+        $validated = $request->validate([
+            // Memastikan input 'month' ada dan formatnya YYYY-MM (misal: 2024-10)
+            'bulan' => 'required|date_format:Y-m',
+        ]);
+
+        // 2. Ambil tahun dan bulan dari input
+        $year = Carbon::createFromFormat('Y-m', $validated['bulan'])->year;
+        $month = Carbon::createFromFormat('Y-m', $validated['bulan'])->month;
+
+        // 3. Ambil semua data yang diperlukan untuk laporan
+
+        // Ganti 'BimbinganKonseling' dengan nama model Anda yang sebenarnya
+        $konseling = CounselingGuidance::with(['room'])
+            ->whereYear('tanggal', $year)
+            ->whereMonth('tanggal', $month)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        // Ambil data kepala madrasah
+        $kepalaMadrasah = User::role('kepala madrasah')->first();
+
+        // Format periode laporan (contoh: OKTOBER 2024)
+        $periodeFormatted = strtoupper(Carbon::createFromFormat('Y-m', $validated['bulan'])->locale('id')->translatedFormat('F Y'));
+
+        // Format tanggal cetak (tanggal hari ini)
+        $tanggalCetakFormatted = Carbon::now()->locale('id')->translatedFormat('d F Y');
+
+        // 4. Kumpulkan semua data untuk dikirim ke view
+        $data = [
+            'imagePath' => $imagePath,
+            'konseling' => $konseling,
+            'kepala_madrasah' => $kepalaMadrasah,
+            'periode' => $periodeFormatted,
+            'tanggal_cetak' => $tanggalCetakFormatted,
+            'judul_laporan' => "Laporan Bimbingan Konseling - " . $periodeFormatted,
+        ];
+
+        // 4. Render view ke dalam PDF menggunakan Dompdf
+        $pdf = Pdf::loadView('konseling.cetak', $data);
+
+        // 5. Atur orientasi kertas (opsional, default portrait)
+        $pdf->setPaper('a4', 'portrait');
+
+        // 6. Tampilkan PDF di browser (stream) atau download
+        return $pdf->stream('laporan-konseling-' . $validated['bulan'] . '.pdf');
     }
 
     /**
