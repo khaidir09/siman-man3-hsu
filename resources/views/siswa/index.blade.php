@@ -41,7 +41,7 @@
                                     {{-- Menampilkan kelas dari relasi 'room' --}}
                                     <td>
                                         @if($student->room)
-                                            {{ $student->room->tingkat }}-{{ $student->room->rombongan }} {{ $student->room->major->nama_jurusan }}
+                                            {{ $student->room->tingkat }}-{{ $student->room->rombongan }} {{ $student->room->nama_jurusan }}
                                         @else
                                             <span class="text-muted">Belum ada kelas</span>
                                         @endif
