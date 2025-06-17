@@ -33,6 +33,7 @@ Route::post('/laporan/prestasi-akademik/cetak', [PrestasiAkademikController::cla
 Route::resource('terlambat', KedisiplinanController::class);
 Route::post('/laporan/kedisiplinan/cetak', [KedisiplinanController::class, 'cetakKedisiplinan'])->name('kedisiplinan.cetak');
 Route::resource('kehadiran', KehadiranController::class);
+Route::post('/laporan/kehadiran/cetak', [KehadiranController::class, 'cetakKehadiran'])->name('kehadiran.cetak');
 Route::resource('konseling', KonselingController::class);
 Route::post('/laporan/konseling/cetak', [KonselingController::class, 'cetakKonseling'])->name('konseling.cetak');
 Route::resource('inventaris', InventarisController::class);

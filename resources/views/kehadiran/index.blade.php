@@ -1,9 +1,49 @@
 @extends('layouts.master')
 
+@push('style')
+    <style>
+        .modal-backdrop {
+            position: relative;
+        }
+    </style>
+@endpush
+
 @section('content')
     <section class="section">
         <div class="section-header">
             <h1>Data Kehadiran</h1>
+            <div class="section-header-action ml-auto">
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#printModal">
+                    <i class="fas fa-print"></i> Cetak Laporan
+                </a>
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="printModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cetak Laporan Pelanggaran Kedisiplinan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {{-- Form untuk mengirim data filter cetak --}}
+                    <form action="{{ route('kehadiran.cetak') }}" method="POST" target="_blank">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Bulan</label>
+                                <input type="month" name="bulan" id="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-whitesmoke br">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary">Cetak</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div class="card card-primary">
