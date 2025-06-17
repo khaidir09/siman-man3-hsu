@@ -39,6 +39,7 @@ Route::resource('inventaris', InventarisController::class);
 Route::resource('kesehatan', KesehatanController::class);
 Route::resource('unit-usaha', KoperasiController::class);
 Route::resource('alumni', AlumniController::class);
+Route::post('/laporan/alumni/cetak', [AlumniController::class, 'cetakAlumni'])->name('alumni.cetak');
 Route::resource('siswa', StudentController::class);
 Route::resource('ekstrakurikuler', ExtracurricularController::class);
 // Route untuk menambah anggota

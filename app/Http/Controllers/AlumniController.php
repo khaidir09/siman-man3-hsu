@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Alumni;
+use Carbon\Carbon;
 use App\Models\Room;
-use App\Models\AcademicPeriod;
+use App\Models\User;
+use App\Models\Alumni;
 use Illuminate\Http\Request;
+use App\Models\AcademicPeriod;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AlumniController extends Controller
 {
@@ -16,7 +19,53 @@ class AlumniController extends Controller
     {
         // Ambil data alumni dengan relasinya untuk efisiensi (eager loading)
         $alumni = Alumni::with(['room', 'academicPeriod'])->latest()->get();
-        return view('alumni.index', compact('alumni'));
+        $academicPeriods = AcademicPeriod::latest()->get();
+        return view('alumni.index', compact('alumni', 'academicPeriods'));
+    }
+
+    public function cetakAlumni(Request $request)
+    {
+        $imagePath = public_path('images/kemenag.png');
+        $request->validate([
+            'academic_periods_id' => 'required',
+        ]);
+
+        $academicPeriod = AcademicPeriod::findOrFail($request->academic_periods_id);
+
+        $alumni = Alumni::with(['academicPeriod'])
+            ->where('academic_periods_id', $request->academic_periods_id)
+            ->orderBy('no_induk', 'asc')
+            ->get();
+
+        // Ambil data kepala madrasah
+        $kepalaMadrasah = User::role('kepala madrasah')->first();
+
+        $tanggalCetakFormatted = Carbon::now()->locale('id')->translatedFormat('d F Y');
+
+        $jumlahAlumniKuliah = $alumni->where('melanjutkan', 'Kuliah')->count();
+        $jumlahAlumniBekerja = $alumni->where('melanjutkan', 'Bekerja')->count();
+        $jumlahAlumniLainnya = $alumni->where('melanjutkan', '!=', 'Kuliah')->where('melanjutkan', '!=', 'Bekerja')->count();
+
+        $data = [
+            'imagePath' => $imagePath,
+            'alumni' => $alumni,
+            'jumlahAlumniKuliah' => $jumlahAlumniKuliah,
+            'jumlahAlumniBekerja' => $jumlahAlumniBekerja,
+            'jumlahAlumniLainnya' => $jumlahAlumniLainnya,
+            'academic_period' => $academicPeriod,
+            'kepala_madrasah' => $kepalaMadrasah,
+            'tanggal_cetak' => $tanggalCetakFormatted,
+            'judul_laporan' => "Laporan Alumni - " . $academicPeriod->tahun_ajaran,
+        ];
+
+        // 4. Render view ke dalam PDF menggunakan Dompdf
+        $pdf = Pdf::loadView('alumni.cetak', $data);
+
+        // 5. Atur orientasi kertas (opsional, default portrait)
+        $pdf->setPaper('a4', 'landscape');
+
+        // 6. Tampilkan PDF di browser (stream) atau download
+        return $pdf->stream('laporan-alumni-' . $academicPeriod->tahun_ajaran . '.pdf');
     }
 
     /**
