@@ -31,6 +31,7 @@ Route::resource('semester', SemesterController::class);
 Route::resource('prestasi-akademik', PrestasiAkademikController::class);
 Route::post('/laporan/prestasi-akademik/cetak', [PrestasiAkademikController::class, 'cetakPrestasiAkademik'])->name('prestasi.cetak');
 Route::resource('terlambat', KedisiplinanController::class);
+Route::post('/laporan/kedisiplinan/cetak', [KedisiplinanController::class, 'cetakKedisiplinan'])->name('kedisiplinan.cetak');
 Route::resource('kehadiran', KehadiranController::class);
 Route::resource('konseling', KonselingController::class);
 Route::post('/laporan/konseling/cetak', [KonselingController::class, 'cetakKonseling'])->name('konseling.cetak');
