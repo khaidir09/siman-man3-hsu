@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Infrastructure;
+use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Infrastructure;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InventarisController extends Controller
 {
@@ -14,6 +17,56 @@ class InventarisController extends Controller
     {
         $infrastructures = Infrastructure::all();
         return view('inventaris.index', compact('infrastructures'));
+    }
+
+    public function cetakInventaris(Request $request)
+    {
+        $imagePath = public_path('images/kemenag.png');
+        // 1. Validasi input dari form modal
+        $validated = $request->validate([
+            // Memastikan input 'month' ada dan formatnya YYYY-MM (misal: 2024-10)
+            'bulan' => 'required|date_format:Y-m',
+        ]);
+
+        // 2. Ambil tahun dan bulan dari input
+        $year = Carbon::createFromFormat('Y-m', $validated['bulan'])->year;
+        $month = Carbon::createFromFormat('Y-m', $validated['bulan'])->month;
+
+        // 3. Ambil semua data yang diperlukan untuk laporan
+
+        // Ganti 'BimbinganKonseling' dengan nama model Anda yang sebenarnya
+        $inventaris = Infrastructure::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        // Ambil data kepala madrasah
+        $kepalaMadrasah = User::role('kepala madrasah')->first();
+
+        // Format periode laporan (contoh: OKTOBER 2024)
+        $periodeFormatted = strtoupper(Carbon::createFromFormat('Y-m', $validated['bulan'])->locale('id')->translatedFormat('F Y'));
+
+        // Format tanggal cetak (tanggal hari ini)
+        $tanggalCetakFormatted = Carbon::now()->locale('id')->translatedFormat('d F Y');
+
+        // 4. Kumpulkan semua data untuk dikirim ke view
+        $data = [
+            'imagePath' => $imagePath,
+            'inventaris' => $inventaris,
+            'kepala_madrasah' => $kepalaMadrasah,
+            'periode' => $periodeFormatted,
+            'tanggal_cetak' => $tanggalCetakFormatted,
+            'judul_laporan' => "Laporan Inventaris - " . $periodeFormatted,
+        ];
+
+        // 4. Render view ke dalam PDF menggunakan Dompdf
+        $pdf = Pdf::loadView('inventaris.cetak', $data);
+
+        // 5. Atur orientasi kertas (opsional, default portrait)
+        $pdf->setPaper('a4', 'portrait');
+
+        // 6. Tampilkan PDF di browser (stream) atau download
+        return $pdf->stream('laporan-inventaris-' . $validated['bulan'] . '.pdf');
     }
 
     /**
