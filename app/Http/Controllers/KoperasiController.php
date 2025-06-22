@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Cooperative;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule; // Diperlukan untuk validasi 'in'
 
 class KoperasiController extends Controller
@@ -16,6 +19,73 @@ class KoperasiController extends Controller
         // Mengambil semua data transaksi, diurutkan dari yang terbaru
         $transactions = Cooperative::latest('tanggal')->latest('id')->get();
         return view('unit-usaha.index', compact('transactions'));
+    }
+
+    public function cetakKoperasi(Request $request)
+    {
+        $imagePath = public_path('images/kemenag.png');
+        // 1. Validasi input dari form modal
+        $validated = $request->validate([
+            // Memastikan input 'month' ada dan formatnya YYYY-MM (misal: 2024-10)
+            'bulan' => 'required|date_format:Y-m',
+        ]);
+
+        // 2. Ambil tahun dan bulan dari input
+        $date = Carbon::createFromFormat('Y-m', $validated['bulan']);
+        $year = $date->year;
+        $month = $date->month;
+
+        $saldoAwal = Cooperative::where('tanggal', '<', $date->startOfMonth())
+            ->latest('tanggal')
+            ->latest('id')
+            ->first()
+            ->jumlah_kas ?? 0;
+
+        // 3. Ambil semua data yang diperlukan untuk laporan
+
+        // Ganti 'BimbinganKonseling' dengan nama model Anda yang sebenarnya
+        $koperasi = Cooperative::whereYear('tanggal', $year)
+            ->whereMonth('tanggal', $month)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        $sisaKas = $koperasi->last()->jumlah_kas ?? $saldoAwal;
+
+        // Ambil data kepala madrasah
+        $kepalaMadrasah = User::role('kepala madrasah')->first();
+
+        // Format periode laporan (contoh: OKTOBER 2024)
+        $periodeFormatted = strtoupper(Carbon::createFromFormat('Y-m', $validated['bulan'])->locale('id')->translatedFormat('F Y'));
+
+        // Format tanggal cetak (tanggal hari ini)
+        $tanggalCetakFormatted = Carbon::now()->locale('id')->translatedFormat('d F Y');
+
+        $totalPemasukan = Cooperative::whereYear('tanggal', $year)
+            ->whereMonth('tanggal', $month)->where('jenis_transaksi', 'Pemasukan')->sum('total');
+        $totalPengeluaran = Cooperative::whereYear('tanggal', $year)
+            ->whereMonth('tanggal', $month)->where('jenis_transaksi', 'Pengeluaran')->sum('total');
+
+        // 4. Kumpulkan semua data untuk dikirim ke view
+        $data = [
+            'imagePath' => $imagePath,
+            'koperasi' => $koperasi,
+            'kepala_madrasah' => $kepalaMadrasah,
+            'periode' => $periodeFormatted,
+            'tanggal_cetak' => $tanggalCetakFormatted,
+            'totalPemasukan' => $totalPemasukan,
+            'totalPengeluaran' => $totalPengeluaran,
+            'sisaKas' => $sisaKas,
+            'judul_laporan' => "Laporan Bimbingan Konseling - " . $periodeFormatted,
+        ];
+
+        // 4. Render view ke dalam PDF menggunakan Dompdf
+        $pdf = Pdf::loadView('unit-usaha.cetak', $data);
+
+        // 5. Atur orientasi kertas (opsional, default portrait)
+        $pdf->setPaper('a4', 'portrait');
+
+        // 6. Tampilkan PDF di browser (stream) atau download
+        return $pdf->stream('laporan-unit-usaha-' . $validated['bulan'] . '.pdf');
     }
 
     /**

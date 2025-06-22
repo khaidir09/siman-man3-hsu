@@ -41,6 +41,7 @@ Route::post('/laporan/inventaris/cetak', [InventarisController::class, 'cetakInv
 Route::resource('kesehatan', KesehatanController::class);
 Route::post('/laporan/kesehatan/cetak', [KesehatanController::class, 'cetakKesehatan'])->name('kesehatan.cetak');
 Route::resource('unit-usaha', KoperasiController::class);
+Route::post('/laporan/unit-usaha/cetak', [KoperasiController::class, 'cetakKoperasi'])->name('unit-usaha.cetak');
 Route::resource('alumni', AlumniController::class);
 Route::post('/laporan/alumni/cetak', [AlumniController::class, 'cetakAlumni'])->name('alumni.cetak');
 Route::resource('siswa', StudentController::class);
