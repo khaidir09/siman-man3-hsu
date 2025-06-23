@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\Schedule;
 use App\Models\TimeSlot;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\AcademicPeriod;
 use App\Models\GeneralSchedule;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
 
 class ScheduleController extends Controller
@@ -20,7 +23,7 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-
+        $academicPeriods = AcademicPeriod::all();
         $rooms = Room::with('waliKelas')->orderBy('tingkat')->get();
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         $timeSlots = TimeSlot::orderBy('jam_ke')->get();
@@ -40,7 +43,73 @@ class ScheduleController extends Controller
             }
         }
 
-        return view('jadwal.index', compact('rooms', 'days', 'timeSlots', 'schedules', 'generalEvents'));
+        return view('jadwal.index', compact('rooms', 'days', 'timeSlots', 'schedules', 'generalEvents', 'academicPeriods'));
+    }
+
+    public function cetakJadwalKelas(Request $request)
+    {
+        $imagePath = public_path('images/kemenag.png');
+
+        // 1. Validasi input dari form modal
+        $validated = $request->validate([
+            'room_id' => 'required|exists:rooms,id',
+            'academic_period_id' => 'required|exists:academic_periods,id',
+            'tanggal_cetak' => 'required|date',
+        ]);
+
+        // 2. Ambil data utama berdasarkan input
+        $room = Room::with('waliKelas')->findOrFail($validated['room_id']);
+        $academicPeriod = AcademicPeriod::findOrFail($validated['academic_period_id']);
+
+        // 3. Ambil semua data yang diperlukan untuk tabel jadwal
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+        $timeSlots = TimeSlot::orderBy('jam_ke')->get();
+
+        // 4. Ambil jadwal pelajaran spesifik untuk kelas dan periode ini
+        $schedules = Schedule::where('room_id', $room->id)
+            ->where('academic_period_id', $academicPeriod->id)
+            ->with(['subject', 'teacher'])
+            ->get()
+            ->groupBy(['hari', 'time_slot_id']); // Kelompokkan agar mudah ditampilkan
+
+        // 5. Ambil jadwal umum (Upacara, Tadarus, dll) untuk periode ini
+        $generalSchedulesRaw = GeneralSchedule::where('academic_period_id', $academicPeriod->id)->get();
+        $generalSchedules = [];
+        foreach ($generalSchedulesRaw as $event) {
+            for ($i = $event->time_slot_id_mulai; $i <= $event->time_slot_id_selesai; $i++) {
+                $generalSchedules[$event->hari][$i] = $event->nama_kegiatan;
+            }
+        }
+
+        // 6. Ambil data untuk tanda tangan
+        $kepalaMadrasah = User::role('kepala madrasah')->first();
+        $wakamadKurikulum = User::role('wakamad kurikulum')->first(); // Pastikan role ini ada
+
+        // 7. Format data lain untuk ditampilkan
+        $tanggalCetakFormatted = Carbon::parse($validated['tanggal_cetak'])->locale('id')->translatedFormat('d F Y');
+        $periodeFormatted = $academicPeriod->tahun_ajaran;
+
+        // 8. Kumpulkan semua data untuk dikirim ke view
+        $data = [
+            'imagePath' => $imagePath,
+            'room' => $room,
+            'academic_period_text' => $periodeFormatted,
+            'days' => $days,
+            'timeSlots' => $timeSlots,
+            'schedules' => $schedules,
+            'generalSchedules' => $generalSchedules,
+            'kepala_madrasah' => $kepalaMadrasah,
+            'wakamad_kurikulum' => $wakamadKurikulum,
+            'tanggal_cetak' => $tanggalCetakFormatted,
+        ];
+
+        // 9. Render view ke dalam PDF
+        $pdf = Pdf::loadView('jadwal.cetak', $data);
+        $pdf->setPaper('a4', 'landscape'); // Landscape paling cocok untuk tabel jadwal
+
+        // 10. Buat nama file yang dinamis dan tampilkan PDF
+        $fileName = 'jadwal-kelas-' . Str::slug($room->name) . '-' . Str::slug($academicPeriod->tahun_ajaran) . '.pdf';
+        return $pdf->stream($fileName);
     }
 
     /**
