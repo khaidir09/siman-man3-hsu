@@ -3,12 +3,12 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h1>Data Siswa</h1>
+            <h1>Data Anggota Ekstrakurikuler</h1>
         </div>
 
         <div class="card card-primary">
             <div class="card-header">
-                <h4>Semua Data Siswa</h4>
+                <h4>Semua Data Anggota Ekstrakurikuler</h4>
                 <div class="card-header-action">
                     {{-- Mengarahkan ke route untuk membuat data siswa baru --}}
                     <a href="{{ route('siswa.create') }}" class="btn btn-primary">
