@@ -73,29 +73,25 @@
             @endif
 
             @if (Auth::user()->hasRole('pembina ekskul') || Auth::user()->hasRole('kepala madrasah'))
-            <li class="{{ Route::is('ekstrakurikuler*') ? 'active' : '' }}">
-                <a href="{{ route('ekstrakurikuler.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Ekstrakurikuler</span></a>
-            </li>
-            <li class="{{ Route::is('prestasi-ekskul*') ? 'active' : '' }}">
-                <a href="{{ route('prestasi-ekskul.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Prestasi Ekstrakurikuler</span></a>
-            </li>
-            <li class="{{ Route::is('siswa*') ? 'active' : '' }}">
-                <a href="{{ route('siswa.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Anggota Ekstrakurikuler</span></a>
+            <li class="dropdown {{ Route::is(['ekstrakurikuler*', 'prestasi-ekskul*', 'siswa*']) ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Data Ekstrakurikuler</span></a>
+                <ul class="dropdown-menu" style="{{ Route::is('pengguna*') ? 'display: block;' : '' }}">
+                    <li class="{{ Route::is('ekstrakurikuler*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('ekstrakurikuler.index') }}">Ekstrakurikuler</a></li>
+                    <li class="{{ Route::is('prestasi-ekskul*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('prestasi-ekskul.index') }}">Prestasi Ekstrakurikuler</a></li>
+                    <li class="{{ Route::is('siswa*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.index') }}">Anggota Ekstrakurikuler</a></li>
+                </ul>
             </li>
             @endif
 
             @if (Auth::user()->hasRole('wakamad kurikulum') || Auth::user()->hasRole('kepala madrasah'))
-            <li class="{{ Route::is('mapel*') ? 'active' : '' }}">
-                <a href="{{ route('mapel.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Mata Pelajaran</span></a>
-            </li>
-            <li class="{{ Route::is('waktu-mapel*') ? 'active' : '' }}">
-                <a href="{{ route('waktu-mapel.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Jam Pelajaran</span></a>
-            </li>
-            <li class="{{ Route::is('jadwal-umum*') ? 'active' : '' }}">
-                <a href="{{ route('jadwal-umum.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Jadwal Umum</span></a>
-            </li>
-            <li class="{{ Route::is('jadwal*') ? 'active' : '' }}">
-                <a href="{{ route('jadwal.index') }}" class="nav-link"><i class="fas fa-fire"></i><span>Jadwal Pelajaran</span></a>
+            <li class="dropdown {{ Route::is(['mapel*', 'waktu-mapel*', 'jadwal-umum*', 'jadwal*']) ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Data Jadwal</span></a>
+                <ul class="dropdown-menu" style="{{ Route::is('pengguna*') ? 'display: block;' : '' }}">
+                    <li class="{{ Route::is('mapel*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('mapel.index') }}">Mata Pelajaran</a></li>
+                    <li class="{{ Route::is('waktu-mapel*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('waktu-mapel.index') }}">Jam Pelajaran</a></li>
+                    <li class="{{ Route::is('jadwal-umum*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('jadwal-umum.index') }}">Jadwal Umum</a></li>
+                    <li class="{{ Route::is('jadwal*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('jadwal.index') }}">Jadwal Pelajaran</a></li>
+                </ul>
             </li>
             @endif
 
