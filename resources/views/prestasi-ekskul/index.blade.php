@@ -37,7 +37,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                     <td>{{ $achievement->tahun }}</td>
                                     <td>{{ $achievement->peringkat }} {{ $achievement->nama_lomba }}</td>
-                                    <td>{{ $achievement->student->nama_lengkap }} ({{ $achievement->student->room->tingkat }}-{{ $achievement->student->room->rombongan }} {{ $achievement->student->room->major->nama_jurusan }})</td>
+                                    <td>{{ $achievement->student->nama_lengkap }} ({{ $achievement->student->room->tingkat }}-{{ $achievement->student->room->rombongan }} {{ $achievement->student->room->nama_jurusan }})</td>
                                     <td>{{ $achievement->tingkat }}</td>
                                     <td>{{ $achievement->penyelenggara }}</td>
                                     <td>{{ $achievement->extracurricular->nama_ekskul }}</td>

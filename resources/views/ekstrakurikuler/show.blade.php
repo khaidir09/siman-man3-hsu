@@ -1,5 +1,13 @@
 @extends('layouts.master')
 
+@push('style')
+    <style>
+        .modal-backdrop {
+            position: relative;
+        }
+    </style>
+@endpush
+
 @section('content')
     <section class="section">
         <div class="section-header">
@@ -19,8 +27,54 @@
                             <h4>{{ $ekstrakurikuler->nama_ekskul }}</h4>
                             <div class="card-header-action">
                                 <a href="{{ route('ekstrakurikuler.edit', $ekstrakurikuler->id) }}" class="btn btn-primary">Edit</a>
+                                <a href="#" class="btn btn-dark ml-2" data-toggle="modal" data-target="#cetakDetailModal">
+                                    <i class="fas fa-print"></i> Cetak Laporan
+                                </a>
                             </div>
                         </div>
+                        <div class="modal fade" tabindex="-1" role="dialog" id="cetakDetailModal">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Cetak Laporan Detail Ekstrakurikuler</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form action="{{ route('cetak-detail-ekskul') }}" method="POST" target="_blank">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <p>Silakan pilih periode laporan yang ingin dicetak.</p>
+                                            
+                                            {{-- Input tersembunyi untuk mengirim ID ekstrakurikuler --}}
+                                            <input type="hidden" name="extracurricular_id" value="{{ $ekstrakurikuler->id }}">
+                        
+                                            <div class="form-group">
+                                                <label>Pilih Tahun Ajaran / Semester <span class="text-danger">*</span></label>
+                                                <select name="academic_period_id" class="form-control" required>
+                                                    <option value="">-- Pilih Periode --</option>
+                                                    {{-- Asumsi Anda mengirimkan variabel $academicPeriods dari controller --}}
+                                                    @foreach ($academicPeriods as $period)
+                                                        <option value="{{ $period->id }}">{{ $period->tahun_ajaran }} - {{ $period->semester }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                        
+                                            <div class="form-group">
+                                                <label>Tanggal Cetak <span class="text-danger">*</span></label>
+                                                <input type="date" name="tanggal_cetak" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+                                            </div>
+                        
+                                        </div>
+                                        <div class="modal-footer bg-whitesmoke br">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                            <button type="submit" class="btn btn-primary">Cetak</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="card-body">
                             <p><strong>Pembina:</strong> {{ $ekstrakurikuler->pembina->name ?? 'N/A' }}</p>
                             <p><strong>Tahun Ajaran:</strong> {{ $ekstrakurikuler->academicPeriod->tahun_ajaran ?? 'N/A' }}</p>
@@ -181,7 +235,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                  <td>{{ $achievement->tahun }}</td>
                                                  <td>{{ $achievement->peringkat }} {{ $achievement->nama_lomba }}</td>
-                                                 <td>{{ $achievement->student->nama_lengkap }} ({{ $achievement->student->room->tingkat }}-{{ $achievement->student->room->rombongan }} {{ $achievement->student->room->major->nama_jurusan }})</td>
+                                                 <td>{{ $achievement->student->nama_lengkap }} ({{ $achievement->student->room->tingkat }}-{{ $achievement->student->room->rombongan }} {{ $achievement->student->room->nama_jurusan }})</td>
                                                  <td>{{ $achievement->tingkat }}</td>
                                                  <td>{{ $achievement->penyelenggara }}</td>
                                              </tr>

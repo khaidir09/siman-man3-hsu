@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Extracurricular;
-use App\Models\User; // Asumsi pembina adalah User
-use App\Models\AcademicPeriod;
+use Carbon\Carbon;
 use App\Models\Student;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\AcademicPeriod;
+use App\Models\Extracurricular;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
+use App\Models\User; // Asumsi pembina adalah User
 
 class ExtracurricularController extends Controller
 {
@@ -78,7 +81,63 @@ class ExtracurricularController extends Controller
         // untuk ditampilkan di dropdown 'Tambah Anggota'
         $studentsForAdding = Student::where('status', 'Aktif')->whereNotIn('id', $memberIds)->get();
 
-        return view('ekstrakurikuler.show', compact('ekstrakurikuler', 'studentsForAdding'));
+        $academicPeriods = AcademicPeriod::all();
+
+        return view('ekstrakurikuler.show', compact('ekstrakurikuler', 'studentsForAdding', 'academicPeriods'));
+    }
+
+    public function cetakDetail(Request $request)
+    {
+        $imagePath = public_path('images/kemenag.png');
+
+        // 1. Validasi input dari form modal
+        $validated = $request->validate([
+            'extracurricular_id' => 'required|exists:extracurriculars,id',
+            'academic_period_id' => 'required|exists:academic_periods,id',
+            'tanggal_cetak' => 'required|date',
+        ]);
+
+        // 2. Ambil data utama berdasarkan input
+        $ekskul = Extracurricular::with('pembina')->findOrFail($validated['extracurricular_id']);
+        $academicPeriod = AcademicPeriod::findOrFail($validated['academic_period_id']);
+
+        // 3. Ambil data relasi yang relevan untuk laporan
+
+        // Ambil anggota dari ekstrakurikuler ini
+        $anggota = $ekskul->students()->orderBy('nama_lengkap')->get();
+
+        // Ambil prestasi yang diraih ekskul ini PADA PERIODE YANG DIPILIH
+        $prestasi = $ekskul->achievements()
+            // ->where('academic_period_id', $academicPeriod->id)
+            ->with('student') // Ambil data siswa peraih prestasi
+            ->orderBy('tahun', 'desc')
+            ->get();
+
+        // Ambil data kepala madrasah
+        $kepalaMadrasah = User::role('kepala madrasah')->first();
+
+        // 4. Format data untuk ditampilkan di view
+        $tanggalCetakFormatted = Carbon::parse($validated['tanggal_cetak'])->locale('id')->translatedFormat('d F Y');
+        $periodeFormatted = "Semester " . $academicPeriod->semester . " Tahun Pelajaran " . $academicPeriod->tahun_ajaran;
+
+        // 5. Kumpulkan semua data untuk dikirim ke view
+        $data = [
+            'imagePath' => $imagePath,
+            'ekskul' => $ekskul,
+            'anggota' => $anggota,
+            'prestasi' => $prestasi,
+            'kepala_madrasah' => $kepalaMadrasah,
+            'periode' => $periodeFormatted,
+            'tanggal_cetak' => $tanggalCetakFormatted,
+        ];
+
+        // 6. Render view ke dalam PDF
+        $pdf = Pdf::loadView('ekstrakurikuler.cetak-detail', $data);
+        $pdf->setPaper('a4', 'landscape');
+
+        // 7. Buat nama file yang dinamis dan tampilkan PDF
+        $fileName = 'laporan-' . Str::slug($ekskul->nama_ekskul) . '-' . Str::slug($academicPeriod->tahun_ajaran) . '.pdf';
+        return $pdf->stream($fileName);
     }
 
     /**

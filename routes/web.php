@@ -46,6 +46,9 @@ Route::resource('alumni', AlumniController::class);
 Route::post('/laporan/alumni/cetak', [AlumniController::class, 'cetakAlumni'])->name('alumni.cetak');
 Route::resource('siswa', StudentController::class);
 Route::resource('ekstrakurikuler', ExtracurricularController::class);
+Route::post('/laporan/ekstrakurikuler/cetak-detail', [ExtracurricularController::class, 'cetakDetail'])
+    ->name('cetak-detail-ekskul')
+    ->middleware('auth');
 // Route untuk menambah anggota
 Route::post('ekstrakurikuler/{ekstrakurikuler}/add-member', [ExtracurricularController::class, 'addMember'])
     ->name('ekstrakurikuler.addMember')->middleware('auth');
