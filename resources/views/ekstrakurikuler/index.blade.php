@@ -1,5 +1,13 @@
 @extends('layouts.master')
 
+@push('style')
+    <style>
+        .modal-backdrop {
+            position: relative;
+        }
+    </style>
+@endpush
+
 @section('content')
     <section class="section">
         <div class="section-header">
@@ -10,12 +18,60 @@
             <div class="card-header">
                 <h4>Semua Data Ekstrakurikuler</h4>
                 <div class="card-header-action">
+                    <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#cetakRangkumanModal">
+                        <i class="fas fa-print"></i> Cetak Laporan
+                    </a>
                     {{-- Mengarahkan ke route untuk membuat data ekstrakurikuler baru --}}
                     <a href="{{ route('ekstrakurikuler.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
                 </div>
             </div>
+
+            <div class="modal fade" tabindex="-1" role="dialog" id="cetakRangkumanModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cetak Laporan Rangkuman Ekskul</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ route('cetak-rangkuman-ekskul') }}" method="POST" target="_blank">
+                            @csrf
+                            <div class="modal-body">
+                                <p>Silakan pilih parameter untuk laporan yang ingin dicetak.</p>
+                                
+                                <div class="form-group">
+                                    <label>Pilih Tahun Ajaran / Semester <span class="text-danger">*</span></label>
+                                    <select name="academic_period_id" class="form-control" required>
+                                        <option value="">-- Pilih Periode --</option>
+                                        {{-- Asumsi Anda mengirimkan variabel $academicPeriods dari controller --}}
+                                        @foreach ($academicPeriods as $period)
+                                            <option value="{{ $period->id }}">{{ $period->tahun_ajaran }} - {{ $period->semester }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+            
+                                <div class="form-group">
+                                    <label>Nomor Surat (Opsional)</label>
+                                    <input type="text" name="nomor_surat" class="form-control" placeholder="Contoh: 123/MAN3/EKS/2025">
+                                </div>
+            
+                                <div class="form-group">
+                                    <label>Tanggal Cetak <span class="text-danger">*</span></label>
+                                    <input type="date" name="tanggal_cetak" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+                                </div>
+            
+                            </div>
+                            <div class="modal-footer bg-whitesmoke br">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-primary">Cetak</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>            
 
             <div class="card-body">
                 <div class="table-responsive">

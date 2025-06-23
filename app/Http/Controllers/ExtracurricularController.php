@@ -21,7 +21,57 @@ class ExtracurricularController extends Controller
     {
         // Mengambil data dengan relasi untuk efisiensi (eager loading)
         $ekstrakurikuler = Extracurricular::with(['pembina', 'academicPeriod'])->latest()->get();
-        return view('ekstrakurikuler.index', compact('ekstrakurikuler'));
+        $academicPeriods = AcademicPeriod::all();
+        return view('ekstrakurikuler.index', compact('ekstrakurikuler', 'academicPeriods'));
+    }
+
+    public function cetakLaporanRangkuman(Request $request)
+    {
+        $imagePath = public_path('images/kemenag.png');
+        // 1. Validasi input dari form modal
+        $validated = $request->validate([
+            'academic_period_id' => 'required|exists:academic_periods,id',
+            'nomor_surat' => 'nullable|string|max:255',
+            'tanggal_cetak' => 'required|date',
+        ]);
+
+        // 2. Ambil data utama berdasarkan input
+        $academicPeriod = AcademicPeriod::findOrFail($validated['academic_period_id']);
+
+        // 3. Ambil semua data ekstrakurikuler
+        // Gunakan withCount untuk menghitung jumlah relasi secara efisien
+        $ekstrakurikuler = Extracurricular::where('tahun_ajaran_id', $academicPeriod->id)
+            ->with('pembina')
+            ->withCount(['students', 'achievements']) // Menghitung jumlah siswa dan prestasi
+            ->orderBy('nama_ekskul', 'asc')
+            ->get();
+
+        // 4. Ambil data untuk tanda tangan
+        $kepalaMadrasah = User::role('kepala madrasah')->first();
+        $wakamadKesiswaan = User::role('wakamad kesiswaan')->first();
+
+        // 5. Format data untuk ditampilkan di view
+        $tanggalCetakFormatted = Carbon::parse($validated['tanggal_cetak'])->locale('id')->translatedFormat('d F Y');
+        $periodeFormatted = "Semester " . $academicPeriod->semester . " Tahun Pelajaran " . $academicPeriod->tahun_ajaran;
+
+        // 6. Kumpulkan semua data untuk dikirim ke view
+        $data = [
+            'imagePath' => $imagePath,
+            'ekstrakurikuler' => $ekstrakurikuler,
+            'kepala_madrasah' => $kepalaMadrasah,
+            'wakamad_kesiswaan' => $wakamadKesiswaan,
+            'periode' => $periodeFormatted,
+            'nomor_surat' => $request->nomor_surat,
+            'tanggal_cetak' => $tanggalCetakFormatted,
+        ];
+
+        // 7. Render view ke dalam PDF
+        $pdf = Pdf::loadView('ekstrakurikuler.cetak', $data);
+        $pdf->setPaper('a4', 'portrait'); // Landscape lebih cocok untuk tabel rangkuman
+
+        // 8. Buat nama file yang dinamis dan tampilkan PDF
+        $fileName = 'laporan-rangkuman-ekskul-' . Str::slug($academicPeriod->tahun_ajaran) . '.pdf';
+        return $pdf->stream($fileName);
     }
 
     /**

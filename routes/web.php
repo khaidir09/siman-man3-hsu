@@ -49,6 +49,9 @@ Route::resource('ekstrakurikuler', ExtracurricularController::class);
 Route::post('/laporan/ekstrakurikuler/cetak-detail', [ExtracurricularController::class, 'cetakDetail'])
     ->name('cetak-detail-ekskul')
     ->middleware('auth');
+Route::post('/laporan/ekstrakurikuler/cetak-rangkuman', [ExtracurricularController::class, 'cetakLaporanRangkuman'])
+    ->name('cetak-rangkuman-ekskul')
+    ->middleware('auth');
 // Route untuk menambah anggota
 Route::post('ekstrakurikuler/{ekstrakurikuler}/add-member', [ExtracurricularController::class, 'addMember'])
     ->name('ekstrakurikuler.addMember')->middleware('auth');
@@ -68,6 +71,10 @@ Route::get('/get-ekskul-members/{ekskul}', [AchievementController::class, 'getMe
 Route::resource('mapel', MapelController::class);
 Route::resource('waktu-mapel', WaktuMapelController::class);
 Route::resource('jadwal', ScheduleController::class);
+Route::post('/laporan/jadwal-pelajaran/cetak', [ScheduleController::class, 'cetakJadwalKelas'])
+    ->name('cetak-jadwal-kelas')
+    ->middleware('auth');
+
 Route::post('/jadwal/{schedule}/clone', [ScheduleController::class, 'clone'])->name('jadwal.clone')->middleware('auth');
 
 Route::resource('jadwal-umum', JadwalUmumController::class);
