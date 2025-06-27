@@ -50,9 +50,11 @@
             <div class="card-header">
                 <h4>Semua Bimbingan Konseling</h4>
                 <div class="card-header-action">
+                    @if (Auth::user()->hasRole('guru bk'))
                     <a href="{{ route('konseling.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -69,7 +71,9 @@
                                 <th>Kelas</th>
                                 <th>Uraian Masalah</th>
                                 <th>Pemecahan Masalah</th>
+                                @if (Auth::user()->hasRole('guru bk'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -81,6 +85,7 @@
                                     <td>{{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->nama_jurusan }}</td>
                                     <td>{{ $item->uraian_masalah }}</td>
                                     <td>{{ $item->pemecahan_masalah }}</td>
+                                    @if (Auth::user()->hasRole('guru bk'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('konseling.edit', $item->id) }}"
@@ -92,6 +97,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
 

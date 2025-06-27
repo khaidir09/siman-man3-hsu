@@ -22,6 +22,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\WaktuMapelController;
 use Illuminate\Support\Facades\Route;
 
+Route::redirect('/', 'login');
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('pengguna', PenggunaController::class);

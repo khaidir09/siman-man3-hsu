@@ -21,10 +21,11 @@
                     <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#cetakRangkumanModal">
                         <i class="fas fa-print"></i> Cetak Laporan
                     </a>
-                    {{-- Mengarahkan ke route untuk membuat data ekstrakurikuler baru --}}
+                    @if (Auth::user()->hasRole('pembina ekskul'))
                     <a href="{{ route('ekstrakurikuler.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -116,6 +117,7 @@
                                             <a data-toggle="tooltip" data-placement="bottom" title="Detail" href="{{ route('ekstrakurikuler.show', $item->id) }}"
                                                 class="btn btn-info rounded"><i class="fas fa-eye"></i>
                                             </a>
+                                            @if (Auth::user()->hasRole('pembina ekskul'))
                                             {{-- Tombol Edit --}}
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('ekstrakurikuler.edit', $item->id) }}"
                                                 class="btn btn-primary rounded ml-2"><i class="fas fa-edit"></i>
@@ -125,6 +127,7 @@
                                                 class="btn btn-danger delete-item rounded ml-2"><i
                                                     class="fas fa-trash-alt"></i>
                                             </a>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

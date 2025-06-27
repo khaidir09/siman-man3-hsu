@@ -26,7 +26,9 @@
                         <div class="card-header">
                             <h4>{{ $ekstrakurikuler->nama_ekskul }}</h4>
                             <div class="card-header-action">
+                                @if (Auth::user()->hasRole('pembina ekskul'))
                                 <a href="{{ route('ekstrakurikuler.edit', $ekstrakurikuler->id) }}" class="btn btn-primary">Edit</a>
+                                @endif
                                 <a href="#" class="btn btn-dark ml-2" data-toggle="modal" data-target="#cetakDetailModal">
                                     <i class="fas fa-print"></i> Cetak Laporan
                                 </a>
@@ -100,6 +102,7 @@
                             <h4>Daftar Anggota</h4>
                         </div>
                         <div class="card-body">
+                            @if (Auth::user()->hasRole('pembina ekskul'))
                             {{-- FORM TAMBAH ANGGOTA --}}
                             <form action="{{ route('ekstrakurikuler.addMember', $ekstrakurikuler->id) }}" method="POST" class="mb-4">
                                 @csrf
@@ -132,7 +135,7 @@
                                     </div>
                                 </div>
                             </form>
-
+                            @endif
                             {{-- TABEL ANGGOTA --}}
                             <div class="table-responsive">
                                 <table class="table table-striped">
@@ -143,7 +146,9 @@
                                             <th>Kelas</th>
                                             <th>Jabatan</th>
                                             <th>Nilai</th>
+                                            @if (Auth::user()->hasRole('pembina ekskul'))
                                             <th width="15%">Aksi</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -152,7 +157,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $student->nama_lengkap }}</td>
                                                 <td>{{ $student->room->tingkat ?? '' }}-{{ $student->room->rombongan ?? '' }}</td>
-                                                {{-- Form untuk Update Jabatan dan Nilai --}}
+                                                
                                                 <form action="{{ route('ekstrakurikuler.updateMember', [$ekstrakurikuler->id, $student->id]) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
@@ -175,19 +180,21 @@
                                                             <option value="D" {{ $student->pivot->nilai == 'D' ? 'selected' : '' }}>D (Kurang)</option>
                                                         </select>
                                                     </td>
+                                                    @if (Auth::user()->hasRole('pembina ekskul'))
                                                     <td>
                                                         <div class="btn-group">
                                                             <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Simpan Perubahan"><i class="fas fa-save"></i></button>
-                                                </form> {{-- Form update ditutup di sini, SEBELUM form hapus --}}
-                            
-                                                {{-- Form untuk Hapus Anggota (sekarang berada di luar form update) --}}
-                                                <form action="{{ route('ekstrakurikuler.removeMember', [$ekstrakurikuler->id, $student->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus anggota ini?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger ml-2" data-toggle="tooltip" title="Hapus Anggota"><i class="fas fa-user-times"></i></button>
-                                                </form>
+                                                            </form> {{-- Form update ditutup di sini, SEBELUM form hapus --}}
+                                        
+                                                            {{-- Form untuk Hapus Anggota (sekarang berada di luar form update) --}}
+                                                            <form action="{{ route('ekstrakurikuler.removeMember', [$ekstrakurikuler->id, $student->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus anggota ini?');">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-sm btn-danger ml-2" data-toggle="tooltip" title="Hapus Anggota"><i class="fas fa-user-times"></i></button>
+                                                            </form>
                                                         </div>
                                                     </td>
+                                                    @endif
                                             </tr>
                                         @empty
                                             <tr>
@@ -210,10 +217,11 @@
                         <div class="card-header">
                             <h4>Prestasi yang Diraih</h4>
                              <div class="card-header-action">
-                                {{-- Tombol ini bisa diarahkan ke form tambah prestasi --}}
+                                @if (Auth::user()->hasRole('pembina ekskul'))
                                 <a href="{{ route('prestasi-ekskul.create', ['ekskul_id' => $ekstrakurikuler->id]) }}" class="btn btn-primary">
                                     Tambah Prestasi
                                 </a>
+                                @endif
                             </div>
                         </div>
                         <div class="card-body">

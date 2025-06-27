@@ -62,9 +62,11 @@
                             <option value="{{ $period->id }}">{{ $period->tahun_ajaran }}</option>
                         @endforeach
                     </select> --}}
+                    @if (Auth::user()->hasRole('wakamad kurikulum'))
                     <a href="{{ route('jadwal.create') }}" class="btn btn-primary ml-2">
                         <i class="fas fa-plus"></i> Buat Jadwal Baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -128,6 +130,7 @@
                                                             <div class="schedule-entry">
                                                                 <span class="subject">{{ $schedule->subject->nama_mapel ?? 'N/A' }}</span>
                                                                 <span class="teacher">{{ $schedule->teacher->name ?? 'N/A' }}</span>
+                                                                @if (Auth::user()->hasRole('wakamad kurikulum'))
                                                                 <div class="schedule-actions">
                                                                     <a href="{{ route('jadwal.edit', $schedule->id) }}" class="btn btn-sm btn-light" title="Edit"><i class="fas fa-pencil-alt"></i></a>
 
@@ -141,6 +144,7 @@
 
                                                                     <a href="{{ route('jadwal.destroy', $schedule->id) }}" class="btn btn-sm btn-light delete-item" title="Hapus"><i class="fas fa-trash-alt"></i></a>
                                                                 </div>
+                                                                @endif
                                                             </div>
                                                             
                                                         @else

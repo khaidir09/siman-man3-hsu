@@ -54,10 +54,11 @@
             <div class="card-header">
                 <h4>Semua Data Alumni</h4>
                 <div class="card-header-action">
-                    {{-- Mengarahkan ke route untuk membuat data alumni baru --}}
+                    @if (Auth::user()->hasRole('tata usaha'))
                     <a href="{{ route('alumni.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -73,7 +74,9 @@
                                 <th>Kelas Terakhir</th>
                                 <th>Melanjutkan</th>
                                 <th>Nama Tempat</th>
+                                @if (Auth::user()->hasRole('tata usaha'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -93,6 +96,7 @@
                                     </td>
                                     <td>{{ $item->melanjutkan }}</td>
                                     <td>{{ $item->nama_tempat }}</td>
+                                    @if (Auth::user()->hasRole('tata usaha'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             {{-- Mengarahkan ke route edit untuk alumni --}}
@@ -106,6 +110,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

@@ -10,10 +10,11 @@
             <div class="card-header">
                 <h4>Semua Data Jadwal Umum</h4>
                 <div class="card-header-action">
-                    {{-- Mengarahkan ke route untuk membuat jadwal umum baru --}}
+                    @if (Auth::user()->hasRole('wakamad kurikulum'))
                     <a href="{{ route('jadwal-umum.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -28,7 +29,9 @@
                                 <th>Waktu</th>
                                 <th>Tahun Ajaran</th>
                                 <th>Keterangan</th>
+                                @if (Auth::user()->hasRole('wakamad kurikulum'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -45,6 +48,7 @@
                                     </td>
                                     <td>{{ $schedule->academicPeriod->tahun_ajaran ?? 'N/A' }} {{ $schedule->academicPeriod->semester }}</td>
                                     <td>{{ $schedule->keterangan ?? '-' }}</td>
+                                    @if (Auth::user()->hasRole('wakamad kurikulum'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             {{-- Tombol Edit --}}
@@ -58,6 +62,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

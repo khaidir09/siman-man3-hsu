@@ -10,9 +10,11 @@
             <div class="card-header">
                 <h4>Semua Prestasi Ekstrakurikuler</h4>
                 <div class="card-header-action">
+                    @if (Auth::user()->hasRole('pembina ekskul'))
                     <a href="{{ route('prestasi-ekskul.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -52,6 +54,7 @@
                                                     <i class="fas fa-image"></i>
                                                 </a>
                                             @endif
+                                            @if (Auth::user()->hasRole('pembina ekskul'))
                                             {{-- Tombol Edit --}}
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('prestasi-ekskul.edit', $achievement->id) }}"
                                                 class="btn btn-primary rounded ml-2"><i class="fas fa-edit"></i>
@@ -61,6 +64,7 @@
                                                 class="btn btn-danger delete-item rounded ml-2"><i
                                                     class="fas fa-trash-alt"></i>
                                             </a>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

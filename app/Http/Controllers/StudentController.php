@@ -55,11 +55,9 @@ class StudentController extends Controller
      * Display the specified resource.
      * (Halaman ini bisa menampilkan profil lengkap siswa, termasuk ekskul yang diikuti)
      */
-    public function show(Student $student)
+    public function show()
     {
-        // Load relasi yang dibutuhkan untuk halaman detail
-        $student->load(['room.major', 'extracurriculars']);
-        return view('siswa.show', compact('student'));
+        //
     }
 
     /**

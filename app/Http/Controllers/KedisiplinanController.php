@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\LateArrival;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class KedisiplinanController extends Controller
 {
@@ -16,7 +17,28 @@ class KedisiplinanController extends Controller
      */
     public function index()
     {
-        $arrivals = LateArrival::all();
+        // 1. Dapatkan pengguna yang sedang login
+        $user = Auth::user();
+
+        // 2. Terapkan kondisi berdasarkan peran (role)
+        if ($user->hasRole(['kepala madrasah', 'wakamad kesiswaan'])) {
+            // Jika Kepala Madrasah atau Wakamad, tampilkan semua data
+            $arrivals = LateArrival::with('room')->latest()->get();
+        } elseif ($user->hasRole('guru')) {
+            // Jika guru, tampilkan hanya data di mana nama 'guru_piket'
+            // sama dengan nama pengguna yang login
+            $arrivals = LateArrival::with('room')
+                ->where('guru_piket', $user->name)
+                ->latest()
+                ->get();
+        } else {
+            // Untuk peran lain (jika ada), jangan tampilkan data apa pun
+            $arrivals = collect(); // Membuat collection kosong
+        }
+
+
+
+        // 3. Kirim data yang sudah difilter ke view
         return view('terlambat.index', compact('arrivals'));
     }
 
@@ -77,7 +99,8 @@ class KedisiplinanController extends Controller
     public function create()
     {
         $rooms = Room::all();
-        return view('terlambat.create', compact('rooms'));
+        $guru = User::role('guru')->get();
+        return view('terlambat.create', compact('rooms', 'guru'));
     }
 
     /**

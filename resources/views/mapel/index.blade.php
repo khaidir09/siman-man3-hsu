@@ -10,10 +10,11 @@
             <div class="card-header">
                 <h4>Semua Data Mata Pelajaran</h4>
                 <div class="card-header-action">
-                    {{-- Mengarahkan ke route untuk membuat data mata pelajaran baru --}}
+                    @if (Auth::user()->hasRole('wakamad kurikulum'))
                     <a href="{{ route('mapel.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -26,7 +27,9 @@
                                 <th>Nama Mata Pelajaran</th>
                                 <th>Kode Mapel</th>
                                 <th>Kelompok</th>
+                                @if (Auth::user()->hasRole('wakamad kurikulum'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -39,6 +42,7 @@
                                     {{-- Menggunakan null coalescing operator untuk menampilkan '-' jika kode kosong --}}
                                     <td>{{ $subject->kode_mapel ?? '-' }}</td>
                                     <td>Kelompok {{ $subject->kelompok_mapel }}</td>
+                                    @if (Auth::user()->hasRole('wakamad kurikulum'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             {{-- Tombol Edit --}}
@@ -52,6 +56,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

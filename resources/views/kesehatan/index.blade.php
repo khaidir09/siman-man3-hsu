@@ -50,10 +50,11 @@
             <div class="card-header">
                 <h4>Semua Usaha Kesehatan Sekolah</h4>
                 <div class="card-header-action">
-                    {{-- Mengarahkan ke route untuk membuat data kesehatan baru --}}
+                    @if (Auth::user()->hasRole('uks'))
                     <a href="{{ route('kesehatan.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -71,7 +72,9 @@
                                 <th>Alamat</th>
                                 <th>Keluhan</th>
                                 <th>Hasil Pemeriksaan</th>
+                                @if (Auth::user()->hasRole('uks'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -92,6 +95,7 @@
                                     {{-- Menampilkan data spesifik untuk kesehatan --}}
                                     <td>{{ $item->keluhan }}</td>
                                     <td>{!! $item->hasil_pemeriksaan !!}</td>
+                                    @if (Auth::user()->hasRole('uks'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             {{-- Mengarahkan ke route edit untuk kesehatan --}}
@@ -105,6 +109,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

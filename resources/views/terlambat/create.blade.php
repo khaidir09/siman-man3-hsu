@@ -27,11 +27,22 @@
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Guru Piket <span class="text-danger">*</span></label>
-                        <input name="guru_piket" type="text" class="form-control" >
+                        @if (Auth::user()->hasRole('kepala madrasah') || Auth::user()->hasRole('wakamad kesiswaan') )
+                        <label for="guru_piket" class="mt-3">Guru Piket <span class="text-danger">*</span></label>
+                        <select name="guru_piket" id="guru_piket" class="form-control">
+                            <option value="">Pilih Guru Piket</option>
+                            @foreach ($guru as $user)
+                                <option value="{{ $user->name }}" {{ old('guru_piket') == $user->name ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
                         @error('guru_piket')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
+                        @else
+                            <input type="hidden" name="guru_piket" value="{{ Auth::user()->name }}">
+                        @endif
 
                         <label for="" class="mt-3">Nama Siswa <span class="text-danger">*</span></label>
                         <input name="nama_siswa" type="text" class="form-control" >

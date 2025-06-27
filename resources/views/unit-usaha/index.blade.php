@@ -50,10 +50,11 @@
             <div class="card-header">
                 <h4>Semua Transaksi Unit Usaha</h4>
                 <div class="card-header-action">
-                    {{-- Mengarahkan ke route untuk membuat transaksi koperasi baru --}}
+                    @if (Auth::user()->hasRole('koperasi'))
                     <a href="{{ route('unit-usaha.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat Baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -68,7 +69,9 @@
                                 <th>Keterangan</th>
                                 <th>Total</th>
                                 <th>Saldo Kas</th>
+                                @if (Auth::user()->hasRole('koperasi')) 
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -97,6 +100,7 @@
                                     {{-- Formatting angka menjadi format Rupiah --}}
                                     <td>Rp {{ number_format($item->total, 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($item->jumlah_kas, 0, ',', '.') }}</td>
+                                    @if (Auth::user()->hasRole('koperasi'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             {{-- Mengarahkan ke route destroy untuk koperasi --}}
@@ -107,6 +111,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

@@ -10,10 +10,11 @@
             <div class="card-header">
                 <h4>Semua Data Anggota Ekstrakurikuler</h4>
                 <div class="card-header-action">
-                    {{-- Mengarahkan ke route untuk membuat data siswa baru --}}
+                    @if (Auth::user()->hasRole('pembina ekskul'))
                     <a href="{{ route('siswa.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -27,7 +28,9 @@
                                 <th>Nama Siswa</th>
                                 <th>Kelas</th>
                                 <th>Status</th>
+                                @if (Auth::user()->hasRole('pembina ekskul'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -58,12 +61,9 @@
                                             <span class="badge badge-danger">{{ $student->status }}</span>
                                         @endif
                                     </td>
+                                    @if (Auth::user()->hasRole('pembina ekskul'))
                                     <td>
                                         <div class="btn-group" role="group">
-                                             {{-- Tombol Detail/Show --}}
-                                            <a data-toggle="tooltip" data-placement="bottom" title="Detail" href="{{ route('siswa.show', $student->id) }}"
-                                                class="btn btn-info rounded"><i class="fas fa-eye"></i>
-                                            </a>
                                             {{-- Tombol Edit --}}
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('siswa.edit', $student->id) }}"
                                                 class="btn btn-primary rounded ml-2"><i class="fas fa-edit"></i>
@@ -75,6 +75,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

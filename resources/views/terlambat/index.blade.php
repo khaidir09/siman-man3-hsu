@@ -50,9 +50,11 @@
             <div class="card-header">
                 <h4>Semua Data Pelanggaran Kedisiplinan</h4>
                 <div class="card-header-action">
+                    @if (Auth::user()->hasRole('wakamad kesiswaan') || Auth::user()->hasRole('guru'))
                     <a href="{{ route('terlambat.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -69,18 +71,21 @@
                                 <th>Kelas</th>
                                 <th>Waktu Datang</th>
                                 <th>Guru Piket</th>
+                                @if (Auth::user()->hasRole('wakamad kesiswaan') || Auth::user()->hasRole('guru'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($arrivals as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('d F Y') }}</td>
                                     <td>{{ $item->nama_siswa }}</td>
                                     <td>{{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->nama_jurusan }}</td>
                                     <td>{{ $item->waktu_datang }}</td>
                                     <td>{{ $item->guru_piket }}</td>
+                                    @if (Auth::user()->hasRole('wakamad kesiswaan') || Auth::user()->hasRole('guru'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('terlambat.edit', $item->id) }}"
@@ -92,6 +97,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
 

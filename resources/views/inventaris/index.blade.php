@@ -50,9 +50,11 @@
             <div class="card-header">
                 <h4>Semua Inventaris</h4>
                 <div class="card-header-action">
+                    @if (Auth::user()->hasRole('wakamad sarpras'))
                     <a href="{{ route('inventaris.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -69,7 +71,9 @@
                                 <th>Jumlah</th>
                                 <th>Biaya</th>
                                 <th>Total Biaya</th>
+                                @if (Auth::user()->hasRole('wakamad sarpras'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -81,6 +85,7 @@
                                     <td>{{ $item->jumlah }}</td>
                                     <td>Rp. {{ number_format($item->biaya, 0, ',', '.') }}</td>
                                     <td>Rp. {{ number_format($item->total_biaya, 0, ',', '.') }}</td>
+                                    @if (Auth::user()->hasRole('wakamad sarpras'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('inventaris.edit', $item->id) }}"
@@ -92,6 +97,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
 
