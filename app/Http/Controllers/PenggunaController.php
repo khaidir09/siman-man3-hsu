@@ -41,7 +41,7 @@ class PenggunaController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
-            'role' => 'required',
+            'nip' => 'string|max:255|nullable|unique:users,nip',
         ]);
 
         // Create a new user
@@ -49,17 +49,11 @@ class PenggunaController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
-            'classes_id' => $request->input('classes_id'),
+            'nip' => $request->input('nip'),
         ]);
 
-        $roleId = $validatedData['role'];
-        $role = Role::findById($roleId);
-
-        if ($role) {
-            $user->assignRole($role);
-        } else {
-            return redirect()->back()->withErrors(['role' => 'Peran yang dipilih tidak valid.'])->withInput();
-        }
+        /** assign the role to user */
+        $user->assignRole($request->role);
 
         toast('Pengguna berhasil dibuat.', 'success')->width('350');
 
@@ -81,9 +75,8 @@ class PenggunaController extends Controller
     {
         $user = User::findOrFail($id);
         $roles = Role::all();
-        $rooms = Room::with('major')->get();
 
-        return view('pengguna.edit', compact('user', 'roles', 'rooms'));
+        return view('pengguna.edit', compact('user', 'roles'));
     }
 
     /**
@@ -97,12 +90,13 @@ class PenggunaController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'nip' => 'string|max:255|unique:users,nip,' . $user->id,
         ]);
 
         // Update user details
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        $user->classes_id = $request->input('classes_id');
+        $user->nip = $request->input('nip');
         $user->roles()->sync($request->input('role', [])); // Sync roles
 
 

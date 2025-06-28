@@ -37,21 +37,16 @@
                         <select name="role" class="form-control">
                             <option value="">Pilih Peran</option>
                             @foreach ($roles as $role)
-                                <option value="{{ $role->id }}" class="text-uppercase">{{ $role->name }}</option>
+                                <option value="{{ $role->name }}" class="text-uppercase">{{ $role->name }}</option>
                             @endforeach
                         </select>
                         @error('role')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Kelas</label>
-                        <select name="classes_id" class="form-control">
-                            <option value="">Pilih Kelas</option>
-                            @foreach ($rooms as $room)
-                                <option value="{{ $room->id }}" class="text-uppercase">{{ $room->tingkat }} {{ $room->rombongan }} {{ $room->nama_jurusan }}</option>
-                            @endforeach
-                        </select>
-                        @error('classes_id')
+                        <label for="" class="mt-3">NIP</label>
+                        <input name="nip" type="number" class="form-control" >
+                        @error('nip')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>

@@ -48,18 +48,9 @@
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Kelas</label>
-                        <select name="classes_id" class="form-control">
-                            <option value="">Tidak ada kelas</option>
-                            @foreach ($rooms as $room)
-                                <option value="{{ $room->id }}"
-                                    {{-- Ambil role pertama user (jika ada) dan bandingkan ID-nya --}}
-                                    {{ $user->classes_id == $room->id ? 'selected' : '' }}>
-                                    {{ $room->tingkat}} {{ $room->rombongan}} {{ $room->nama_jurusan}}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('classes_id')
+                        <label for="" class="mt-3">NIP</label>
+                        <input name="nip" type="number" value="{{ $user->nip }}" class="form-control" >
+                        @error('nip')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
