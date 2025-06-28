@@ -5,7 +5,7 @@
             <h1>Dasbor</h1>
         </div>
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
                     <div class="card-icon shadow-primary bg-primary">
                         <i class="fas fa-user"></i>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
                     <div class="card-icon shadow-primary bg-primary">
                         <i class="fas fa-archive"></i>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
                     <div class="card-icon shadow-primary bg-primary">
                         <i class="fas fa-archive"></i>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
                     <div class="card-icon shadow-primary bg-primary">
                         <i class="fas fa-trophy"></i>
@@ -65,37 +65,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                        <h4>Pelanggaran</h4>
-                        </div>
-                        <div class="card-body">
-                            {{ $pelanggaran }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                        <h4>Alumni</h4>
-                        </div>
-                        <div class="card-body">
-                            {{ $alumni }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
                     <div class="card-icon shadow-primary bg-primary">
                         <i class="fas fa-heart"></i>
@@ -110,9 +80,39 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
+                    <div class="card-icon shadow-secondary bg-secondary">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                        <h4>Pelanggaran</h4>
+                        </div>
+                        <div class="card-body">
+                            {{ $pelanggaran }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon shadow-secondary bg-secondary">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                        <h4>Alumni</h4>
+                        </div>
+                        <div class="card-body">
+                            {{ $alumni }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon shadow-secondary bg-secondary">
                         <i class="fas fa-box"></i>
                     </div>
                     <div class="card-wrap">
@@ -125,9 +125,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
+                    <div class="card-icon shadow-secondary bg-secondary">
                         <i class="fas fa-stethoscope"></i>
                     </div>
                     <div class="card-wrap">
@@ -140,9 +140,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
+                    <div class="card-icon shadow-secondary bg-secondary">
                         <i class="fas fa-wallet"></i>
                     </div>
                     <div class="card-wrap">
@@ -155,9 +155,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
+                    <div class="card-icon shadow-secondary bg-secondary">
                         <i class="fas fa-medal"></i>
                     </div>
                     <div class="card-wrap">
@@ -170,9 +170,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
+                    <div class="card-icon shadow-secondary bg-secondary">
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="card-wrap">
@@ -185,9 +185,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card card-statistic-1">
-                    <div class="card-icon shadow-primary bg-primary">
+                    <div class="card-icon shadow-secondary bg-secondary">
                         <i class="fas fa-medal"></i>
                     </div>
                     <div class="card-wrap">
