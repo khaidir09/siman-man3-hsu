@@ -41,6 +41,7 @@ class PenggunaController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
+            'role' => 'required|exists:roles,name',
             'nip' => 'string|max:255|nullable|unique:users,nip',
         ]);
 
@@ -90,6 +91,7 @@ class PenggunaController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'required|string|min:8',
             'nip' => 'string|max:255|unique:users,nip,' . $user->id,
         ]);
 
