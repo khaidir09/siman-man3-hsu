@@ -66,7 +66,7 @@
             <div class="card-header">
                 <h4>Semua Prestasi Akademik</h4>
                 <div class="card-header-action">
-                    @if (Auth::user()->hasRole('wakamad kurikulum'))
+                    @if (Auth::user()->hasRole('wakamad kesiswaan'))
                     <a href="{{ route('prestasi-akademik.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Buat baru
                     </a>
@@ -90,7 +90,7 @@
                                 <th>Nilai rata-rata</th>
                                 <th>Ranking</th>
                                 <th>TP/Semester</th>
-                                @if (Auth::user()->hasRole('wakamad kurikulum'))
+                                @if (Auth::user()->hasRole('wakamad kesiswaan'))
                                 <th>Aksi</th>
                                 @endif
                             </tr>
@@ -107,7 +107,7 @@
                                     <td>{{ $item->rata_rata }}</td>
                                     <td>{{ $item->ranking }}</td>
                                     <td>{{ $item->period->tahun_ajaran }} / {{ $item->period->semester }}</td>
-                                    @if (Auth::user()->hasRole('wakamad kurikulum'))
+                                    @if (Auth::user()->hasRole('wakamad kesiswaan'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('prestasi-akademik.edit', $item->id) }}"

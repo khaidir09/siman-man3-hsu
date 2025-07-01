@@ -33,14 +33,14 @@
                 <a href="{{ route('prestasi-akademik.index') }}" class="nav-link"><i class="fas fa-trophy"></i><span>Prestasi Akademik</span></a>
             </li>
 
-            <li class="{{ Route::is('alumni*') ? 'active' : '' }}">
-                <a href="{{ route('alumni.index') }}" class="nav-link"><i class="fas fa-graduation-cap"></i><span>Alumni</span></a>
+            <li class="{{ Route::is('terlambat*') ? 'active' : '' }}">
+                <a href="{{ route('terlambat.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Pelanggaran Kedisiplinan</span></a>
             </li>
             @endif
 
-            @if (Auth::user()->hasRole('wakamad kesiswaan') || Auth::user()->hasRole('kepala madrasah') || Auth::user()->hasRole('guru'))
-            <li class="{{ Route::is('terlambat*') ? 'active' : '' }}">
-                <a href="{{ route('terlambat.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Pelanggaran Kedisiplinan</span></a>
+            @if (Auth::user()->hasRole('tata usaha') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('alumni*') ? 'active' : '' }}">
+                <a href="{{ route('alumni.index') }}" class="nav-link"><i class="fas fa-graduation-cap"></i><span>Alumni</span></a>
             </li>
             @endif
 
