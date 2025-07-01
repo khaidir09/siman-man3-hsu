@@ -21,16 +21,20 @@
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Kelas <span class="text-danger">*</span></label>
-                        <select name="rooms_id" class="form-control">
-                            <option value="">Pilih Kelas</option>
-                            @foreach ($rooms as $room)
-                                <option value="{{ $room->id }}" class="text-uppercase">{{ $room->tingkat }} {{ $room->rombongan }} {{ $room->nama_jurusan }}</option>
-                            @endforeach
-                        </select>
-                        @error('rooms_id')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
+                        @if (Auth::user()->hasRole('wali kelas'))
+                            <input type="hidden" name="rooms_id" value="{{ Auth::user()->roomClass->id }}">
+                        @else
+                            <label for="" class="mt-3">Kelas <span class="text-danger">*</span></label>
+                            <select name="rooms_id" class="form-control">
+                                <option value="">Pilih Kelas</option>
+                                @foreach ($rooms as $room)
+                                    <option value="{{ $room->id }}" class="text-uppercase">{{ $room->tingkat }} {{ $room->rombongan }} {{ $room->nama_jurusan }}</option>
+                                @endforeach
+                            </select>
+                            @error('rooms_id')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        @endif
 
                         <label for="" class="mt-3">Izin <span class="text-danger">*</span></label>
                         <input name="izin" type="number" class="form-control" >
@@ -57,7 +61,7 @@
                         @enderror
 
                         <label for="" class="mt-3">Jumlah Siswa <span class="text-danger">*</span></label>
-                        <input name="jumlah_siswa" type="number" class="form-control" >
+                        <input name="jumlah_siswa" type="number" class="form-control">
                         @error('jumlah_siswa')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror

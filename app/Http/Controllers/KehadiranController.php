@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class KehadiranController extends Controller
 {
@@ -16,7 +17,31 @@ class KehadiranController extends Controller
      */
     public function index()
     {
-        $attendances = Attendance::all();
+        // 1. Dapatkan pengguna yang sedang login
+        $user = Auth::user();
+
+        // 2. Mulai query dasar dengan eager loading untuk efisiensi
+        $query = Attendance::with(['room.waliKelas']);
+
+        // 3. Terapkan filter berdasarkan peran (role) pengguna
+        if ($user->hasRole('wali kelas')) {
+            // Jika pengguna adalah Wali Kelas, filter data kehadirannya.
+            // 'room' adalah nama relasi di model MonthlyAttendance ke model Room.
+            // 'wali_kelas_id' adalah nama kolom di tabel rooms.
+            $query->whereHas('room', function ($q) use ($user) {
+                $q->where('wali_kelas_id', $user->id);
+            });
+        } elseif (!$user->hasRole('kepala madrasah')) {
+            // Jika BUKAN Kepala Madrasah ATAU Wali Kelas, jangan tampilkan data apa pun
+            // Ini adalah pengaman untuk peran lain seperti guru biasa.
+            $query->whereRaw('1 = 0'); // Kondisi yang tidak akan pernah terpenuhi
+        }
+        // Jika pengguna adalah Kepala Madrasah, tidak perlu filter tambahan,
+        // query akan mengambil semua data.
+
+        // 4. Eksekusi query dan kirim hasilnya ke view
+        $attendances = $query->orderBy('bulan', 'desc')->get();
+
         return view('kehadiran.index', compact('attendances'));
     }
 

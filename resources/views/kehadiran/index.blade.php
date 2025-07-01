@@ -50,9 +50,11 @@
             <div class="card-header">
                 <h4>Semua Data Kehadiran</h4>
                 <div class="card-header-action">
-                    <a href="{{ route('kehadiran.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Buat baru
-                    </a>
+                    @if (Auth::user()->hasRole('wali kelas'))
+                        <a href="{{ route('kehadiran.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Buat baru
+                        </a>
+                    @endif
                 </div>
             </div>
 
@@ -73,7 +75,9 @@
                                 <th>Hari Efektif</th>
                                 <th>Jumlah Siswa</th>
                                 <th>Rata-rata Kehadiran</th>
+                                @if (Auth::user()->hasRole('wali kelas'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -89,6 +93,7 @@
                                     <td>{{ $item->hari_efektif }}</td>
                                     <td>{{ $item->jumlah_siswa }}</td>
                                     <td>{{ $item->rata_rata }} %</td>
+                                    @if (Auth::user()->hasRole('wali kelas'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('kehadiran.edit', $item->id) }}"
@@ -100,6 +105,7 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
 

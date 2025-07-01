@@ -22,19 +22,23 @@
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Kelas</label>
-                        <select name="rooms_id" class="form-control">
-                            <option value="">Pilih Kelas</option>
-                            @foreach ($rooms as $room)
-                                <option value="{{ $room->id }}" {{-- Cek apakah ID jurusan saat ini sama dengan majors_id pada kelas yang diedit --}}
-                                    {{ $kehadiran->rooms_id == $room->id ? 'selected' : '' }}>
-                                    {{ $room->tingkat }} {{ $room->rombongan }} {{ $room->nama_jurusan }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('rooms_id')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
+                        @if (Auth::user()->hasRole('wali kelas'))
+                            <input type="hidden" name="rooms_id" value="{{ Auth::user()->roomClass->id }}">
+                        @else
+                            <label for="" class="mt-3">Kelas</label>
+                            <select name="rooms_id" class="form-control">
+                                <option value="">Pilih Kelas</option>
+                                @foreach ($rooms as $room)
+                                    <option value="{{ $room->id }}" {{-- Cek apakah ID jurusan saat ini sama dengan majors_id pada kelas yang diedit --}}
+                                        {{ $kehadiran->rooms_id == $room->id ? 'selected' : '' }}>
+                                        {{ $room->tingkat }} {{ $room->rombongan }} {{ $room->nama_jurusan }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('rooms_id')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        @endif
 
                         <label for="" class="mt-3">Izin</label>
                         <input name="izin" type="number" class="form-control" value="{{ $kehadiran->izin }}">
