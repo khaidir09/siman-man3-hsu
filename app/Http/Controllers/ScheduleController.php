@@ -25,7 +25,7 @@ class ScheduleController extends Controller
     {
         $academicPeriods = AcademicPeriod::all();
         $rooms = Room::with('waliKelas')->orderBy('tingkat')->get();
-        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
         $timeSlots = TimeSlot::orderBy('jam_ke')->get();
         $schedules = Schedule::with(['subject', 'teacher'])
             ->get()
