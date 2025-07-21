@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use App\Models\User;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -36,15 +37,6 @@ class PenggunaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8',
-            'role' => 'required|exists:roles,name',
-            'nip' => 'string|max:255|nullable|unique:users,nip',
-        ]);
-
         // Create a new user
         $user = User::create([
             'name' => $request->input('name'),
@@ -55,6 +47,16 @@ class PenggunaController extends Controller
 
         /** assign the role to user */
         $user->assignRole($request->role);
+
+        if ($request->role === 'siswa') {
+            Student::create([
+                'user_id' => $user->id,
+                'nama_lengkap' => $user->name,
+                'nisn' => $request->input('nisn'),
+                'room_id' => $request->input('room_id'),
+                'status' => $request->input('status'),
+            ]);
+        }
 
         toast('Pengguna berhasil dibuat.', 'success')->width('350');
 
