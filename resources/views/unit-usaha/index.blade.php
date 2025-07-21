@@ -11,7 +11,7 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h1>Unit Usaha</h1>
+            <h1>Koperasi</h1>
             <div class="section-header-action ml-auto">
                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#printModal">
                     <i class="fas fa-print"></i> Cetak Laporan
@@ -23,7 +23,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Cetak Laporan Unit Usaha</h5>
+                        <h5 class="modal-title">Cetak Laporan Koperasi</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -48,7 +48,7 @@
 
         <div class="card card-primary">
             <div class="card-header">
-                <h4>Semua Transaksi Unit Usaha</h4>
+                <h4>Semua Transaksi Koperasi</h4>
                 <div class="card-header-action">
                     @if (Auth::user()->hasRole('koperasi'))
                     <a href="{{ route('unit-usaha.create') }}" class="btn btn-primary">

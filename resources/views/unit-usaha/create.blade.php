@@ -3,12 +3,12 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h1>Unit Usaha</h1>
+            <h1>Koperasi</h1>
         </div>
 
         <div class="card card-primary">
             <div class="card-header">
-                <h4>Buat Transaksi Unit Usaha</h4>
+                <h4>Buat Transaksi Koperasi</h4>
             </div>
             <div class="card-body">
                 {{-- Mengarahkan form action ke route store untuk koperasi --}}

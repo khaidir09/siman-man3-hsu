@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Unit Usaha</title>
+    <title>Laporan Koperasi</title>
     <style>
         /* Mengatur dasar halaman */
         body {
@@ -125,7 +125,7 @@
     <hr class="double-line">
     
     <div class="report-title-section">
-        LAPORAN UNIT USAHA MAN 3 HULU SUNGAI UTARA<br>
+        LAPORAN KOPERASI MAN 3 HULU SUNGAI UTARA<br>
         PERIODE {{ $periode }}
     </div>
     <table style="margin-bottom: 20px;">
@@ -166,7 +166,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="col-center">Tidak ada data unit usaha untuk periode ini.</td>
+                    <td colspan="6" class="col-center">Tidak ada data koperasi untuk periode ini.</td>
                 </tr>
             @endforelse
         </tbody>
