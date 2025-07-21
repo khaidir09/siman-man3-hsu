@@ -89,7 +89,7 @@
                                     {{-- Menampilkan kelas dari relasi 'room' --}}
                                     <td>
                                         {{-- Menambahkan null safe operator (??) untuk keamanan jika relasi/data kosong --}}
-                                        {{ $item->room->tingkat ?? '' }}-{{ $item->room->rombongan ?? '' }} {{ $item->room->major->nama_jurusan ?? '' }}
+                                        {{ $item->kelas }}
                                     </td>
                                     <td>{!! $item->alamat !!}</td>
                                     {{-- Menampilkan data spesifik untuk kesehatan --}}

@@ -8,8 +8,8 @@ class HealthCare extends Model
 {
     protected $guarded = [];
 
-    public function room()
+    public function student()
     {
-        return $this->belongsTo(Room::class, 'rooms_id', 'id');
+        return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 }

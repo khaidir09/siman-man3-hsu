@@ -27,24 +27,15 @@
 
                     <div class="form-group">
                         <label for="nama_siswa">Nama Siswa <span class="text-danger">*</span></label>
-                        <input name="nama_siswa" id="nama_siswa" type="text" class="form-control" value="{{ old('nama_siswa', $kesehatan->nama_siswa) }}">
-                        @error('nama_siswa')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="rooms_id">Kelas <span class="text-danger">*</span></label>
-                        <select name="rooms_id" id="rooms_id" class="form-control">
-                            <option value="">Pilih Kelas</option>
-                            @foreach ($rooms as $room)
-                                {{-- Kondisi untuk memilih kelas yang sesuai --}}
-                                <option value="{{ $room->id }}" {{ old('rooms_id', $kesehatan->rooms_id) == $room->id ? 'selected' : '' }} class="text-uppercase">
-                                    {{ $room->tingkat }} {{ $room->rombongan }} {{ $room->major->nama_jurusan ?? '' }}
+                        <select name="student_id" class="form-control">
+                            <option value="">Pilih Siswa</option>
+                            @foreach ($siswa as $siswa)
+                                <option value="{{ $siswa->id }}" {{ old('student_id', $kesehatan->student_id) == $siswa->id ? 'selected' : '' }} class="text-uppercase">
+                                    {{ $siswa->nama_lengkap }} ({{ $siswa->room->tingkat }} {{ $siswa->room->rombongan }} {{ $siswa->room->nama_jurusan }})
                                 </option>
                             @endforeach
                         </select>
-                        @error('rooms_id')
+                        @error('student_id')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>

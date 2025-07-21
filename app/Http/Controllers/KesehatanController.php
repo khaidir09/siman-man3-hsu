@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\Student;
 use App\Models\HealthCare;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\KesehatanNotification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class KesehatanController extends Controller
 {
@@ -17,7 +21,7 @@ class KesehatanController extends Controller
     public function index()
     {
         // Mengambil semua data kesehatan
-        $kesehatan = HealthCare::with('room')->latest()->get(); // Gunakan eager loading untuk efisiensi
+        $kesehatan = HealthCare::with('student')->latest()->get(); // Gunakan eager loading untuk efisiensi
         // Mengarahkan ke view kesehatan.index
         return view('kesehatan.index', compact('kesehatan'));
     }
@@ -38,7 +42,7 @@ class KesehatanController extends Controller
         // 3. Ambil semua data yang diperlukan untuk laporan
 
         // Ganti 'BimbinganKonseling' dengan nama model Anda yang sebenarnya
-        $kesehatan = HealthCare::with(['room'])
+        $kesehatan = HealthCare::with(['student'])
             ->whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)
             ->orderBy('tanggal', 'asc')
@@ -78,9 +82,8 @@ class KesehatanController extends Controller
      */
     public function create()
     {
-        $rooms = Room::all();
-        // Mengarahkan ke view kesehatan.create
-        return view('kesehatan.create', compact('rooms'));
+        $siswa = Student::where('status', 'Aktif')->get();
+        return view('kesehatan.create', compact('siswa'));
     }
 
     /**
@@ -90,8 +93,7 @@ class KesehatanController extends Controller
     {
         // Validasi data sesuai skema tabel health_cares
         $request->validate([
-            'nama_siswa' => 'required|string|max:255',
-            'rooms_id' => 'required|exists:rooms,id',
+            'student_id' => 'required|exists:students,id',
             'keluhan' => 'required|string|max:255',
             'orang_tua' => 'required|string|max:255',
             'alamat' => 'required|string',
@@ -99,16 +101,27 @@ class KesehatanController extends Controller
             'tanggal' => 'required|date',
         ]);
 
+        $siswa = Student::with('user')->findOrFail($request->input('student_id'));
+
         // Membuat record baru menggunakan model HealthCare
-        HealthCare::create([
-            'nama_siswa' => $request->input('nama_siswa'),
-            'rooms_id' => $request->input('rooms_id'),
+        $newHealthCare = HealthCare::create([
+            'student_id' => $request->input('student_id'),
+            'nama_siswa' => $siswa->nama_lengkap,
+            'kelas' => $siswa->room->tingkat . ' ' . $siswa->room->rombongan . ' ' . $siswa->room->nama_jurusan,
             'keluhan' => $request->input('keluhan'),
             'orang_tua' => $request->input('orang_tua'),
             'alamat' => $request->input('alamat'),
             'hasil_pemeriksaan' => $request->input('hasil_pemeriksaan'),
             'tanggal' => $request->input('tanggal'),
         ]);
+
+        if ($siswa->user && $siswa->user->email) {
+            try {
+                Mail::to($siswa->user->email)->send(new KesehatanNotification($newHealthCare));
+            } catch (\Exception $e) {
+                Log::error('Gagal mengirim email notifikasi UKS: ' . $e->getMessage());
+            }
+        }
 
         // Notifikasi Toast
         toast('Data Kesehatan berhasil dibuat.', 'success')->width('350');
@@ -132,10 +145,10 @@ class KesehatanController extends Controller
     {
         // Mengambil data kesehatan spesifik berdasarkan ID
         $kesehatan = HealthCare::findOrFail($id);
-        $rooms = Room::all();
+        $siswa = Student::where('status', 'Aktif')->get();
 
         // Mengarahkan ke view kesehatan.edit dengan data yang relevan
-        return view('kesehatan.edit', compact('kesehatan', 'rooms'));
+        return view('kesehatan.edit', compact('kesehatan', 'siswa'));
     }
 
     /**
@@ -148,8 +161,7 @@ class KesehatanController extends Controller
 
         // Validasi data (sama seperti di method store)
         $request->validate([
-            'nama_siswa' => 'required|string|max:255',
-            'rooms_id' => 'required|exists:rooms,id',
+            'student_id' => 'required|exists:students,id',
             'keluhan' => 'required|string|max:255',
             'orang_tua' => 'required|string|max:255',
             'alamat' => 'required|string',
@@ -157,10 +169,13 @@ class KesehatanController extends Controller
             'tanggal' => 'required|date',
         ]);
 
+        $siswa = Student::with('user')->findOrFail($request->input('student_id'));
+
         // Meng-update record
         $kesehatan->update([
-            'nama_siswa' => $request->input('nama_siswa'),
-            'rooms_id' => $request->input('rooms_id'),
+            'student_id' => $request->input('student_id'),
+            'nama_siswa' => $siswa->nama_lengkap,
+            'kelas' => $siswa->room->tingkat . ' ' . $siswa->room->rombongan . ' ' . $siswa->room->nama_jurusan,
             'keluhan' => $request->input('keluhan'),
             'orang_tua' => $request->input('orang_tua'),
             'alamat' => $request->input('alamat'),

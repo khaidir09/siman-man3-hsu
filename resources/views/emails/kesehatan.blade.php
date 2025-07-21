@@ -1,28 +1,4 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-    <h2>Halo, {{ $counseling->nama_siswa }}</h2>
-    <p>Anda telah menerima catatan bimbingan konseling baru pada tanggal <strong>{{ \Carbon\Carbon::parse($counseling->tanggal)->locale('id')->translatedFormat('d F Y') }}</strong>.</p>
-    <p>Berikut adalah detailnya:</p>
-    <ul>
-        <li><strong>Uraian Masalah:</strong> {{ $counseling->uraian_masalah }}</li>
-        <li><strong>Pemecahan Masalah:</strong> {{ $counseling->pemecahan_masalah }}</li>
-    </ul>
-    <p>
-        Jenis Bimbingan:
-        @if($counseling->is_pribadi) Pribadi @endif
-        @if($counseling->is_sosial) Sosial @endif
-        @if($counseling->is_belajar) Belajar @endif
-        @if($counseling->is_karir) Karir @endif
-    </p>
-    <p>Silakan hubungi Guru BK Anda jika ada pertanyaan lebih lanjut.</p>
-</body>
-</html>
-
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -80,41 +56,32 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="header">Notifikasi Bimbingan Konseling</h1>
+        <h1 class="header">Informasi Kesehatan UKS</h1>
         <div class="content">
             <p>
-                Halo, <strong>{{ $counseling->nama_siswa }}</strong>,
+                Halo, <strong>{{ $healthCare->nama_siswa }}</strong>,
             </p>
             <p>
-                Guru BK telah mencatat bimbingan konseling baru atas nama Anda dengan rincian sebagai berikut:
+                Petugas UKS telah mencatat data pemeriksaan kesehatan atas nama Anda dengan rincian sebagai berikut:
             </p>
 
             <table class="details-table">
                 <tr>
                     <td>Tanggal</td>
-                    <td>{{ \Carbon\Carbon::parse($counseling->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($healthCare->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                 </tr>
                 <tr>
-                    <td>Uraian Masalah</td>
-                    <td>{{ $counseling->uraian_masalah }}</td>
+                    <td>Keluhan</td>
+                    <td>{{ $healthCare->keluhan }}</td>
                 </tr>
                 <tr>
-                    <td>Pemecahan Masalah</td>
-                    <td>{{ $counseling->pemecahan_masalah }}</td>
-                </tr>
-                <tr>
-                    <td>Jenis Bimbingan</td>
-                    <td>
-                        @if($counseling->is_pribadi) Pribadi @endif
-                        @if($counseling->is_sosial) Sosial @endif
-                        @if($counseling->is_belajar) Belajar @endif
-                        @if($counseling->is_karir) Karir @endif
-                    </td>
+                    <td>Hasil Pemeriksaan</td>
+                    <td>{{ $healthCare->hasil_pemeriksaan }}</td>
                 </tr>
             </table>
 
             <p style="margin-top: 20px;">
-                Silakan hubungi Guru BK Anda jika ada pertanyaan lebih lanjut.
+                Semoga lekas sembuh dan dapat kembali beraktivitas seperti sedia kala.
             </p>
         </div>
         <div class="footer">

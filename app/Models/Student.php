@@ -41,4 +41,9 @@ class Student extends Model
     {
         return $this->hasMany(CounselingGuidance::class, 'student_id', 'id');
     }
+
+    public function healthcare()
+    {
+        return $this->hasMany(HealthCare::class, 'student_id', 'id');
+    }
 }
