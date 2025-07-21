@@ -32,7 +32,9 @@
             <li class="{{ Route::is('prestasi-akademik*') ? 'active' : '' }}">
                 <a href="{{ route('prestasi-akademik.index') }}" class="nav-link"><i class="fas fa-trophy"></i><span>Prestasi Akademik</span></a>
             </li>
+            @endif
 
+            @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('wakamad kesiswaan') || Auth::user()->hasRole('kepala madrasah'))
             <li class="{{ Route::is('terlambat*') ? 'active' : '' }}">
                 <a href="{{ route('terlambat.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Pelanggaran Kedisiplinan</span></a>
             </li>
@@ -70,7 +72,7 @@
 
             @if (Auth::user()->hasRole('koperasi') || Auth::user()->hasRole('kepala madrasah'))
             <li class="{{ Route::is('unit-usaha*') ? 'active' : '' }}">
-                <a href="{{ route('unit-usaha.index') }}" class="nav-link"><i class="fas fa-wallet"></i><span>Unit Usaha</span></a>
+                <a href="{{ route('unit-usaha.index') }}" class="nav-link"><i class="fas fa-wallet"></i><span>Koperasi</span></a>
             </li>
             @endif
 
@@ -80,7 +82,6 @@
                 <ul class="dropdown-menu" style="{{ Route::is('pengguna*') ? 'display: block;' : '' }}">
                     <li class="{{ Route::is('ekstrakurikuler*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('ekstrakurikuler.index') }}">Ekstrakurikuler</a></li>
                     <li class="{{ Route::is('prestasi-ekskul*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('prestasi-ekskul.index') }}">Prestasi Ekstrakurikuler</a></li>
-                    <li class="{{ Route::is('siswa*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.index') }}">Anggota Ekstrakurikuler</a></li>
                 </ul>
             </li>
             @endif
