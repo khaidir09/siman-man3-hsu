@@ -10,7 +10,9 @@ use App\Models\AcademicPeriod;
 use App\Models\Extracurricular;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
-use App\Models\User; // Asumsi pembina adalah User
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NilaiEkskulNotification;
+use App\Models\User;
 
 class ExtracurricularController extends Controller
 {
@@ -260,11 +262,18 @@ class ExtracurricularController extends Controller
             'nilai' => ['nullable', 'string', Rule::in(['A', 'B', 'C', 'D', 'E'])],
         ]);
 
+        $newGrade = $request->input('nilai');
+
         // Gunakan updateExistingPivot() untuk mengubah data di tabel pivot
         $ekstrakurikuler->students()->updateExistingPivot($student->id, [
             'jabatan' => $validated['jabatan'],
-            'nilai' => $request->input('nilai'),
+            'nilai' => $newGrade,
         ]);
+
+        if ($request->filled('nilai')) {
+            $user = $student->user;
+            Mail::to($user->email)->send(new NilaiEkskulNotification($user, $ekstrakurikuler, $newGrade));
+        }
 
         toast('Data keanggotaan berhasil diperbarui.', 'success');
         return redirect()->back();
