@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\Student;
 use App\Models\LateArrival;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PelanggaranKedisiplinanNotification;
 
 class KedisiplinanController extends Controller
 {
@@ -98,9 +102,9 @@ class KedisiplinanController extends Controller
      */
     public function create()
     {
-        $rooms = Room::all();
         $guru = User::role('guru')->get();
-        return view('terlambat.create', compact('rooms', 'guru'));
+        $siswa = Student::where('status', 'Aktif')->get();
+        return view('terlambat.create', compact('guru', 'siswa'));
     }
 
     /**
@@ -110,21 +114,32 @@ class KedisiplinanController extends Controller
     {
         // Validate the request data
         $request->validate([
-            'nama_siswa' => 'required|string|max:255',
+            'student_id' => 'required|exists:students,id',
             'guru_piket' => 'required|string|max:255',
-            'rooms_id' => 'required|exists:rooms,id',
             'tanggal' => 'required|date',
             'waktu_datang' => 'required|date_format:H:i',
         ]);
 
+        $siswa = Student::with('user')->findOrFail($request->input('student_id'));
+
         // Create a new LateArrival
-        LateArrival::create([
-            'nama_siswa' => $request->input('nama_siswa'),
+        $newLateArrival = LateArrival::create([
+            'student_id' => $request->input('student_id'),
+            'nama_siswa' => $siswa->nama_lengkap,
             'guru_piket' => $request->input('guru_piket'),
-            'rooms_id' => $request->input('rooms_id'),
+            'kelas' => $siswa->room->tingkat . ' ' . $siswa->room->rombongan . ' ' . $siswa->room->nama_jurusan,
             'tanggal' => $request->input('tanggal'),
             'waktu_datang' => $request->input('waktu_datang'),
         ]);
+
+        if ($siswa->user && $siswa->user->email) {
+            try {
+                Mail::to($siswa->user->email)->send(new PelanggaranKedisiplinanNotification($newLateArrival));
+            } catch (\Exception $e) {
+                // Opsional: Catat error jika email gagal terkirim tanpa menghentikan proses
+                Log::error('Gagal mengirim email notifikasi pelanggaran: ' . $e->getMessage());
+            }
+        }
 
         toast('Data Pelanggaran Kedisiplinan berhasil dibuat.', 'success')->width('350');
 
@@ -145,9 +160,9 @@ class KedisiplinanController extends Controller
     public function edit(string $id)
     {
         $terlambat = LateArrival::findOrFail($id);
-        $rooms = Room::all();
+        $siswa = Student::where('status', 'Aktif')->get();
 
-        return view('terlambat.edit', compact('terlambat', 'rooms'));
+        return view('terlambat.edit', compact('terlambat', 'siswa'));
     }
 
     /**
@@ -159,18 +174,19 @@ class KedisiplinanController extends Controller
 
         // Validate the request data
         $request->validate([
-            'nama_siswa' => 'required|string|max:255',
+            'student_id' => 'required|exists:students,id',
             'guru_piket' => 'required|string|max:255',
-            'rooms_id' => 'required|exists:rooms,id',
             'tanggal' => 'required|date',
-            'waktu_datang' => 'required|date_format:H:i',
         ]);
+
+        $siswa = Student::with('user')->findOrFail($request->input('student_id'));
 
         // Create a new LateArrival
         $LateArrival->update([
-            'nama_siswa' => $request->input('nama_siswa'),
+            'student_id' => $request->input('student_id'),
+            'nama_siswa' => $siswa->nama_lengkap,
             'guru_piket' => $request->input('guru_piket'),
-            'rooms_id' => $request->input('rooms_id'),
+            'kelas' => $siswa->room->tingkat . ' ' . $siswa->room->rombongan . ' ' . $siswa->room->nama_jurusan,
             'tanggal' => $request->input('tanggal'),
             'waktu_datang' => $request->input('waktu_datang'),
         ]);

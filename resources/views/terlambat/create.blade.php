@@ -45,19 +45,13 @@
                         @endif
 
                         <label for="" class="mt-3">Nama Siswa <span class="text-danger">*</span></label>
-                        <input name="nama_siswa" type="text" class="form-control" >
-                        @error('nama_siswa')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-
-                        <label for="" class="mt-3">Kelas <span class="text-danger">*</span></label>
-                        <select name="rooms_id" class="form-control">
-                            <option value="">Pilih Kelas</option>
-                            @foreach ($rooms as $room)
-                                <option value="{{ $room->id }}" class="text-uppercase">{{ $room->tingkat }} {{ $room->rombongan }} {{ $room->nama_jurusan }}</option>
+                        <select name="student_id" class="form-control">
+                            <option value="">Pilih Siswa</option>
+                            @foreach ($siswa as $siswa)
+                                <option value="{{ $siswa->id }}" class="text-uppercase">{{ $siswa->nama_lengkap }} ({{ $siswa->room->tingkat }} {{ $siswa->room->rombongan }} {{ $siswa->room->nama_jurusan }})</option>
                             @endforeach
                         </select>
-                        @error('rooms_id')
+                        @error('student_id')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>

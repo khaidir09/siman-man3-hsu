@@ -82,7 +82,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('d F Y') }}</td>
                                     <td>{{ $item->nama_siswa }}</td>
-                                    <td>{{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->nama_jurusan }}</td>
+                                    <td>{{ $item->kelas }}</td>
                                     <td>{{ $item->waktu_datang }}</td>
                                     <td>{{ $item->guru_piket }}</td>
                                     @if (Auth::user()->hasRole('wakamad kesiswaan') || Auth::user()->hasRole('guru'))
