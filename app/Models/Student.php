@@ -31,4 +31,9 @@ class Student extends Model
     {
         return $this->hasMany(ExtracurricularAchievement::class, 'student_id', 'id');
     }
+
+    public function lateArrival()
+    {
+        return $this->hasMany(LateArrival::class, 'student_id', 'id');
+    }
 }
