@@ -43,7 +43,7 @@
                                 </option>
                             @endforeach
                         </select>
-                        @error('rooms_id')
+                        @error('student_id')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>

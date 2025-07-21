@@ -146,9 +146,7 @@
                     <td class="col-center">{{ $loop->iteration }}</td>
                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('d F Y') }}</td>
                     <td>{{ $item->nama_siswa }}</td>
-                    <td class="col-center">{{ $item->room->tingkat }}-{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
-                        ({{ $item->room->nama_jurusan }})
-                    @endif</td>
+                    <td class="col-center">{{ $item->kelas }}</td>
                     <td>{{ $item->uraian_masalah }}</td>
                     <td>{{ $item->pemecahan_masalah }}</td>
                 </tr>

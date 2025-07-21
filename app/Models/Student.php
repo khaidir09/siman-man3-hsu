@@ -36,4 +36,9 @@ class Student extends Model
     {
         return $this->hasMany(LateArrival::class, 'student_id', 'id');
     }
+
+    public function counseling()
+    {
+        return $this->hasMany(CounselingGuidance::class, 'student_id', 'id');
+    }
 }

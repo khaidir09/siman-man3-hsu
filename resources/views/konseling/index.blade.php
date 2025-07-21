@@ -82,7 +82,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('d F Y') }}</td>
                                     <td>{{ $item->nama_siswa }}</td>
-                                    <td>{{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->nama_jurusan }}</td>
+                                    <td>{{ $item->kelas }}</td>
                                     <td>{{ $item->uraian_masalah }}</td>
                                     <td>{{ $item->pemecahan_masalah }}</td>
                                     @if (Auth::user()->hasRole('guru bk'))

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Room;
 use App\Models\User;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\CounselingGuidance;
+use App\Mail\KonselingNotification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class KonselingController extends Controller
 {
@@ -36,7 +39,7 @@ class KonselingController extends Controller
         // 3. Ambil semua data yang diperlukan untuk laporan
 
         // Ganti 'BimbinganKonseling' dengan nama model Anda yang sebenarnya
-        $konseling = CounselingGuidance::with(['room'])
+        $konseling = CounselingGuidance::with(['student'])
             ->whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)
             ->orderBy('tanggal', 'asc')
@@ -76,8 +79,8 @@ class KonselingController extends Controller
      */
     public function create()
     {
-        $rooms = Room::all();
-        return view('konseling.create', compact('rooms'));
+        $siswa = Student::where('status', 'Aktif')->get();
+        return view('konseling.create', compact('siswa'));
     }
 
     /**
@@ -88,17 +91,19 @@ class KonselingController extends Controller
         // Validate the request data
         $request->validate([
             'tanggal' => 'required|date',
-            'nama_siswa' => 'required|string|max:255',
-            'rooms_id' => 'required|exists:rooms,id',
+            'student_id' => 'required|exists:students,id',
             'uraian_masalah' => 'required',
             'pemecahan_masalah' => 'required',
         ]);
 
+        $siswa = Student::with('user')->findOrFail($request->input('student_id'));
+
         // Create a new guidance
-        CounselingGuidance::create([
+        $counseling = CounselingGuidance::create([
             'tanggal' => $request->input('tanggal'),
-            'nama_siswa' => $request->input('nama_siswa'),
-            'rooms_id' => $request->input('rooms_id'),
+            'student_id' => $request->input('student_id'),
+            'nama_siswa' => $siswa->nama_lengkap,
+            'kelas' => $siswa->room->tingkat . ' ' . $siswa->room->rombongan . ' ' . $siswa->room->nama_jurusan,
             'uraian_masalah' => $request->input('uraian_masalah'),
             'pemecahan_masalah' => $request->input('pemecahan_masalah'),
             'is_pribadi' => $request->input('is_pribadi') == 1 ? 1 : 0,
@@ -106,6 +111,14 @@ class KonselingController extends Controller
             'is_belajar' => $request->input('is_belajar') == 1 ? 1 : 0,
             'is_karir' => $request->input('is_karir') == 1 ? 1 : 0,
         ]);
+
+        try {
+            if ($siswa->user && $siswa->user->email) {
+                Mail::to($siswa->user->email)->send(new KonselingNotification($counseling));
+            }
+        } catch (\Exception $e) {
+            Log::error('Gagal mengirim email notifikasi konseling: ' . $e->getMessage());
+        }
 
         toast('Data Pelanggaran Kedisiplinan berhasil dibuat.', 'success')->width('350');
 
@@ -126,9 +139,9 @@ class KonselingController extends Controller
     public function edit(string $id)
     {
         $konseling = CounselingGuidance::findOrFail($id);
-        $rooms = Room::all();
+        $siswa = Student::where('status', 'Aktif')->get();
 
-        return view('konseling.edit', compact('konseling', 'rooms'));
+        return view('konseling.edit', compact('konseling', 'siswa'));
     }
 
     /**
@@ -141,17 +154,19 @@ class KonselingController extends Controller
         // Validate the request data
         $request->validate([
             'tanggal' => 'required|date',
-            'nama_siswa' => 'required|string|max:255',
-            'rooms_id' => 'required|exists:rooms,id',
+            'student_id' => 'required|exists:students,id',
             'uraian_masalah' => 'required',
             'pemecahan_masalah' => 'required',
         ]);
 
+        $siswa = Student::with('user')->findOrFail($request->input('student_id'));
+
         // Create a new guidance
         $guidance->update([
             'tanggal' => $request->input('tanggal'),
-            'nama_siswa' => $request->input('nama_siswa'),
-            'rooms_id' => $request->input('rooms_id'),
+            'student_id' => $request->input('student_id'),
+            'nama_siswa' => $siswa->nama_lengkap,
+            'kelas' => $siswa->room->tingkat . ' ' . $siswa->room->rombongan . ' ' . $siswa->room->nama_jurusan,
             'uraian_masalah' => $request->input('uraian_masalah'),
             'pemecahan_masalah' => $request->input('pemecahan_masalah'),
             'is_pribadi' => $request->input('is_pribadi') == 1 ? 1 : 0,

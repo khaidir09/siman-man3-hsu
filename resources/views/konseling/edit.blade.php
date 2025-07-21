@@ -23,22 +23,15 @@
                         @enderror
 
                         <label for="" class="mt-3">Nama Siswa</label>
-                        <input name="nama_siswa" type="text" value="{{ $konseling->nama_siswa }}" class="form-control" >
-                        @error('nama_siswa')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-
-                        <label for="" class="mt-3">Kelas</label>
-                        <select name="rooms_id" class="form-control">
-                            <option value="">Pilih Kelas</option>
-                            @foreach ($rooms as $room)
-                                <option value="{{ $room->id }}" {{-- Cek apakah ID jurusan saat ini sama dengan majors_id pada kelas yang diedit --}}
-                                    {{ $konseling->rooms_id == $room->id ? 'selected' : '' }}>
-                                    {{ $room->tingkat }} {{ $room->rombongan }} {{ $room->nama_jurusan }}
+                        <select name="student_id" class="form-control">
+                            <option value="">Pilih Siswa</option>
+                            @foreach ($siswa as $siswa)
+                                <option value="{{ $siswa->id }}" {{ old('student_id', $konseling->student_id) == $siswa->id ? 'selected' : '' }} class="text-uppercase">
+                                    {{ $siswa->nama_lengkap }} ({{ $siswa->room->tingkat }} {{ $siswa->room->rombongan }} {{ $siswa->room->nama_jurusan }})
                                 </option>
                             @endforeach
                         </select>
-                        @error('rooms_id')
+                        @error('student_id')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
