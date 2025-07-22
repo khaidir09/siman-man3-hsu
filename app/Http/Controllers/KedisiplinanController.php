@@ -27,11 +27,11 @@ class KedisiplinanController extends Controller
         // 2. Terapkan kondisi berdasarkan peran (role)
         if ($user->hasRole(['kepala madrasah', 'wakamad kesiswaan'])) {
             // Jika Kepala Madrasah atau Wakamad, tampilkan semua data
-            $arrivals = LateArrival::with('room')->latest()->get();
+            $arrivals = LateArrival::with('student')->latest()->get();
         } elseif ($user->hasRole('guru')) {
             // Jika guru, tampilkan hanya data di mana nama 'guru_piket'
             // sama dengan nama pengguna yang login
-            $arrivals = LateArrival::with('room')
+            $arrivals = LateArrival::with('student')
                 ->where('guru_piket', $user->name)
                 ->latest()
                 ->get();
