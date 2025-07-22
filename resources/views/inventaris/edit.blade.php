@@ -28,15 +28,21 @@
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="">Item</label>
+                        <label for="" class="mt-3">Nama Item</label>
                         <input name="item" type="text" value="{{ $infrastructure->item }}" class="form-control" >
                         @error('item')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Jumlah</label>
-                        <input name="jumlah" type="number" class="form-control" value="{{ $infrastructure->jumlah }}">
+                        <input name="jumlah" type="text" class="form-control" value="{{ $infrastructure->jumlah }}">
                         @error('jumlah')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+
+                        <label for="" class="mt-3">Satuan</label>
+                        <input name="satuan" type="text" class="form-control" value="{{ $infrastructure->satuan }}">
+                        @error('satuan')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 

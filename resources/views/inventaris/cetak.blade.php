@@ -137,7 +137,7 @@
                 <th>Jenis Kegiatan</th>
                 <th>Item</th>
                 <th width="5%">Jumlah</th>
-                <th>Biaya</th>
+                <th>Harga</th>
                 <th>Total Biaya</th>
             </tr>
         </thead>
@@ -148,7 +148,7 @@
                     <td>{{ \Carbon\Carbon::parse($item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
                     <td>{{ $item->jenis_kegiatan }}</td>
                     <td>{{ $item->item }}</td>
-                    <td class="col-center">{{ $item->jumlah }}</td>
+                    <td class="col-center">{{ $item->jumlah }} {{ $item->satuan }}</td>
                     <td>Rp. {{ number_format($item->biaya, 0, ',', '.') }}</td>
                     <td>Rp. {{ number_format($item->total_biaya, 0, ',', '.') }}</td>
                 </tr>

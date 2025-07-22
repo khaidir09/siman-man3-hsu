@@ -86,7 +86,7 @@ class InventarisController extends Controller
         $request->validate([
             'jenis_kegiatan' => 'required|string|max:255',
             'item' => 'required|string|max:255',
-            'jumlah' => 'required|integer|numeric',
+            'satuan' => 'required|string|max:255',
             'biaya' => 'required|numeric'
         ]);
 
@@ -97,6 +97,7 @@ class InventarisController extends Controller
             'jenis_kegiatan' => $request->input('jenis_kegiatan'),
             'item' => $request->input('item'),
             'jumlah' => $request->input('jumlah'),
+            'satuan' => $request->input('satuan'),
             'biaya' => $request->input('biaya'),
             'total_biaya' => $totalBiaya,
         ]);
@@ -135,7 +136,8 @@ class InventarisController extends Controller
         $request->validate([
             'jenis_kegiatan' => 'required|string|max:255',
             'item' => 'required|string|max:255',
-            'jumlah' => 'required|integer|numeric',
+            'satuan' => 'required|string|max:255',
+            'jumlah' => 'required|numeric',
             'biaya' => 'required|numeric'
         ]);
 
@@ -146,6 +148,7 @@ class InventarisController extends Controller
             'jenis_kegiatan' => $request->input('jenis_kegiatan'),
             'item' => $request->input('item'),
             'jumlah' => $request->input('jumlah'),
+            'satuan' => $request->input('satuan'),
             'biaya' => $request->input('biaya'),
             'total_biaya' => $totalBiaya,
         ]);

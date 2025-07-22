@@ -18,24 +18,30 @@
                         <label for="">Jenis Kegiatan <span class="text-danger">*</span></label>
                         <select name="jenis_kegiatan" class="form-control">
                             <option value="">Pilih Jenis Kegiatan</option>
-                            <option value="Pengadaan">Pengadaan</option>
                             <option value="Penambahan">Penambahan</option>
                             <option value="Perbaikan">Perbaikan</option>
+                            <option value="Pengadaan">Pengadaan</option>
                             <option value="Hibah">Hibah</option>
                         </select>
                         @error('jenis_kegiatan')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
-                        <label for="" class="mt-3">Item <span class="text-danger">*</span></label>
+                        <label for="" class="mt-3">Nama Item <span class="text-danger">*</span></label>
                         <input name="item" type="text" class="form-control" >
                         @error('item')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Jumlah <span class="text-danger">*</span></label>
-                        <input name="jumlah" type="number" class="form-control" >
+                        <input name="jumlah" type="text" class="form-control" placeholder="Jika desimal gunakan pemisah titik (.)">
                         @error('jumlah')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+
+                        <label for="" class="mt-3">Satuan <span class="text-danger">*</span></label>
+                        <input name="satuan" type="text" class="form-control" placeholder="Contoh: pcs, unit, buah, kg, dll">
+                        @error('satuan')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 

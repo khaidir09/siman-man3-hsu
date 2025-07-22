@@ -69,7 +69,7 @@
                                 <th>Jenis Kegiatan</th>
                                 <th>Item</th>
                                 <th>Jumlah</th>
-                                <th>Biaya</th>
+                                <th>Harga</th>
                                 <th>Total Biaya</th>
                                 @if (Auth::user()->hasRole('wakamad sarpras'))
                                 <th>Aksi</th>
@@ -82,7 +82,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->jenis_kegiatan }}</td>
                                     <td>{{ $item->item }}</td>
-                                    <td>{{ $item->jumlah }}</td>
+                                    <td>{{ $item->jumlah }} {{ $item->satuan }}</td>
                                     <td>Rp. {{ number_format($item->biaya, 0, ',', '.') }}</td>
                                     <td>Rp. {{ number_format($item->total_biaya, 0, ',', '.') }}</td>
                                     @if (Auth::user()->hasRole('wakamad sarpras'))
