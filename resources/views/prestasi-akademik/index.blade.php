@@ -96,9 +96,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @foreach ($academic_achievements as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $i++ }}</td>
                                     <td>{{ $item->nisn }}</td>
                                     <td>{{ $item->nama }}</td>
                                     <td>{{ $item->ortu }}</td>
@@ -141,7 +144,7 @@
                 "sortable": false,
                 "targets": [1]
             }],
-            "order": [[0, "desc"]]
+            "order": [[0, "asc"]]
         });
     </script>
 @endpush
