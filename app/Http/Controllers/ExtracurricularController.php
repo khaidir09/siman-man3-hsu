@@ -98,7 +98,6 @@ class ExtracurricularController extends Controller
     {
         // Validasi data sesuai skema
         $validatedData = $request->validate([
-            'kelompok' => 'required|string|max:255',
             'nama_ekskul' => 'required|string|max:255|unique:extracurriculars,nama_ekskul',
             'pembina_id' => 'required|exists:users,id',
             'deskripsi' => 'nullable|string',
@@ -213,7 +212,6 @@ class ExtracurricularController extends Controller
     {
         // Validasi data
         $validatedData = $request->validate([
-            'kelompok' => 'required|string|max:255',
             'nama_ekskul' => 'required|string|max:255|unique:extracurriculars,nama_ekskul,' . $ekstrakurikuler->id,
             'pembina_id' => 'required|exists:users,id',
             'deskripsi' => 'nullable|string',

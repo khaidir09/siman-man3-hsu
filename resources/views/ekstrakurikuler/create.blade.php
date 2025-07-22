@@ -16,19 +16,6 @@
                     @csrf
 
                     <div class="form-group">
-                        <label for="kelompok">Kelompok Ekstrakurikuler <span class="text-danger">*</span></label>
-                        <select name="kelompok" id="kelompok" class="form-control">
-                             <option value="">Pilih Kelompok</option>
-                             <option value="Olahraga" {{ old('kelompok') == 'Olahraga' ? 'selected' : '' }}>Olahraga</option>
-                             <option value="Seni" {{ old('kelompok') == 'Seni' ? 'selected' : '' }}>Seni</option>
-                             <option value="Paskibra" {{ old('kelompok') == 'Paskibra' ? 'selected' : '' }}>Paskibra</option>
-                        </select>
-                        @error('kelompok')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
                         <label for="nama_ekskul">Nama Ekstrakurikuler <span class="text-danger">*</span></label>
                         {{-- Menambahkan helper old() untuk menjaga input jika ada error validasi --}}
                         <input name="nama_ekskul" id="nama_ekskul" type="text" class="form-control" value="{{ old('nama_ekskul') }}">
