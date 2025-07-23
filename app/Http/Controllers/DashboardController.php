@@ -7,6 +7,8 @@ use App\Models\Room;
 use App\Models\User;
 use App\Models\Major;
 use App\Models\Alumni;
+use App\Models\Presence;
+use App\Models\Schedule;
 use App\Models\Attendance;
 use App\Models\HealthCare;
 use App\Models\Cooperative;
@@ -25,11 +27,8 @@ class DashboardController extends Controller
     {
 
         $user = Auth::user();
+        $data = [];
 
-
-        // ===================================================================
-        // LANGKAH 1: SIAPKAN SEMUA DATA STATISTIK UMUM
-        // ===================================================================
         $viewData = [
             'guru' => User::role('guru')->count(),
             'jurusan' => Major::count(),
@@ -62,11 +61,9 @@ class DashboardController extends Controller
         $viewData['sisaKas'] = $transaksiBulanIni->jumlah_kas ?? ($kasTerakhirBulanLalu->jumlah_kas ?? 0);
 
 
-        // ===================================================================
-        // LANGKAH 2: SIAPKAN DATA STATISTIK KEHADIRAN SESUAI PERAN
-        // ===================================================================
         $isKepalaMadrasah = $user->hasRole('kepala madrasah');
         $isWaliKelas = $user->hasRole('wali kelas');
+        $isSiswa = $user->hasRole('siswa');
 
         // Periode waktu untuk statistik (6 bulan terakhir)
         $endDate = Carbon::now();
@@ -125,9 +122,48 @@ class DashboardController extends Controller
             $viewData['class_comparison_data'] = $classComparisonData->pluck('rata_rata');
         }
 
-        // ===================================================================
-        // LANGKAH 3: KIRIM SEMUA DATA KE VIEW
-        // ===================================================================
-        return view('dashboard.index', $viewData);
+        // Jika user adalah guru, ambil jadwal mengajarnya hari ini
+        if ($user->hasRole('guru')) {
+            $todayIndonesianDay = Carbon::now()->locale('id')->isoFormat('dddd');
+
+            // Ambil jadwal guru untuk hari ini
+            $schedules = Schedule::where('user_id', $user->id)
+                ->where('hari', $todayIndonesianDay) // Mencocokkan dengan nama hari
+                ->with(['subject', 'room', 'timeSlot'])
+                ->get()
+                ->sortBy('timeSlot.waktu_mulai');
+
+            // Cek untuk setiap jadwal, apakah presensi sudah diambil hari ini
+            $todayDate = now()->toDateString();
+            foreach ($schedules as $schedule) {
+                $schedule->presence_taken = Presence::where('schedule_id', $schedule->id)
+                    ->where('user_id', $user->id) // Kolom guru di tabel presences
+                    ->whereDate('created_at', $todayDate) // Cek berdasarkan tanggal pembuatan
+                    ->exists();
+            }
+
+            $data['today_schedules'] = $schedules;
+        }
+
+        if ($isSiswa) {
+            $studentId = Auth::user()->student->id;
+
+            $presencesThisMonth = Presence::where('student_id', $studentId)
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->get();
+
+            // Hitung rekap untuk kartu statistik
+            $rekap = $presencesThisMonth->countBy('status');
+
+            // Siapkan data untuk dikirim ke view
+            $data['rekap_hadir'] = $rekap->get('hadir', 0);
+            $data['rekap_izin']  = $rekap->get('izin', 0);
+            $data['rekap_sakit'] = $rekap->get('sakit', 0);
+            $data['rekap_alfa']  = $rekap->get('alfa', 0);
+        }
+
+
+        return view('dashboard.index', $viewData, $data);
     }
 }

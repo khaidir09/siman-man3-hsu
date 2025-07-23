@@ -98,6 +98,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('siswa'))
+            <li class="{{ Route::is('presensi.riwayat') ? 'active' : '' }}">
+                <a href="{{ route('presensi.riwayat') }}" class="nav-link"><i class="fas fa-check"></i><span>Riwayat Presensi Saya</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>

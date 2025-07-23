@@ -15,6 +15,7 @@ use App\Http\Controllers\KonselingController;
 use App\Http\Controllers\KoperasiController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\PrestasiAkademikController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SemesterController;
@@ -79,5 +80,12 @@ Route::post('/laporan/jadwal-pelajaran/cetak', [ScheduleController::class, 'ceta
 Route::post('/jadwal/{schedule}/clone', [ScheduleController::class, 'clone'])->name('jadwal.clone')->middleware('auth');
 
 Route::resource('jadwal-umum', JadwalUmumController::class);
+
+Route::get('/presensi/{schedule}/create', [PresensiController::class, 'create'])->name('presences.create');
+Route::post('/presensi/{schedule}/store', [PresensiController::class, 'store'])->name('presences.store');
+
+Route::get('/presensi/riwayat', [PresensiController::class, 'showHistory'])
+    ->name('presensi.riwayat')
+    ->middleware('auth');
 
 require __DIR__ . '/auth.php';

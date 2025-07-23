@@ -223,6 +223,63 @@
             @endif
         </div>
 
+        @if (Auth::user()->hasRole('guru') && isset($today_schedules))
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-calendar-day mr-2"></i> Jadwal Mengajar Hari Ini ({{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }})</h4>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 15%;">Jam</th>
+                                            <th>Mata Pelajaran</th>
+                                            <th>Kelas</th>
+                                            <th style="width: 20%;" class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($today_schedules as $schedule)
+                                            <tr>
+                                                <td>
+                                                    <div class="badge badge-secondary">
+                                                        {{-- Menampilkan data dari relasi timeSlot --}}
+                                                        {{ \Carbon\Carbon::parse($schedule->timeSlot->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($schedule->timeSlot->waktu_selesai)->format('H:i') }}
+                                                    </div>
+                                                </td>
+                                                <td>{{ $schedule->subject->nama_mapel }}</td>
+                                                <td>{{ $schedule->room->tingkat }}-{{ $schedule->room->rombongan }} {{ $schedule->room->nama_jurusan }}</td>
+                                                <td class="text-center">
+                                                    {{-- Menggunakan properti baru presence_taken --}}
+                                                    @if ($schedule->presence_taken)
+                                                        <span class="badge badge-success"><i class="fas fa-check-circle mr-1"></i> Presensi Sudah Diambil</span>
+                                                    @else
+                                                        {{-- Arahkan ke route untuk mengambil presensi --}}
+                                                        <a href="{{ route('presences.create', $schedule->id) }}" class="btn btn-primary btn-sm">
+                                                            <i class="fas fa-edit mr-1"></i> Ambil Presensi
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center py-4">
+                                                    Tidak ada jadwal mengajar hari ini. Selamat beristirahat!
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         {{-- Periksa apakah ada data statistik yang dikirim --}}
         @if (isset($stats_rata_rata))
             {{-- BAGIAN 1: KARTU STATISTIK UTAMA --}}
@@ -298,6 +355,49 @@
                             </div>
                         @endif
                     @endif
+                </div>
+            </div>
+        @endif
+
+        @if (Auth::user()->hasRole('siswa'))
+            {{-- Kartu Rekap Kehadiran --}}
+            <h2 class="section-title">Rekap kehadiran bulan {{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM') }}</h2>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-success"><i class="fas fa-user-check"></i></div>
+                        <div class="card-wrap">
+                            <div class="card-header"><h4>Hadir</h4></div>
+                            <div class="card-body">{{ $rekap_hadir ?? 0 }} JP</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-info"><i class="fas fa-envelope-open-text"></i></div>
+                        <div class="card-wrap">
+                            <div class="card-header"><h4>Izin</h4></div>
+                            <div class="card-body">{{ $rekap_izin ?? 0 }} JP</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-warning"><i class="fas fa-procedures"></i></div>
+                        <div class="card-wrap">
+                            <div class="card-header"><h4>Sakit</h4></div>
+                            <div class="card-body">{{ $rekap_sakit ?? 0 }} JP</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-danger"><i class="fas fa-user-slash"></i></div>
+                        <div class="card-wrap">
+                            <div class="card-header"><h4>Tanpa Keterangan</h4></div>
+                            <div class="card-body">{{ $rekap_alfa ?? 0 }} JP</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         @endif
