@@ -1,27 +1,30 @@
 <?php
 
-use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\AlumniController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ExtracurricularController;
-use App\Http\Controllers\InventarisController;
-use App\Http\Controllers\JadwalUmumController;
-use App\Http\Controllers\JurusanController;
-use App\Http\Controllers\KedisiplinanController;
-use App\Http\Controllers\KehadiranController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KelasController;
-use App\Http\Controllers\KesehatanController;
-use App\Http\Controllers\KonselingController;
-use App\Http\Controllers\KoperasiController;
 use App\Http\Controllers\MapelController;
+use App\Http\Controllers\UjianController;
+use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\JurusanController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\KoperasiController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PresensiController;
-use App\Http\Controllers\PrestasiAkademikController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SemesterController;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KehadiranController;
+use App\Http\Controllers\KesehatanController;
+use App\Http\Controllers\KonselingController;
+use App\Http\Controllers\InventarisController;
+use App\Http\Controllers\JadwalUmumController;
+use App\Http\Controllers\NilaiUjianController;
 use App\Http\Controllers\WaktuMapelController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\KedisiplinanController;
+use App\Http\Controllers\RiwayatUjianController;
+use App\Http\Controllers\ExtracurricularController;
+use App\Http\Controllers\PrestasiAkademikController;
 
 Route::redirect('/', 'login');
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -87,5 +90,16 @@ Route::post('/presensi/{schedule}/store', [PresensiController::class, 'store'])-
 Route::get('/presensi/riwayat', [PresensiController::class, 'showHistory'])
     ->name('presensi.riwayat')
     ->middleware('auth');
+
+Route::resource('ujian', UjianController::class);
+
+Route::get('/ujian/{exam}/input-nilai', [NilaiUjianController::class, 'edit'])->name('input-nilai-ujian');
+
+// Route untuk memproses penyimpanan nilai ujian
+Route::patch('/ujian/{exam}/input-nilai', [NilaiUjianController::class, 'update'])->name('simpan-nilai-ujian');
+
+Route::get('/riwayat-ujian', [RiwayatUjianController::class, 'index'])
+    ->name('riwayat-ujian-saya')
+    ->middleware(['auth']);
 
 require __DIR__ . '/auth.php';

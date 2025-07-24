@@ -104,6 +104,18 @@
             </li>
             @endif
 
+            @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('kepala madrasah'))
+            <li class="{{ Route::is('ujian*') ? 'active' : '' }}">
+                <a href="{{ route('ujian.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Ujian</span></a>
+            </li>
+            @endif
+
+            @if (Auth::user()->hasRole('siswa'))
+            <li class="{{ Route::is('riwayat-ujian-saya') ? 'active' : '' }}">
+                <a href="{{ route('riwayat-ujian-saya') }}" class="nav-link"><i class="fas fa-check"></i><span>Riwayat Ujian Saya</span></a>
+            </li>
+            @endif
+
         </ul>
     </aside>
 </div>
