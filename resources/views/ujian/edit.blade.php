@@ -33,79 +33,32 @@
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label for="subject_id">Mata Pelajaran <span class="text-danger">*</span></label>
-                                <select name="subject_id" id="subject_id" class="form-control" required>
-                                    <option value="">-- Pilih Mata Pelajaran --</option>
-                                    @foreach ($subjects as $subject)
-                                        <option value="{{ $subject->id }}" {{ old('subject_id', $ujian->subject_id) == $subject->id ? 'selected' : '' }}>
-                                            {{ $subject->nama_mapel }}
+                                <label for="learning_id">Pembelajaran <span class="text-danger">*</span></label>
+                                <select name="learning_id" id="learning_id" class="form-control" required>
+                                    <option value="">-- Pilih Pembelajaran --</option>
+                                    @foreach ($learnings as $item)
+                                        <option value="{{ $item->id }}" {{ old('learning_id', $ujian->learning_id) == $item->id ? 'selected' : '' }}>
+                                            {{ $item->subject->nama_mapel }} - {{ $item->user->name }} (Kelas {{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->major->nama_jurusan ?? '' }})
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('subject_id')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="room_id">Kelas <span class="text-danger">*</span></label>
-                                <select name="room_id" id="room_id" class="form-control" required>
-                                    <option value="">-- Pilih Kelas --</option>
-                                    @foreach ($rooms as $room)
-                                        <option value="{{ $room->id }}" {{ old('room_id', $ujian->room_id) == $room->id ? 'selected' : '' }}>
-                                            {{ $room->tingkat }}-{{ $room->rombongan }} {{ $room->nama_jurusan }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('room_id')
+                                @error('learning_id')
                                     <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-
-                        {{-- Kolom Kanan --}}
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="teacher_id">Guru Penanggung Jawab <span class="text-danger">*</span></label>
-                                @if(Auth::user()->hasRole('wakasek kurikulum'))
-                                    {{-- JIKA WAKASEK: TAMPILKAN DROPDOWN --}}
-                                    <select name="teacher_id" id="teacher_id" class="form-control" required>
-                                        <option value="">-- Pilih Guru --</option>
-                                        @foreach ($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}" {{ old('teacher_id', $ujian->teacher_id) == $teacher->id ? 'selected' : '' }}>
-                                                {{ $teacher->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                @else
-                                    {{-- JIKA GURU: TAMPILKAN NAMA SENDIRI & DISABLED --}}
-                                    <input type="text" class="form-control" value="{{ Auth::user()->name }}" disabled>
-                                    <input type="hidden" name="teacher_id" value="{{ Auth::user()->id }}">
-                                @endif
-                            </div>
-
-                             <div class="form-group">
-                                <label for="academic_period_id">Periode Ajaran <span class="text-danger">*</span></label>
-                                <select name="academic_period_id" id="academic_period_id" class="form-control" required>
-                                    <option value="">-- Pilih Periode Ajaran --</option>
-                                    @foreach ($academicPeriods as $period)
-                                        <option value="{{ $period->id }}" {{ old('academic_period_id', $ujian->academic_period_id) == $period->id ? 'selected' : '' }}>
-                                            {{ $period->tahun_ajaran }} ({{ $period->semester }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('academic_period_id')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-
                             <div class="form-group">
                                 <label for="exam_date">Tanggal Pelaksanaan <span class="text-danger">*</span></label>
                                 <input type="date" id="exam_date" name="exam_date" class="form-control" value="{{ old('exam_date', $ujian->exam_date) }}" required>
                                 @error('exam_date')
-                                    <p class="text-danger">{{ $message }}</p>
+                                <p class="text-danger">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>

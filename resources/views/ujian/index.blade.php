@@ -10,9 +10,11 @@
             <div class="card-header">
                 <h4>Semua Ujian</h4>
                 <div class="card-header-action">
-                    <a href="{{ route('ujian.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Buat baru
-                    </a>
+                    @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('wakamad kurikulum'))
+                        <a href="{{ route('ujian.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Buat baru
+                        </a>
+                    @endif
                 </div>
             </div>
 
@@ -30,7 +32,9 @@
                                 <th>Kelas</th>
                                 <th>Periode Akademik</th>
                                 <th>Tanggal Ujian</th>
+                                @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('wakamad kurikulum'))
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -38,11 +42,12 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
-                                    <td>{{ $item->teacher->name }}</td>
-                                    <td>{{ $item->subject->nama_mapel }}</td>
-                                    <td>{{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->nama_jurusan }}</td>
-                                    <td>{{ $item->academicPeriod->semester }} {{ $item->academicPeriod->tahun_ajaran }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_ujian)->locale('id')->translatedFormat('d F Y') }}</td>
+                                    <td>{{ $item->learning->user->name }}</td>
+                                    <td>{{ $item->learning->subject->nama_mapel }}</td>
+                                    <td>{{ $item->learning->room->tingkat }}-{{ $item->learning->room->rombongan }} {{ $item->learning->room->nama_jurusan }}</td>
+                                    <td>{{ $item->learning->academicPeriod->semester }} {{ $item->learning->academicPeriod->tahun_ajaran }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->exam_date)->locale('id')->translatedFormat('d F Y') }}</td>
+                                    @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('wakamad kurikulum'))
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a data-toggle="tooltip" data-placement="bottom" title="Edit Jadwal Ujian" href="{{ route('ujian.edit', $item->id) }}"
@@ -61,9 +66,9 @@
                                             </a>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
-
 
                         </tbody>
                     </table>

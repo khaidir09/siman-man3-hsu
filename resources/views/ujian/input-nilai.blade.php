@@ -19,8 +19,8 @@
                 <div>
                     <h4>Formulir Nilai: {{ $exam->name }}</h4>
                     <p class="mb-0 text-muted">
-                        Mata Pelajaran: <strong>{{ $exam->subject->nama_mapel }}</strong> |
-                        Kelas: <strong>{{ $exam->room->tingkat }}-{{ $exam->room->rombongan }} {{ $exam->room->nama_jurusan }}</strong> |
+                        Mata Pelajaran: <strong>{{ $exam->learning->subject->nama_mapel }}</strong> |
+                        Kelas: <strong>{{ $exam->learning->room->tingkat }}-{{ $exam->learning->room->rombongan }} {{ $exam->learning->room->nama_jurusan }}</strong> |
                         Tanggal: <strong>{{ \Carbon\Carbon::parse($exam->exam_date)->locale('id')->translatedFormat('d F Y') }}</strong>
                     </p>
                 </div>

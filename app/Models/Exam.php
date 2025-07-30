@@ -8,24 +8,9 @@ class Exam extends Model
 {
     protected $guarded = [];
 
-    public function subject()
+    public function learning()
     {
-        return $this->belongsTo(Subject::class);
-    }
-
-    public function room()
-    {
-        return $this->belongsTo(Room::class);
-    }
-
-    public function teacher()
-    {
-        return $this->belongsTo(User::class, 'teacher_id');
-    }
-
-    public function academicPeriod()
-    {
-        return $this->belongsTo(AcademicPeriod::class);
+        return $this->belongsTo(Learning::class);
     }
 
     public function scores()

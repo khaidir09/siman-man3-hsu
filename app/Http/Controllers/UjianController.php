@@ -11,6 +11,7 @@ use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Models\AcademicPeriod;
 use App\Mail\NewExamNotification;
+use App\Models\Learning;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -22,15 +23,25 @@ class UjianController extends Controller
      */
     public function index()
     {
+        // Memulai query pada model Exam
         $query = Exam::query();
 
         $user = Auth::user();
 
+        // Jika user adalah seorang guru, filter ujian berdasarkan guru_id di dalam tabel pembelajaran
         if ($user->hasRole('guru')) {
-            $query->where('teacher_id', $user->id);
+            // Gunakan whereHas untuk memfilter Exam berdasarkan kondisi pada relasi 'pembelajaran'
+            $query->whereHas('learning', function ($subQuery) use ($user) {
+                $subQuery->where('user_id', $user->id);
+            });
         }
 
-        $exams = $query->with(['subject', 'room', 'teacher'])
+        // Sesuaikan eager loading untuk memuat relasi melalui 'pembelajaran'
+        $exams = $query->with([
+            'learning.subject',
+            'learning.user',
+            'learning.room'
+        ])
             ->orderBy('exam_date', 'desc')
             ->paginate(10);
 
@@ -45,29 +56,18 @@ class UjianController extends Controller
         $user = Auth::user();
         $data = [];
 
+        $pembelajaranQuery = Learning::with('subject', 'user', 'room', 'academicPeriod');
+
         if ($user->hasRole('wakasek kurikulum')) {
-            // Jika Wakasek, ambil semua data
-            $data['subjects'] = Subject::orderBy('nama_mapel', 'asc')->get();
-            $data['rooms'] = Room::orderBy('tingkat', 'asc')->get();
-            $data['teachers'] = User::whereHas('roles', fn($q) => $q->where('name', 'guru'))->orderBy('name', 'asc')->get();
+            // Jika Wakasek, ambil semua data pembelajaran yang ada.
+            $data['learnings'] = $pembelajaranQuery->get();
         } elseif ($user->hasRole('guru')) {
-            // Jika Guru, ambil data yang berelasi dengannya saja
-            $teacherId = $user->id;
-
-            // Ambil ID mata pelajaran unik yang diajar oleh guru ini dari jadwal
-            $subjectIds = Schedule::where('user_id', $teacherId)->distinct()->pluck('subject_id');
-            $data['subjects'] = Subject::whereIn('id', $subjectIds)->orderBy('nama_mapel', 'asc')->get();
-
-            // Ambil ID kelas unik yang diajar oleh guru ini dari jadwal
-            $roomIds = Schedule::where('user_id', $teacherId)->distinct()->pluck('room_id');
-            $data['rooms'] = Room::whereIn('id', $roomIds)->orderBy('tingkat', 'asc')->get();
-
-            // Untuk guru, tidak perlu daftar guru lain
-            $data['teachers'] = null;
+            // Jika Guru, ambil hanya data pembelajaran yang berelasi dengan ID guru tersebut.
+            $data['learnings'] = $pembelajaranQuery->where('user_id', $user->id)->get();
+        } else {
+            // Default jika user tidak memiliki peran yang sesuai, kembalikan array kosong.
+            $data['learnings'] = [];
         }
-
-        // Data periode ajaran sama untuk semua peran
-        $data['academicPeriods'] = AcademicPeriod::all();
 
         return view('ujian.create', $data);
     }
@@ -80,11 +80,8 @@ class UjianController extends Controller
         // Validasi input dari form
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'subject_id' => 'required|exists:subjects,id',
-            'room_id' => 'required|exists:rooms,id',
-            'teacher_id' => 'required|exists:users,id',
+            'learning_id' => 'required|exists:learnings,id',
             'exam_date' => 'required|date',
-            'academic_period_id' => 'required|exists:academic_periods,id',
         ]);
 
         // Buat record baru
@@ -93,7 +90,7 @@ class UjianController extends Controller
         try {
             // 1. Ambil semua siswa yang berada di kelas yang sama dengan ujian
             // Gunakan `with('user')` untuk eager loading agar efisien
-            $students = Student::where('room_id', $newExam->room_id)->with('user')->get();
+            $students = Student::where('room_id', $newExam->learning->room_id)->with('user')->get();
 
             // 2. Looping melalui setiap siswa untuk mengirim email
             foreach ($students as $student) {
@@ -128,11 +125,14 @@ class UjianController extends Controller
     public function edit(Exam $ujian)
     {
         $user = Auth::user();
+        $data = [];
+
+        $pembelajaranQuery = Learning::with('subject', 'user', 'room', 'academicPeriod');
 
         // --- Langkah 1: Otorisasi Keamanan ---
         // Jika user adalah guru, cek apakah dia pemilik ujian ini.
         // Jika bukan, hentikan proses dan tampilkan error 403 (Forbidden).
-        if ($user->hasRole('guru') && $ujian->teacher_id !== $user->id) {
+        if ($user->hasRole('guru') && $ujian->learning->user_id !== $user->id) {
             abort(403, 'AKSI TIDAK DIIZINKAN.');
         }
 
@@ -141,22 +141,14 @@ class UjianController extends Controller
 
         if ($user->hasRole('wakasek kurikulum')) {
             // Jika Wakasek, ambil semua data
-            $data['subjects'] = Subject::orderBy('nama_mapel', 'asc')->get();
-            $data['rooms'] = Room::orderBy('tingkat', 'asc')->get();
-            $data['teachers'] = User::whereHas('roles', fn($q) => $q->where('name', 'guru'))->orderBy('name', 'asc')->get();
+            $data['learnings'] = $pembelajaranQuery->get();
         } elseif ($user->hasRole('guru')) {
-            // Jika Guru, ambil data yang berelasi dengannya saja
-            $teacherId = $user->id;
-
-            $subjectIds = Schedule::where('user_id', $teacherId)->distinct()->pluck('subject_id');
-            $data['subjects'] = Subject::whereIn('id', $subjectIds)->orderBy('nama_mapel', 'asc')->get();
-
-            $roomIds = Schedule::where('user_id', $teacherId)->distinct()->pluck('room_id');
-            $data['rooms'] = Room::whereIn('id', $roomIds)->orderBy('tingkat', 'asc')->get();
+            // Jika Guru, ambil hanya data pembelajaran yang berelasi dengan ID guru tersebut.
+            $data['learnings'] = $pembelajaranQuery->where('user_id', $user->id)->get();
+        } else {
+            // Default jika user tidak memiliki peran yang sesuai, kembalikan array kosong.
+            $data['learnings'] = [];
         }
-
-        // Data periode ajaran sama untuk semua peran
-        $data['academicPeriods'] = AcademicPeriod::all();
 
         return view('ujian.edit', $data);
     }
@@ -169,11 +161,8 @@ class UjianController extends Controller
         // Validasi input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'subject_id' => 'required|exists:subjects,id',
-            'room_id' => 'required|exists:rooms,id',
-            'teacher_id' => 'required|exists:users,id',
+            'learning_id' => 'required|exists:learnings,id',
             'exam_date' => 'required|date',
-            'academic_period_id' => 'required|exists:academic_periods,id',
         ]);
 
         // Update record yang ada

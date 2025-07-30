@@ -21,10 +21,10 @@ class NilaiUjianController extends Controller
     public function edit(Exam $exam)
     {
         // Eager load relasi untuk efisiensi dan mengambil data yang dibutuhkan
-        $exam->load('room.students', 'subject');
+        $exam->load('learning.room.students', 'learning.subject');
 
         // Ambil semua siswa dari kelas yang terkait dengan ujian ini
-        $students = $exam->room->students;
+        $students = $exam->learning->room->students;
 
         // Ambil nilai yang sudah ada untuk ujian ini.
         // pluck() akan membuat array asosiatif [student_id => score]
