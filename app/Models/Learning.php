@@ -32,4 +32,10 @@ class Learning extends Model
     {
         return $this->hasMany(Schedule::class, 'learning_id', 'id');
     }
+
+    // app/Models/Learning.php
+    public function learningObjectives()
+    {
+        return $this->hasMany(LearningObjective::class);
+    }
 }

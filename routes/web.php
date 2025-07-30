@@ -27,6 +27,7 @@ use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\Guru\MapelDiampuController;
 use App\Http\Controllers\PembelajaranController;
 use App\Http\Controllers\PrestasiAkademikController;
+use App\Http\Controllers\TujuanPembelajaranController;
 
 Route::redirect('/', 'login');
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -106,5 +107,11 @@ Route::get('/riwayat-ujian', [RiwayatUjianController::class, 'index'])
     ->middleware(['auth']);
 
 Route::get('/mapel-diampu', [MapelDiampuController::class, 'index'])->name('mapel-diampu');
+
+Route::resource('tujuan-pembelajaran', TujuanPembelajaranController::class);
+
+// routes/web.php -> TETAP SAMA
+Route::get('/finalisasi-nilai/{learning}', [FinalScoreController::class, 'edit'])->name('nilai-akhir.edit');
+Route::post('/finalisasi-nilai/{learning}', [FinalScoreController::class, 'store'])->name('nilai-akhir.store');
 
 require __DIR__ . '/auth.php';

@@ -9,7 +9,6 @@
         <div class="card card-primary">
             <div class="card-header">
                 <h4>Buat Kehadiran</h4>
-
             </div>
             <div class="card-body">
                 <form action="{{ route('kehadiran.store') }}" method="POST">
