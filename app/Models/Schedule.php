@@ -8,24 +8,12 @@ class Schedule extends Model
 {
     protected $guarded = [];
 
-    public function room()
+    public function learning()
     {
-        return $this->belongsTo(Room::class);
-    }
-    public function subject()
-    {
-        return $this->belongsTo(Subject::class);
-    }
-    public function teacher()
-    {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Learning::class);
     }
     public function timeSlot()
     {
         return $this->belongsTo(TimeSlot::class);
-    }
-    public function academicPeriod()
-    {
-        return $this->belongsTo(AcademicPeriod::class);
     }
 }

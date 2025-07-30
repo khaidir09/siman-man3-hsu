@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Pelajaran - {{ $room->name }}</title>
+    <title>Jadwal Pelajaran - {{ $room->tingkat }}-{{ $room->rombongan }} {{ $room->nama_jurusan }}</title>
     <style>
         /* Mengatur dasar halaman - Sesuai style Anda */
         body {
@@ -194,8 +194,8 @@
                                     $schedule = $schedules[$day][$timeSlot->id]->first();
                                 @endphp
                                 <div class="schedule-entry">
-                                    <span class="subject">{{ $schedule->subject->nama_mapel ?? 'N/A' }}</span>
-                                    <span class="teacher">{{ $schedule->teacher->name ?? 'N/A' }}</span>
+                                    <span class="subject">{{ $schedule->learning->subject->nama_mapel ?? 'N/A' }}</span>
+                                    <span class="teacher">{{ $schedule->learning->user->name ?? 'N/A' }}</span>
                                 </div>
                             @else
                                 {{-- Jika slot kosong --}}

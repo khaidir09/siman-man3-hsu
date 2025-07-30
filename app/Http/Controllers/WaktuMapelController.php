@@ -45,7 +45,7 @@ class WaktuMapelController extends Controller
         // 3. Hitung waktu selesai
         // Menggunakan Carbon untuk menambah 42 menit dari waktu mulai
         $waktuSelesai = Carbon::createFromFormat('H:i', $waktuMulai)
-            ->addMinutes(42)
+            ->addMinutes(45)
             ->format('H:i:s');
 
         // 4. Simpan data ke database
@@ -97,7 +97,7 @@ class WaktuMapelController extends Controller
 
         // 3. Hitung ulang waktu selesai
         $waktuSelesai = Carbon::createFromFormat('H:i', $waktuMulai)
-            ->addMinutes(42)
+            ->addMinutes(45)
             ->format('H:i:s');
 
         // 4. Update data di database

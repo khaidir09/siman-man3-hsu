@@ -128,8 +128,8 @@
                                                                 $schedule = $schedules[$room->id][$day][$timeSlot->id]->first();
                                                             @endphp
                                                             <div class="schedule-entry">
-                                                                <span class="subject">{{ $schedule->subject->nama_mapel ?? 'N/A' }}</span>
-                                                                <span class="teacher">{{ $schedule->teacher->name ?? 'N/A' }}</span>
+                                                                <span class="subject">{{ $schedule->learning->subject->nama_mapel ?? 'N/A' }}</span>
+                                                                <span class="teacher">{{ $schedule->learning->user->name ?? 'N/A' }}</span>
                                                                 @if (Auth::user()->hasRole('wakamad kurikulum'))
                                                                 <div class="schedule-actions">
                                                                     <a href="{{ route('jadwal.edit', $schedule->id) }}" class="btn btn-sm btn-light" title="Edit"><i class="fas fa-pencil-alt"></i></a>

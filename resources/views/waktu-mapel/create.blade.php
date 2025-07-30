@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="alert alert-light">
-                        <strong>Info:</strong> Waktu selesai akan dihitung secara otomatis (+42 menit dari Waktu Mulai).
+                        <strong>Info:</strong> Waktu selesai akan dihitung secara otomatis (+45 menit dari Waktu Mulai).
                     </div>
 
                     <button type="submit" class="btn btn-primary">Buat</button>
