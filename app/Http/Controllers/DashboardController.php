@@ -127,10 +127,8 @@ class DashboardController extends Controller
             $todayIndonesianDay = Carbon::now()->locale('id')->isoFormat('dddd');
 
             // Ambil jadwal guru untuk hari ini
-            $schedules = Schedule::where('user_id', $user->id)
+            $schedules = Schedule::with(['learning', 'timeSlot'])->get()->where('learning.user_id', $user->id)
                 ->where('hari', $todayIndonesianDay) // Mencocokkan dengan nama hari
-                ->with(['subject', 'room', 'timeSlot'])
-                ->get()
                 ->sortBy('timeSlot.waktu_mulai');
 
             // Cek untuk setiap jadwal, apakah presensi sudah diambil hari ini

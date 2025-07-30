@@ -87,10 +87,11 @@
             @endif
 
             @if (Auth::user()->hasRole('wakamad kurikulum') || Auth::user()->hasRole('kepala madrasah'))
-            <li class="dropdown {{ Route::is(['mapel*', 'waktu-mapel*', 'jadwal*', 'jadwal-umum*']) ? 'active' : '' }}">
+            <li class="dropdown {{ Route::is(['mapel*', 'waktu-mapel*', 'jadwal*', 'jadwal-umum*', 'pembelajaran*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-calendar"></i> <span>Data Jadwal</span></a>
                 <ul class="dropdown-menu" style="{{ Route::is('pengguna*') ? 'display: block;' : '' }}">
                     <li class="{{ Route::is('mapel*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('mapel.index') }}">Mata Pelajaran</a></li>
+                    <li class="{{ Route::is('pembelajaran*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('pembelajaran.index') }}">Pembelajaran</a></li>
                     <li class="{{ Route::is('waktu-mapel*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('waktu-mapel.index') }}">Jam Pelajaran</a></li>
                     <li class="{{ Route::is('jadwal*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('jadwal.index') }}">Jadwal Pelajaran</a></li>
                     <li class="{{ Route::is('jadwal-umum*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('jadwal-umum.index') }}">Jadwal Umum</a></li>
@@ -104,9 +105,15 @@
             </li>
             @endif
 
-            @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('kepala madrasah'))
+            @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('kepala madrasah') || Auth::user()->hasRole('wakamad kurikulum'))
             <li class="{{ Route::is('ujian*') ? 'active' : '' }}">
                 <a href="{{ route('ujian.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Ujian</span></a>
+            </li>
+            @endif
+
+            @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('kepala madrasah') || Auth::user()->hasRole('wakamad kurikulum'))
+            <li class="{{ Route::is('mapel-diampu*') ? 'active' : '' }}">
+                <a href="{{ route('mapel-diampu') }}" class="nav-link"><i class="fas fa-clock"></i><span>Mata Pelajaran Diampu</span></a>
             </li>
             @endif
 

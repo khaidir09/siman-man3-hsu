@@ -24,6 +24,8 @@ use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\KedisiplinanController;
 use App\Http\Controllers\RiwayatUjianController;
 use App\Http\Controllers\ExtracurricularController;
+use App\Http\Controllers\Guru\MapelDiampuController;
+use App\Http\Controllers\PembelajaranController;
 use App\Http\Controllers\PrestasiAkademikController;
 
 Route::redirect('/', 'login');
@@ -74,6 +76,7 @@ Route::get('/get-ekskul-members/{ekskul}', [AchievementController::class, 'getMe
     ->name('ekskul.getMembers')->middleware('auth');
 
 Route::resource('mapel', MapelController::class);
+Route::resource('pembelajaran', PembelajaranController::class);
 Route::resource('waktu-mapel', WaktuMapelController::class);
 Route::resource('jadwal', ScheduleController::class);
 Route::post('/laporan/jadwal-pelajaran/cetak', [ScheduleController::class, 'cetakJadwalKelas'])
@@ -101,5 +104,7 @@ Route::patch('/ujian/{exam}/input-nilai', [NilaiUjianController::class, 'update'
 Route::get('/riwayat-ujian', [RiwayatUjianController::class, 'index'])
     ->name('riwayat-ujian-saya')
     ->middleware(['auth']);
+
+Route::get('/mapel-diampu', [MapelDiampuController::class, 'index'])->name('mapel-diampu');
 
 require __DIR__ . '/auth.php';

@@ -250,8 +250,8 @@
                                                         {{ \Carbon\Carbon::parse($schedule->timeSlot->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($schedule->timeSlot->waktu_selesai)->format('H:i') }}
                                                     </div>
                                                 </td>
-                                                <td>{{ $schedule->subject->nama_mapel }}</td>
-                                                <td>{{ $schedule->room->tingkat }}-{{ $schedule->room->rombongan }} {{ $schedule->room->nama_jurusan }}</td>
+                                                <td>{{ $schedule->learning->subject->nama_mapel }}</td>
+                                                <td>{{ $schedule->learning->room->tingkat }}-{{ $schedule->learning->room->rombongan }} {{ $schedule->learning->room->nama_jurusan }}</td>
                                                 <td class="text-center">
                                                     {{-- Menggunakan properti baru presence_taken --}}
                                                     @if ($schedule->presence_taken)
