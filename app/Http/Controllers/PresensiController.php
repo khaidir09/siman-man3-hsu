@@ -27,11 +27,11 @@ class PresensiController extends Controller
         }
 
         // Eager load relasi yang dibutuhkan di view
-        $schedule->load(['room.students', 'subject', 'timeSlot']);
+        $schedule->load(['learning.room.students', 'learning.subject', 'timeSlot']);
 
         // dd($schedule->id);
 
-        $students = $schedule->room->students;
+        $students = $schedule->learning->room->students;
 
         return view('presensi.create', compact('schedule', 'students'));
     }
@@ -77,7 +77,7 @@ class PresensiController extends Controller
         $history = Presence::where('student_id', $studentId)
             ->whereMonth('created_at', $selectedMonth)
             ->whereYear('created_at', $selectedYear)
-            ->with(['schedule.subject', 'schedule.timeSlot']) // Eager loading
+            ->with(['schedule.learning.subject', 'schedule.timeSlot']) // Eager loading
             ->orderBy('created_at', 'desc')
             ->get();
 

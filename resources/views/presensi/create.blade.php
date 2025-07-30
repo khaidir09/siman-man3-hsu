@@ -13,7 +13,7 @@
             <div class="card-body">
                 <form action="{{ route('presences.store', $schedule->id) }}" method="POST">
                     @csrf
-                    <h3>Presensi untuk: {{ $schedule->subject->nama_mapel }} Kelas {{ $schedule->room->tingkat }}-{{ $schedule->room->rombongan }} {{ $schedule->room->nama_jurusan }}</h3>
+                    <h3>Presensi untuk: {{ $schedule->learning->subject->nama_mapel }} Kelas {{ $schedule->learning->room->tingkat }}-{{ $schedule->learning->room->rombongan }} {{ $schedule->learning->room->nama_jurusan }}</h3>
                     <p>
                         Hari/Tanggal: {{ $schedule->hari }}, {{ now()->locale('id')->isoFormat('D MMMM YYYY') }} <br>
                         Waktu: {{ \Carbon\Carbon::parse($schedule->timeSlot->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($schedule->timeSlot->waktu_selesai)->format('H:i') }}
