@@ -162,7 +162,7 @@ class DashboardController extends Controller
             $data['rekap_alfa']  = $rekap->get('alfa', 0);
         }
 
-        if ($user->hasRole(['wakasek kurikulum', 'kepala madrasah'])) {
+        if ($user->hasRole(['wakamad kurikulum', 'kepala madrasah'])) {
 
             // --- Grafik 1: Ekstrakurikuler Paling Populer ---
             $popularEkskul = Extracurricular::withCount('students')

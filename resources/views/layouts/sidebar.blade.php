@@ -129,7 +129,7 @@
             </li>
             @endif
 
-            @if (Auth::user()->hasRole('guru'))
+            @if (Auth::user()->hasRole('wali kelas'))
             <li class="{{ Route::is('rapor*') ? 'active' : '' }}">
                 <a href="{{ route('rapor.kelas') }}" class="nav-link"><i class="fas fa-clock"></i><span>Rapor Kelas Saya</span></a>
             </li>

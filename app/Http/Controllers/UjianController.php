@@ -115,7 +115,7 @@ class UjianController extends Controller
         // --- Langkah 2: Menyiapkan Data untuk Form ---
         $data = ['ujian' => $ujian]; // Sertakan data ujian yang akan diedit
 
-        if ($user->hasRole('wakasek kurikulum')) {
+        if ($user->hasRole('wakamad kurikulum')) {
             // Jika Wakasek, ambil semua data
             $data['learnings'] = $pembelajaranQuery->get();
         } elseif ($user->hasRole('guru')) {

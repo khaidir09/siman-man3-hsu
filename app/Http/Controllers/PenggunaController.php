@@ -93,8 +93,6 @@ class PenggunaController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'required|string|min:8',
-            'nip' => 'string|max:255|unique:users,nip,' . $user->id,
         ]);
 
         // Update user details

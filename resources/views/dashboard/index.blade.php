@@ -402,7 +402,7 @@
             </div>
         @endif
 
-        @if (Auth::user()->hasRole(['wakasek kurikulum', 'kepala madrasah']))
+        @if (Auth::user()->hasRole(['wakamad kurikulum', 'kepala madrasah']))
         <div class="row">
             {{-- Grafik Ekstrakurikuler Paling Populer --}}
             <div class="col-lg-6 col-md-12">
@@ -493,7 +493,7 @@ $(document).ready(function() {
     }
     @endif
 
-    @if (Auth::user()->hasRole(['wakasek kurikulum', 'kepala madrasah']))
+    @if (Auth::user()->hasRole(['wakamad kurikulum', 'kepala madrasah']))
     
     // Grafik Ekstrakurikuler Populer (Pie Chart)
     if ($('#popularEkskulChart').length) {

@@ -80,7 +80,7 @@
                 "targets": [5] // Menonaktifkan sorting untuk kolom 'Aksi' (kolom ke-6, index 5)
             }],
              // Mengurutkan berdasarkan Mata Pelajaran (kolom kedua, index 1) secara ascending (A-Z)
-            "order": [[ 1, "asc" ]]
+            "order": [[ 0, "asc" ]]
         });
     </script>
 @endpush

@@ -12,7 +12,7 @@
         <div class="card-header">
             <h4>Daftar Mata Pelajaran yang Anda Ampu</h4>
             {{-- Tombol Tambah hanya muncul untuk admin/wakasek --}}
-            @if(Auth::user()->hasRole('wakasek kurikulum'))
+            @if(Auth::user()->hasRole('wakamad kurikulum'))
                 <div class="card-header-action">
                     <a href="#" class="btn btn-primary">Tambah Data</a>
                 </div>
