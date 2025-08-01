@@ -100,7 +100,7 @@ class RaportController extends Controller
         // Cek apakah user adalah siswa pemilik rapor, atau wali kelas dari rapor tsb.
         $isOwner = ($user->hasRole('siswa') && $user->student->id == $reportCard->student_id);
         $isHomeroomTeacher = $user->id == $reportCard->homeroom_teacher_id;
-        $isAdmin = ($user->hasRole('wakasek kurikulum') || $user->hasRole('kepala madrasah'));
+        $isAdmin = ($user->hasRole('wakamad kurikulum') || $user->hasRole('kepala madrasah'));
 
         if (!$isOwner && !$isHomeroomTeacher && !$isAdmin) {
             abort(403, 'AKSI TIDAK DIIZINKAN.');
