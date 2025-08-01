@@ -25,8 +25,10 @@ use App\Http\Controllers\KedisiplinanController;
 use App\Http\Controllers\RiwayatUjianController;
 use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\Guru\MapelDiampuController;
+use App\Http\Controllers\Guru\NilaiAkhirController;
 use App\Http\Controllers\PembelajaranController;
 use App\Http\Controllers\PrestasiAkademikController;
+use App\Http\Controllers\RaportController;
 use App\Http\Controllers\TujuanPembelajaranController;
 
 Route::redirect('/', 'login');
@@ -108,10 +110,34 @@ Route::get('/riwayat-ujian', [RiwayatUjianController::class, 'index'])
 
 Route::get('/mapel-diampu', [MapelDiampuController::class, 'index'])->name('mapel-diampu');
 
-Route::resource('tujuan-pembelajaran', TujuanPembelajaranController::class);
+// Route::resource('tujuan-pembelajaran', TujuanPembelajaranController::class);
+Route::prefix('pembelajaran/{learning}')->name('tujuan-pembelajaran.')->group(function () {
+    Route::get('/tujuan-pembelajaran', [TujuanPembelajaranController::class, 'index'])->name('index');
+    Route::get('/tujuan-pembelajaran/create', [TujuanPembelajaranController::class, 'create'])->name('create');
+    Route::post('/tujuan-pembelajaran', [TujuanPembelajaranController::class, 'store'])->name('store');
+    Route::get('/tujuan-pembelajaran/{tujuan_pembelajaran}/edit', [TujuanPembelajaranController::class, 'edit'])->name('edit');
+    Route::patch('/tujuan-pembelajaran/{tujuan_pembelajaran}', [TujuanPembelajaranController::class, 'update'])->name('update');
+    Route::delete('/tujuan-pembelajaran/{tujuan_pembelajaran}', [TujuanPembelajaranController::class, 'destroy'])->name('destroy');
+});
 
 // routes/web.php -> TETAP SAMA
-Route::get('/finalisasi-nilai/{learning}', [FinalScoreController::class, 'edit'])->name('nilai-akhir.edit');
-Route::post('/finalisasi-nilai/{learning}', [FinalScoreController::class, 'store'])->name('nilai-akhir.store');
+Route::get('/finalisasi-nilai/{learning}', [NilaiAkhirController::class, 'edit'])->name('nilai-akhir.edit');
+Route::post('/finalisasi-nilai/{learning}', [NilaiAkhirController::class, 'store'])->name('nilai-akhir.store');
+
+Route::get('/rapor/kelas-saya', [RaportController::class, 'showClass'])
+    ->name('rapor.kelas')
+    ->middleware(['auth']);
+
+Route::get('/rapor/proses/{student}/{period}', [RaportController::class, 'process'])
+    ->name('rapor.process');
+
+// 3. Aksi untuk menyimpan catatan dan memfinalisasi rapor
+// Menggunakan {reportCard} untuk Route Model Binding
+Route::patch('/rapor/finalisasi/{reportCard}', [RaportController::class, 'finalize'])
+    ->name('rapor.finalize');
+
+Route::get('/rapor/cetak/{reportCard}', [RaportController::class, 'printPdf'])
+    ->name('raport.print')
+    ->middleware('auth');
 
 require __DIR__ . '/auth.php';

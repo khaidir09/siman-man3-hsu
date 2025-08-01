@@ -33,6 +33,11 @@ class Learning extends Model
         return $this->hasMany(Schedule::class, 'learning_id', 'id');
     }
 
+    public function exams()
+    {
+        return $this->hasMany(Exam::class);
+    }
+
     // app/Models/Learning.php
     public function learningObjectives()
     {

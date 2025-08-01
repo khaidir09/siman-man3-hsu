@@ -12,7 +12,7 @@
         <div class="card-header">
             <h4>Daftar Tujuan Pembelajaran</h4>
             <div class="card-header-action">
-                <a href="{{ route('tujuan-pembelajaran.create') }}" class="btn btn-primary">
+                <a href="{{ route('tujuan-pembelajaran.create', $learning->id) }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Tambah Baru
                 </a>
             </div>
@@ -24,6 +24,7 @@
                         <tr>
                             <th class="text-center">No</th>
                             <th>Mata Pelajaran</th>
+                            <th>Kelas</th>
                             <th>Periode Ajaran</th>
                             <th>Deskripsi Tujuan Pembelajaran</th>
                             <th>Aksi</th>
@@ -36,6 +37,7 @@
                                     {{ $learningObjectives->firstItem() + $loop->index }}
                                 </td>
                                 <td>{{ $item->learning->subject->nama_mapel ?? 'N/A' }}</td>
+                                <td>{{ $item->learning->room->tingkat }}-{{ $item->learning->room->rombongan }} {{ $item->learning->room->nama_jurusan ?? '' }}</td>
                                 <td>{{ $item->learning->academicPeriod->semester ?? 'N/A' }} {{ $item->learning->academicPeriod->tahun_ajaran ?? 'N/A' }}</td>
                                 <td>{{ $item->deskripsi }}</td>
                                 <td>
@@ -43,11 +45,11 @@
                                         {{-- Tombol Edit dan Hapus hanya untuk role tertentu --}}
                                         @if (Auth::user()->hasRole('wakamad kurikulum') || Auth::user()->hasRole('guru'))
                                         {{-- Tombol Edit --}}
-                                        <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('tujuan-pembelajaran.edit', $item->id) }}"
+                                        <a data-toggle="tooltip" data-placement="bottom" title="Edit" href="{{ route('tujuan-pembelajaran.edit', ['learning' => $learning->id, 'tujuan_pembelajaran' => $item->id]) }}"
                                             class="btn btn-primary rounded ml-2"><i class="fas fa-edit"></i>
                                         </a>
                                         {{-- Tombol Hapus dengan konfirmasi --}}
-                                        <a data-toggle="tooltip" data-placement="bottom" title="Hapus" href="{{ route('tujuan-pembelajaran.destroy', $item->id) }}"
+                                        <a data-toggle="tooltip" data-placement="bottom" title="Hapus" href="{{ route('tujuan-pembelajaran.destroy', ['learning' => $learning->id, 'tujuan_pembelajaran' => $item->id]) }}"
                                             class="btn btn-danger delete-item rounded ml-2"><i
                                                 class="fas fa-trash-alt"></i>
                                         </a>
@@ -57,7 +59,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">
+                                <td colspan="6" class="text-center">
                                     Data tujuan pembelajaran belum tersedia.
                                 </td>
                             </tr>

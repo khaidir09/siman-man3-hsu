@@ -15,25 +15,9 @@
             </div>
             <div class="card-body">
                 {{-- Arahkan form ke route 'update' dan gunakan method PATCH --}}
-                <form action="{{ route('tujuan-pembelajaran.update', $tujuan_pembelajaran->id) }}" method="POST">
+                <form action="{{ route('tujuan-pembelajaran.update', ['learning' => $learning->id, 'tujuan_pembelajaran' => $tujuan_pembelajaran->id]) }}" method="POST">
                     @csrf
                     @method('PATCH')
-
-                    <div class="form-group">
-                        <label for="learning_id">Pembelajaran <span class="text-danger">*</span></label>
-                        <select name="learning_id" id="learning_id" class="form-control" required>
-                            <option value="">-- Pilih Pembelajaran --</option>
-                            @foreach ($learnings as $item)
-                                {{-- Logika untuk memilih opsi yang sesuai dengan data lama atau data dari DB --}}
-                                <option value="{{ $item->id }}" {{ old('learning_id', $tujuan_pembelajaran->learning_id) == $item->id ? 'selected' : '' }}>
-                                    {{ $item->subject->nama_mapel }} - {{ $item->user->name }} (Kelas {{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->major->nama_jurusan ?? '' }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('learning_id')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
 
                     <div class="form-group">
                         <label for="deskripsi">Deskripsi Tujuan Pembelajaran <span class="text-danger">*</span></label>
@@ -44,10 +28,7 @@
                         @enderror
                     </div>
 
-                    <div class="card-footer text-right">
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        <a href="{{ route('tujuan-pembelajaran.index') }}" class="btn btn-secondary">Batal</a>
-                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                 </form>
             </div>
         </div>

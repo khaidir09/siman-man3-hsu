@@ -401,6 +401,34 @@
                 </div>
             </div>
         @endif
+
+        @if (Auth::user()->hasRole(['wakasek kurikulum', 'kepala madrasah']))
+        <div class="row">
+            {{-- Grafik Ekstrakurikuler Paling Populer --}}
+            <div class="col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Ekstrakurikuler Terpopuler (Berdasarkan Jumlah Anggota)</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="popularEkskulChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Grafik Partisipasi Siswa per Kelas --}}
+            <div class="col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Partisipasi Ekskul Tertinggi (Berdasarkan Kelas)</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="classParticipationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
     </section>
 @endsection
 
@@ -463,6 +491,59 @@ $(document).ready(function() {
             }
         });
     }
+    @endif
+
+    @if (Auth::user()->hasRole(['wakasek kurikulum', 'kepala madrasah']))
+    
+    // Grafik Ekstrakurikuler Populer (Pie Chart)
+    if ($('#popularEkskulChart').length) {
+        var ctxPopular = document.getElementById('popularEkskulChart').getContext('2d');
+        new Chart(ctxPopular, {
+            type: 'pie',
+            data: {
+                labels: {!! json_encode($popular_ekskul_labels ?? []) !!},
+                datasets: [{
+                    data: {!! json_encode($popular_ekskul_data ?? []) !!},
+                    backgroundColor: ['#6777ef', '#ffc107', '#28a745', '#dc3545', '#17a2b8'],
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom',
+                },
+            }
+        });
+    }
+
+    // Grafik Partisipasi Kelas (Bar Chart)
+    if ($('#classParticipationChart').length) {
+        var ctxParticipation = document.getElementById('classParticipationChart').getContext('2d');
+        new Chart(ctxParticipation, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($class_participation_labels ?? []) !!},
+                datasets: [{
+                    label: 'Jumlah Siswa yang Ikut Ekskul',
+                    data: {!! json_encode($class_participation_data ?? []) !!},
+                    backgroundColor: '#6777ef',
+                    borderColor: '#6777ef',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1 // Pastikan sumbu Y adalah bilangan bulat
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
     @endif
 });
 </script>

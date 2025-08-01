@@ -13,32 +13,19 @@
             <h4>Formulir Tujuan Pembelajaran Baru</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('tujuan-pembelajaran.store') }}" method="POST">
+            {{-- Form action sekarang menyertakan ID learning --}}
+            <form action="{{ route('tujuan-pembelajaran.store', $learning->id) }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="learning_id">Pembelajaran <span class="text-danger">*</span></label>
-                    <select name="learning_id" id="learning_id" class="form-control" required>
-                        <option value="">-- Pilih Pembelajaran --</option>
-                        @foreach ($learnings as $item)
-                            <option value="{{ $item->id }}" {{ old('learning_id') == $item->id ? 'selected' : '' }}>
-                                {{ $item->subject->nama_mapel }} - {{ $item->user->name }} (Kelas {{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->major->nama_jurusan ?? '' }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('learning_id')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="deskripsi">Deskripsi Tujuan Pembelajaran <span class="text-danger">*</span></label>
-                    <textarea name="deskripsi" id="deskripsi" class="form-control" rows="4" required>{{ old('deskripsi') }}</textarea>
+                    <label>Deskripsi Tujuan Pembelajaran <span class="text-danger">*</span></label>
+                    <textarea name="deskripsi" class="form-control" rows="4" required>{{ old('deskripsi') }}</textarea>
                     @error('deskripsi')
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <button type="submit" class="btn btn-primary">Buat</button>
+                <button type="submit" class="btn btn-primary mr-2">Simpan</button>
+                <a href="{{ route('tujuan-pembelajaran.index', $learning->id) }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>

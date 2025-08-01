@@ -1,130 +1,113 @@
 @extends('layouts.master')
 
-@section('content')
-    <section class="section">
-        <div class="section-header">
-            <h1>Data Ekstrakurikuler</h1>
-        </div>
+@section('title', 'Edit Data Pembelajaran')
 
-        <div class="card card-primary">
+@section('content')
+<section class="section">
+    <div class="section-header">
+        <h1>Data Pembelajaran</h1>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasbor</a></div>
+            <div class="breadcrumb-item"><a href="{{ route('pembelajaran.index') }}">Data Pembelajaran</a></div>
+            <div class="breadcrumb-item">Edit</div>
+        </div>
+    </div>
+
+    <div class="section-body">
+        <div class="card">
             <div class="card-header">
-                <h4>Perbarui Data Ekstrakurikuler</h4>
+                <h4>Formulir Edit Data Pembelajaran</h4>
             </div>
             <div class="card-body">
-                {{-- Mengarahkan form action ke route update untuk ekstrakurikuler --}}
-                <form action="{{ route('ekstrakurikuler.update', $ekstrakurikuler->id) }}" method="POST">
+                {{-- Arahkan form ke route 'update' dan gunakan method PATCH --}}
+                <form action="{{ route('pembelajaran.update', $pembelajaran->id) }}" method="POST">
                     @csrf
-                    @method('PUT')
+                    @method('PATCH')
 
-                    <div class="form-group">
-                        <label for="kelompok">Kelompok Ekstrakurikuler <span class="text-danger">*</span></label>
-                        <select name="kelompok" id="kelompok" class="form-control">
-                             <option value="">Pilih Kelompok</option>
-                             <option value="Olahraga" {{ old('kelompok', $ekstrakurikuler->kelompok) == 'Olahraga' ? 'selected' : '' }}>Olahraga</option>
-                             <option value="Seni" {{ old('kelompok', $ekstrakurikuler->kelompok) == 'Seni' ? 'selected' : '' }}>Seni</option>
-                             <option value="Paskibra" {{ old('kelompok', $ekstrakurikuler->kelompok) == 'Paskibra' ? 'selected' : '' }}>Paskibra</option>
-                        </select>
-                        @error('kelompok')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{-- Input untuk memilih Mata Pelajaran --}}
+                            <div class="form-group">
+                                <label for="subject_id">Mata Pelajaran <span class="text-danger">*</span></label>
+                                <select name="subject_id" id="subject_id" class="form-control">
+                                    <option value="">Pilih Mata Pelajaran</option>
+                                    @foreach ($subjects as $mapel)
+                                        {{-- Logika untuk memilih opsi yang sesuai --}}
+                                        <option value="{{ $mapel->id }}" {{ old('subject_id', $pembelajaran->subject_id) == $mapel->id ? 'selected' : '' }}>
+                                            {{ $mapel->nama_mapel }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('subject_id')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            {{-- Input untuk memilih Guru Pengampu --}}
+                            <div class="form-group">
+                                <label for="user_id">Guru Pengampu <span class="text-danger">*</span></label>
+                                <select name="user_id" id="user_id" class="form-control">
+                                    <option value="">Pilih Guru</option>
+                                    @foreach ($teachers as $guru)
+                                        <option value="{{ $guru->id }}" {{ old('user_id', $pembelajaran->user_id) == $guru->id ? 'selected' : '' }}>
+                                            {{ $guru->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('user_id')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="nama_ekskul">Nama Ekstrakurikuler <span class="text-danger">*</span></label>
-                        {{-- Helper old() akan menampilkan input baru jika validasi gagal, jika tidak, tampilkan data dari database --}}
-                        <input name="nama_ekskul" id="nama_ekskul" type="text" class="form-control" value="{{ old('nama_ekskul', $ekstrakurikuler->nama_ekskul) }}">
-                        @error('nama_ekskul')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{-- Input untuk memilih Rombongan Belajar (Kelas) --}}
+                            <div class="form-group">
+                                <label for="room_id">Kelas (Rombongan Belajar) <span class="text-danger">*</span></label>
+                                <select name="room_id" id="room_id" class="form-control">
+                                    <option value="">Pilih Kelas</option>
+                                    @foreach ($rooms as $rombel)
+                                        <option value="{{ $rombel->id }}" {{ old('room_id', $pembelajaran->room_id) == $rombel->id ? 'selected' : '' }}>
+                                            {{ $rombel->tingkat }}-{{ $rombel->rombongan }} {{ $rombel->nama_jurusan }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('room_id')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            {{-- Input untuk memilih Periode Akademik --}}
+                            <div class="form-group">
+                                <label for="academic_period_id">Tahun Ajaran / Semester <span class="text-danger">*</span></label>
+                                <select name="academic_period_id" id="academic_period_id" class="form-control">
+                                    <option value="">Pilih Periode</option>
+                                    @foreach ($academicPeriods as $semester)
+                                        <option value="{{ $semester->id }}" {{ old('academic_period_id', $pembelajaran->academic_period_id) == $semester->id ? 'selected' : '' }}>
+                                            {{ $semester->tahun_ajaran }} - {{ $semester->semester }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('academic_period_id')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="pembina_id">Pembina <span class="text-danger">*</span></label>
-                        <select name="pembina_id" id="pembina_id" class="form-control">
-                            <option value="">Pilih Pembina</option>
-                            @foreach ($pembina as $user)
-                                {{-- Kondisi untuk memilih pembina yang sesuai --}}
-                                <option value="{{ $user->id }}" {{ old('pembina_id', $ekstrakurikuler->pembina_id) == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('pembina_id')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
+                    <div class="card-footer text-right">
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        <a href="{{ route('pembelajaran.index') }}" class="btn btn-secondary">Batal</a>
                     </div>
-
-                    <div class="form-group">
-                        <label for="status">Status <span class="text-danger">*</span></label>
-                        <select name="status" id="status" class="form-control">
-                            <option value="">Pilih Status</option>
-                            <option value="Aktif" {{ old('status', $ekstrakurikuler->status) == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                            <option value="Tidak Aktif" {{ old('status', $ekstrakurikuler->status) == 'Tidak Aktif' ? 'selected' : '' }}>Tidak Aktif</option>
-                        </select>
-                        @error('status')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="jadwal_hari">Hari Latihan Rutin <span class="text-danger">*</span></label>
-                        <select name="jadwal_hari" id="jadwal_hari" class="form-control">
-                             <option value="">Pilih Hari</option>
-                             <option value="Senin" {{ old('jadwal_hari', $ekstrakurikuler->jadwal_hari) == 'Senin' ? 'selected' : '' }}>Senin</option>
-                             <option value="Selasa" {{ old('jadwal_hari', $ekstrakurikuler->jadwal_hari) == 'Selasa' ? 'selected' : '' }}>Selasa</option>
-                             <option value="Rabu" {{ old('jadwal_hari', $ekstrakurikuler->jadwal_hari) == 'Rabu' ? 'selected' : '' }}>Rabu</option>
-                             <option value="Kamis" {{ old('jadwal_hari', $ekstrakurikuler->jadwal_hari) == 'Kamis' ? 'selected' : '' }}>Kamis</option>
-                             <option value="Jumat" {{ old('jadwal_hari', $ekstrakurikuler->jadwal_hari) == 'Jumat' ? 'selected' : '' }}>Jumat</option>
-                             <option value="Sabtu" {{ old('jadwal_hari', $ekstrakurikuler->jadwal_hari) == 'Sabtu' ? 'selected' : '' }}>Sabtu</option>
-                             <option value="Minggu" {{ old('jadwal_hari', $ekstrakurikuler->jadwal_hari) == 'Minggu' ? 'selected' : '' }}>Minggu</option>
-                        </select>
-                        @error('jadwal_hari')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="jadwal_waktu">Waktu Latihan (Mulai) <span class="text-danger">*</span></label>
-                        <input name="jadwal_waktu" id="jadwal_waktu" type="time" class="form-control" value="{{ old('jadwal_waktu', $ekstrakurikuler->jadwal_waktu) }}">
-                        @error('jadwal_waktu')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="lokasi">Lokasi Latihan <span class="text-danger">*</span></label>
-                        <input name="lokasi" id="lokasi" type="text" class="form-control" value="{{ old('lokasi', $ekstrakurikuler->lokasi) }}">
-                        @error('lokasi')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tahun_ajaran_id">Tahun Ajaran <span class="text-danger">*</span></label>
-                        <select name="tahun_ajaran_id" id="tahun_ajaran_id" class="form-control">
-                            <option value="">Pilih Tahun Ajaran</option>
-                            @foreach ($academicPeriods as $period)
-                                <option value="{{ $period->id }}" {{ old('tahun_ajaran_id', $ekstrakurikuler->tahun_ajaran_id) == $period->id ? 'selected' : '' }}>
-                                    {{ $period->tahun_ajaran }} {{ $period->semester }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('tahun_ajaran_id')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="deskripsi">Deskripsi</label>
-                        <textarea name="deskripsi" id="deskripsi" class="form-control" style="height: 100px;">{{ old('deskripsi', $ekstrakurikuler->deskripsi) }}</textarea>
-                        @error('deskripsi')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Perbarui</button>
                 </form>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection

@@ -22,7 +22,7 @@ class Student extends Model
 
     public function extracurriculars()
     {
-        return $this->belongsToMany(Extracurricular::class, 'extracurricular_student')
+        return $this->belongsToMany(Extracurricular::class, 'extracurricular_students')
             ->withPivot('jabatan', 'nilai', 'tanggal_bergabung')
             ->withTimestamps();
     }

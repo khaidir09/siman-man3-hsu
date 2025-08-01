@@ -3,13 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
-use App\Models\Room;
-use App\Models\User;
 use App\Models\Student;
-use App\Models\Subject;
-use App\Models\Schedule;
 use Illuminate\Http\Request;
-use App\Models\AcademicPeriod;
 use App\Mail\NewExamNotification;
 use App\Models\Learning;
 use Illuminate\Support\Facades\Log;
@@ -23,27 +18,15 @@ class UjianController extends Controller
      */
     public function index()
     {
-        // Memulai query pada model Exam
-        $query = Exam::query();
-
         $user = Auth::user();
+        $query = Exam::query()->with('learning.subject', 'learning.room');
 
-        // Jika user adalah seorang guru, filter ujian berdasarkan guru_id di dalam tabel pembelajaran
         if ($user->hasRole('guru')) {
-            // Gunakan whereHas untuk memfilter Exam berdasarkan kondisi pada relasi 'pembelajaran'
-            $query->whereHas('learning', function ($subQuery) use ($user) {
-                $subQuery->where('user_id', $user->id);
-            });
+            // Filter ujian berdasarkan user_id di dalam relasi learning
+            $query->whereHas('learning', fn($q) => $q->where('user_id', $user->id));
         }
 
-        // Sesuaikan eager loading untuk memuat relasi melalui 'pembelajaran'
-        $exams = $query->with([
-            'learning.subject',
-            'learning.user',
-            'learning.room'
-        ])
-            ->orderBy('exam_date', 'desc')
-            ->paginate(10);
+        $exams = $query->latest()->paginate(10);
 
         return view('ujian.index', compact('exams'));
     }
@@ -54,22 +37,15 @@ class UjianController extends Controller
     public function create()
     {
         $user = Auth::user();
-        $data = [];
+        $learnings = collect();
 
-        $pembelajaranQuery = Learning::with('subject', 'user', 'room', 'academicPeriod');
-
-        if ($user->hasRole('wakasek kurikulum')) {
-            // Jika Wakasek, ambil semua data pembelajaran yang ada.
-            $data['learnings'] = $pembelajaranQuery->get();
+        if ($user->hasRole('wakamad kurikulum')) {
+            $learnings = Learning::with(['subject', 'room', 'user'])->get();
         } elseif ($user->hasRole('guru')) {
-            // Jika Guru, ambil hanya data pembelajaran yang berelasi dengan ID guru tersebut.
-            $data['learnings'] = $pembelajaranQuery->where('user_id', $user->id)->get();
-        } else {
-            // Default jika user tidak memiliki peran yang sesuai, kembalikan array kosong.
-            $data['learnings'] = [];
+            $learnings = Learning::where('user_id', $user->id)->with(['subject', 'room'])->get();
         }
 
-        return view('ujian.create', $data);
+        return view('ujian.create', compact('learnings'));
     }
 
     /**

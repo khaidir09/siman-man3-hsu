@@ -16,6 +16,7 @@ use App\Models\LateArrival;
 use App\Models\Infrastructure;
 use App\Models\Extracurricular;
 use App\Models\CounselingGuidance;
+use Illuminate\Support\Facades\DB;
 use App\Models\AcademicAchievement;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ExtracurricularStudent;
@@ -161,6 +162,40 @@ class DashboardController extends Controller
             $data['rekap_alfa']  = $rekap->get('alfa', 0);
         }
 
+        if ($user->hasRole(['wakasek kurikulum', 'kepala madrasah'])) {
+
+            // --- Grafik 1: Ekstrakurikuler Paling Populer ---
+            $popularEkskul = Extracurricular::withCount('students')
+                ->orderBy('students_count', 'desc')
+                ->take(5) // Ambil 5 ekskul teratas
+                ->get();
+
+            $data['popular_ekskul_labels'] = $popularEkskul->pluck('nama_ekskul');
+            $data['popular_ekskul_data'] = $popularEkskul->pluck('students_count');
+
+
+            // --- Grafik 2: Partisipasi Siswa per Kelas ---
+            $classParticipation = Room::select('rooms.tingkat')
+                ->join('students', 'rooms.id', '=', 'students.room_id')
+                ->join('extracurricular_students', 'students.id', '=', 'extracurricular_students.student_id')
+                ->groupBy('rooms.tingkat')
+                ->orderByRaw('COUNT(DISTINCT extracurricular_students.student_id) DESC')
+                ->take(5) // Ambil 5 kelas teratas
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    // Query ini sedikit lebih kompleks untuk mendapatkan jumlah siswa unik
+                    $count = DB::table('extracurricular_students')
+                        ->join('students', 'extracurricular_students.student_id', '=', 'students.id')
+                        ->join('rooms', 'students.room_id', '=', 'rooms.id')
+                        ->where('rooms.tingkat', $item->tingkat)
+                        ->distinct('students.id')
+                        ->count('students.id');
+                    return [$item->tingkat => $count];
+                });
+
+            $data['class_participation_labels'] = $classParticipation->keys();
+            $data['class_participation_data'] = $classParticipation->values();
+        }
 
         return view('dashboard.index', $viewData, $data);
     }

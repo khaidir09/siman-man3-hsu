@@ -12,4 +12,14 @@ class Subject extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+
+    public function reportCardDetails()
+    {
+        return $this->hasMany(ReportCardDetail::class);
+    }
+
+    public function learningObjectives()
+    {
+        return $this->hasMany(LearningObjective::class);
+    }
 }

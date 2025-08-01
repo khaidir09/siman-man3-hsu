@@ -117,15 +117,21 @@
             </li>
             @endif
 
-            @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('kepala madrasah') || Auth::user()->hasRole('wakamad kurikulum'))
+            {{-- @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('kepala madrasah') || Auth::user()->hasRole('wakamad kurikulum'))
             <li class="{{ Route::is('tujuan-pembelajaran*') ? 'active' : '' }}">
                 <a href="{{ route('tujuan-pembelajaran.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Tujuan Pembelajaran</span></a>
             </li>
-            @endif
+            @endif --}}
 
             @if (Auth::user()->hasRole('siswa'))
             <li class="{{ Route::is('riwayat-ujian-saya') ? 'active' : '' }}">
                 <a href="{{ route('riwayat-ujian-saya') }}" class="nav-link"><i class="fas fa-check"></i><span>Riwayat Ujian Saya</span></a>
+            </li>
+            @endif
+
+            @if (Auth::user()->hasRole('guru'))
+            <li class="{{ Route::is('rapor*') ? 'active' : '' }}">
+                <a href="{{ route('rapor.kelas') }}" class="nav-link"><i class="fas fa-clock"></i><span>Rapor Kelas Saya</span></a>
             </li>
             @endif
 

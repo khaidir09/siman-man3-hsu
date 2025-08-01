@@ -2,13 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
-use App\Models\User;
-use App\Models\Subject;
 use App\Models\Learning;
 use Illuminate\Http\Request;
-use App\Models\AcademicPeriod;
-use App\Models\Extracurricular;
 use App\Models\LearningObjective;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,63 +12,52 @@ class TujuanPembelajaranController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Learning $learning)
     {
-        $user = Auth::user();
-        $query = LearningObjective::query()->with('learning');
-
-        // Jika user adalah guru, filter hanya TP dari mapel yang diajar
-        if ($user->hasRole('guru')) {
-            // Gunakan whereHas untuk memfilter Exam berdasarkan kondisi pada relasi 'pembelajaran'
-            $query->whereHas('learning', function ($subQuery) use ($user) {
-                $subQuery->where('user_id', $user->id);
-            });
+        if ($learning->user_id !== Auth::id()) {
+            abort(403);
         }
 
-        $learningObjectives = $query->latest()->paginate(10);
+        // Ambil semua TP yang berelasi dengan $learning
+        $learningObjectives = $learning->learningObjectives()->paginate(10);
 
-        return view('tujuan-pembelajaran.index', compact('learningObjectives'));
+        return view('tujuan-pembelajaran.index', compact('learning', 'learningObjectives'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Learning $learning)
     {
-        $user = Auth::user();
-        $data = [];
-
-        $pembelajaranQuery = Learning::with('subject', 'user', 'room', 'academicPeriod');
-
-        if ($user->hasRole('wakasek kurikulum')) {
-            $data['learnings'] = $pembelajaranQuery->get();
-        } elseif ($user->hasRole('guru')) {
-            // Jika Guru, ambil hanya data pembelajaran yang berelasi dengan ID guru tersebut.
-            $data['learnings'] = $pembelajaranQuery->where('user_id', $user->id)->get();
-        } else {
-            // Default jika user tidak memiliki peran yang sesuai, kembalikan array kosong.
-            $data['learnings'] = [];
+        if ($learning->user_id !== Auth::id()) {
+            abort(403);
         }
 
-        return view('tujuan-pembelajaran.create', $data);
+        return view('tujuan-pembelajaran.create', compact('learning'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Learning $learning)
     {
+        if ($learning->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $validated = $request->validate([
-            'learning_id' => 'required|exists:learnings,id',
             'deskripsi' => 'required|string',
         ]);
 
-        LearningObjective::create($validated);
+        // Buat TP baru yang otomatis terhubung ke $learning
+        $learning->learningObjectives()->create([
+            'deskripsi' => $validated['deskripsi'],
+        ]);
 
-        toast('Data Tujuan Pembelajaran berhasil dibuat.', 'success')->width('350');
-
-        return redirect()->route('tujuan-pembelajaran.index');
+        toast('Tujuan Pembelajaran berhasil ditambahkan.', 'success');
+        return redirect()->route('tujuan-pembelajaran.index', $learning->id);
     }
+
 
     /**
      * Display the specified resource.
@@ -86,68 +70,51 @@ class TujuanPembelajaranController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(LearningObjective $tujuan_pembelajaran)
+    public function edit(Learning $learning, LearningObjective $tujuan_pembelajaran)
     {
-        // Logika untuk mengisi dropdown sama seperti di method create
-        $user = Auth::user();
-        $learnings = collect();
-
-        if ($user->hasRole('wakasek kurikulum')) {
-            $learnings = Learning::with('subject', 'user', 'room', 'academicPeriod')->get();
-        } elseif ($user->hasRole('guru')) {
-            $learnings = Learning::with('subject', 'user', 'room', 'academicPeriod')
-                ->where('user_id', $user->id)
-                ->get();
-        } else {
-            // Jika user tidak memiliki peran yang sesuai, kembalikan array kosong.
-            $learnings = collect();
+        if ($learning->user_id !== Auth::id()) {
+            abort(403, 'AKSI TIDAK DIIZINKAN.');
         }
 
-        return view('tujuan-pembelajaran.edit', compact('tujuan_pembelajaran', 'learnings'));
+        return view('tujuan-pembelajaran.edit', compact('learning', 'tujuan_pembelajaran'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LearningObjective $learningObjective)
+    public function update(Request $request, Learning $learning, LearningObjective $tujuan_pembelajaran)
     {
-        // Validasi data
-        $validatedData = $request->validate([
-            'learning_id' => 'required|exists:learnings,id',
+        if ($learning->user_id !== Auth::id()) {
+            abort(403, 'AKSI TIDAK DIIZINKAN.');
+        }
+
+        // Validasi input
+        $validated = $request->validate([
             'deskripsi' => 'required|string',
         ]);
 
-        // Update record
-        $learningObjective->update($validatedData);
+        // Update data
+        $tujuan_pembelajaran->update([
+            'deskripsi' => $validated['deskripsi'],
+        ]);
 
-        toast('Data Pembelajaran berhasil diperbarui.', 'success')->width('350');
-
-        return redirect()->route('tujuan-pembelajaran.index');
+        toast('Tujuan Pembelajaran berhasil diperbarui.', 'success');
+        return redirect()->route('tujuan-pembelajaran.index', $learning->id);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Learning $learning, LearningObjective $tujuan_pembelajaran)
     {
-        $pembelajaran = Learning::findOrFail($id);
-
-        try {
-            // Hapus record dari database
-            $pembelajaran->delete();
-
-            // Kembalikan respons dalam format JSON
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data Pembelajaran Berhasil Dihapus!'
-            ]);
-        } catch (\Exception $e) {
-            // Jika terjadi error saat menghapus, kirim respons error
-            // Log::error($e); // Opsional: catat error ke log
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal menghapus data. Terjadi kesalahan.'
-            ], 500); // 500 = Internal Server Error
+        if ($learning->user_id !== Auth::id()) {
+            abort(403, 'AKSI TIDAK DIIZINKAN.');
         }
+
+        // Hapus data
+        $tujuan_pembelajaran->delete();
+
+        toast('Tujuan Pembelajaran berhasil dihapus.', 'success');
+        return redirect()->route('tujuan-pembelajaran.index', $learning->id);
     }
 }

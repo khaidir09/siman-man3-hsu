@@ -77,16 +77,16 @@ class PembelajaranController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Extracurricular $ekstrakurikuler)
+    public function edit(Learning $pembelajaran)
     {
-        $teachers = User::whereHas('roles', function ($query) {
-            $query->where('name', 'guru');
-        })->get();
+        // Logika untuk mengisi dropdown sama persis seperti di method create
+        $teachers = User::whereHas('roles', fn($q) => $q->where('name', 'guru'))->get();
         $academicPeriods = AcademicPeriod::all();
         $rooms = Room::all();
         $subjects = Subject::all();
 
-        return view('pembelajaran.edit', compact('teachers', 'academicPeriods', 'rooms', 'subjects'));
+        // Kirim semua data yang dibutuhkan ke view, termasuk data '$pembelajaran' yang akan diedit
+        return view('pembelajaran.edit', compact('pembelajaran', 'teachers', 'academicPeriods', 'rooms', 'subjects'));
     }
 
     /**
@@ -94,7 +94,7 @@ class PembelajaranController extends Controller
      */
     public function update(Request $request, Learning $pembelajaran)
     {
-        // Validasi data
+        // Validasi data sama persis seperti di method store
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'room_id' => 'required|exists:rooms,id',
@@ -102,11 +102,10 @@ class PembelajaranController extends Controller
             'academic_period_id' => 'required|exists:academic_periods,id',
         ]);
 
-        // Update record
+        // Update record yang ada menggunakan data yang sudah divalidasi
         $pembelajaran->update($validatedData);
 
         toast('Data Pembelajaran berhasil diperbarui.', 'success')->width('350');
-
         return redirect()->route('pembelajaran.index');
     }
 

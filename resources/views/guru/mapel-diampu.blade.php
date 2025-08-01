@@ -23,32 +23,27 @@
                 <table class="table table-striped" id="table-sub">
                     <thead>
                         <tr>
-                            <th class="text-center">No</th>
                             <th>Mata Pelajaran</th>
                             <th>Kelas</th>
+                            <th>Periode Ajaran</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($groupedSubjects as $subjectName => $schedules)
-                            <tr>
-                                <td class="text-center">
-                                    {{ $loop->iteration }}
-                                </td>
-                                <td>{{ $subjectName }}</td>
-                                <td>
-                                    {{-- Loop dalam untuk setiap kelas di mana mapel ini diajarkan --}}
-                                    @foreach ($schedules as $schedule)
-                                        <span class="badge badge-light">{{ $schedule->room->tingkat }} {{ $schedule->room->rombongan }}</span>
-                                    @endforeach
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" class="text-center">
-                                    Anda belum tercatat mengampu mata pelajaran apapun.
-                                </td>
-                            </tr>
-                        @endforelse
+                        @foreach ($learnings as $learning)
+                        <tr>
+                            <td>{{ $learning->subject->nama_mapel }}</td>
+                            <td>{{ $learning->room->tingkat }}-{{ $learning->room->rombongan }} {{ $learning->room->nama_jurusan ?? '' }}</td>
+                            <td>{{ $learning->academicPeriod->semester }} {{ $learning->academicPeriod->tahun_ajaran }}</td>
+                            <td>
+                                {{-- Tombol Input Nilai Akhir --}}
+                                <a href="{{ route('nilai-akhir.edit', $learning->id) }}" class="btn btn-primary btn-sm mr-2">Input Nilai</a>
+                                
+                                {{-- TOMBOL BARU: Kelola Tujuan Pembelajaran --}}
+                                <a href="{{ route('tujuan-pembelajaran.index', $learning->id) }}" class="btn btn-info btn-sm">Kelola TP</a>
+                            </td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
