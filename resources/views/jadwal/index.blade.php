@@ -123,7 +123,7 @@
                                                             </div>
 
                                                         {{-- 2. Jika tidak ada, baru cek Jadwal Pelajaran biasa --}}
-                                                        @elseif(isset($schedules[$room->id][$day][$timeSlot->id]))
+                                                        @elseif(isset($schedules[$room->id][$day][$timeSlot->id]) && $schedules[$room->id][$day][$timeSlot->id]->count())
                                                             @php
                                                                 $schedule = $schedules[$room->id][$day][$timeSlot->id]->first();
                                                             @endphp

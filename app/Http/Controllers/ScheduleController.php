@@ -27,9 +27,17 @@ class ScheduleController extends Controller
         $rooms = Room::with('waliKelas')->orderBy('tingkat')->get();
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
         $timeSlots = TimeSlot::orderBy('jam_ke')->get();
+
+        // Perbaikan: Group jadwal berdasarkan room_id, hari, dan time_slot_id
         $schedules = Schedule::with(['learning'])
             ->get()
-            ->groupBy(['learning_id', 'hari', 'time_slot_id']);
+            ->groupBy(function ($item) {
+                return $item->learning->room_id;
+            })->map(function ($group) {
+                return $group->groupBy('hari')->map(function ($hariGroup) {
+                    return $hariGroup->groupBy('time_slot_id');
+                });
+            });
 
         // --- TAMBAHAN BARU ---
         // Ambil semua jadwal umum
