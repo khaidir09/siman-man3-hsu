@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\User;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\ClassTransferLog;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -14,9 +18,39 @@ class StudentController extends Controller
      */
     public function index()
     {
-        // Mengambil data siswa dengan relasi kelasnya (eager loading)
+        // 1. Ambil user yang sedang login
+        $user = Auth::user();
+
         $students = Student::with('room.major')->latest()->get();
-        return view('siswa.index', compact('students'));
+
+        // 2. Mulai query dasar dengan eager loading
+        $query = Student::with('room.major')->latest();
+
+        // 3. Tambahkan kondisi JIKA user adalah 'wali kelas'
+        if ($user->hasRole('wali kelas')) {
+            // a. Cari ID kelas di mana user ini menjadi wali kelasnya
+            //    Ini mengasumsikan tabel 'rooms' punya kolom 'wali_kelas_id'
+            $roomId = Room::where('wali_kelas_id', $user->id)->value('id');
+
+            // b. Filter query siswa berdasarkan room_id tersebut
+            if ($roomId) {
+                $query->where('room_id', $roomId);
+            } else {
+                // Jika guru ini tidak menjadi wali kelas manapun, tampilkan data kosong
+                $query->where('id', -1); // Trik untuk mengembalikan koleksi kosong
+            }
+        }
+
+        // 4. Jika user bukan 'wali kelas' (misal: kepala madrasah),
+        //    maka kondisi if di atas tidak dijalankan, dan semua siswa akan ditampilkan.
+
+        // 5. Eksekusi query dengan paginasi
+        $students = $query->paginate(10);
+
+        // Data rooms mungkin tidak lagi relevan jika wali kelas hanya melihat 1 kelas,
+        // tapi bisa tetap dikirim untuk keperluan lain.
+        $rooms = Room::all();
+        return view('siswa.index', compact('students', 'rooms'));
     }
 
     /**
@@ -34,17 +68,33 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi data berdasarkan skema tabel students
-        $validatedData = $request->validate([
+        $request->validate([
             'nisn' => 'required|string|max:50|unique:students,nisn',
-            'nama_lengkap' => 'required|string|max:255',
             'room_id' => 'required|exists:rooms,id',
-            'status' => ['required', Rule::in(['Aktif', 'Lulus', 'Pindah', 'Dikeluarkan'])],
-            // Tambahkan validasi untuk field lain dari migrasi komprehensif jika perlu
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
+        // Create a new user
+        $user = User::create([
+            'name' => $request->input('nama_lengkap'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
+
+        $role = 'siswa';
+
+        /** assign the role to user */
+        $user->assignRole($role);
+
         // Buat record siswa baru
-        Student::create($validatedData);
+        Student::create([
+            'user_id' => $user->id,
+            'nisn' => $request->input('nisn'),
+            'nama_lengkap' => $request->input('nama_lengkap'),
+            'room_id' => $request->input('room_id'),
+            'status' => 'Aktif', // Set status default ke 'Aktif'
+        ]);
 
         toast('Data Siswa berhasil dibuat.', 'success')->width('350');
 
@@ -91,6 +141,35 @@ class StudentController extends Controller
         return redirect()->route('siswa.index');
     }
 
+    public function transfer(Request $request, Student $student)
+    {
+        $request->validate([
+            'to_room_id' => 'required|exists:rooms,id',
+            'transfer_date' => 'required|date',
+            'reason' => 'nullable|string',
+        ]);
+
+        $fromRoomId = $student->room_id;
+
+        DB::transaction(function () use ($request, $student, $fromRoomId) {
+            // 1. Update kelas siswa
+            $student->update(['room_id' => $request->to_room_id]);
+
+            // 2. Buat log perpindahan (jika Anda membuat tabelnya)
+            ClassTransferLog::create([
+                'student_id' => $student->id,
+                'from_room_id' => $fromRoomId,
+                'to_room_id' => $request->to_room_id,
+                'transfer_date' => $request->transfer_date,
+                'reason' => $request->reason,
+                'user_id' => auth()->id(),
+            ]);
+        });
+
+        toast('Siswa berhasil dipindahkan.', 'success');
+        return redirect()->back();
+    }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -105,7 +184,7 @@ class StudentController extends Controller
             // Kembalikan respons dalam format JSON
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data Kelas Berhasil Dihapus!'
+                'message' => 'Data Siswa Berhasil Dihapus!'
             ]);
         } catch (\Exception $e) {
             // Jika terjadi error saat menghapus, kirim respons error

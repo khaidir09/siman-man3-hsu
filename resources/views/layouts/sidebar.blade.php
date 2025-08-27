@@ -17,13 +17,14 @@
             </li>
 
             @if (Auth::user()->hasRole('kepala madrasah'))
-            <li class="dropdown {{ Route::is(['pengguna*', 'jurusan*', 'kelas*', 'semester*']) ? 'active' : '' }}">
+            <li class="dropdown {{ Route::is(['pengguna*', 'jurusan*', 'kelas*', 'semester*', 'siswa*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-key"></i> <span>Data Master</span></a>
                 <ul class="dropdown-menu" style="{{ Route::is('pengguna*') ? 'display: block;' : '' }}">
                     <li class="{{ Route::is('pengguna*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('pengguna.index') }}">Pengguna</a></li>
                     <li class="{{ Route::is('jurusan*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('jurusan.index') }}">Jurusan</a></li>
                     <li class="{{ Route::is('kelas*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('kelas.index') }}">Kelas</a></li>
                     <li class="{{ Route::is('semester*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('semester.index') }}">TP/Semester</a></li>
+                    <li class="{{ Route::is('siswa*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('siswa.index') }}">Siswa</a></li>
                 </ul>
             </li>
             @endif
@@ -77,7 +78,7 @@
             @endif
 
             @if (Auth::user()->hasRole('pembina ekskul') || Auth::user()->hasRole('kepala madrasah'))
-            <li class="dropdown {{ Route::is(['ekstrakurikuler*', 'prestasi-ekskul*', 'siswa*']) ? 'active' : '' }}">
+            <li class="dropdown {{ Route::is(['ekstrakurikuler*', 'prestasi-ekskul*']) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-medal"></i> <span>Data Ekstrakurikuler</span></a>
                 <ul class="dropdown-menu" style="{{ Route::is('pengguna*') ? 'display: block;' : '' }}">
                     <li class="{{ Route::is('ekstrakurikuler*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('ekstrakurikuler.index') }}">Ekstrakurikuler</a></li>
@@ -130,12 +131,12 @@
             @endif
 
             @if (Auth::user()->hasRole('wali kelas'))
+            <li class="{{ Route::is('siswa*') ? 'active' : '' }}">
+                <a href="{{ route('siswa.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Siswa</span></a>
+            </li>
             <li class="{{ Route::is('rapor*') ? 'active' : '' }}">
                 <a href="{{ route('rapor.kelas') }}" class="nav-link"><i class="fas fa-clock"></i><span>Rapor Kelas Saya</span></a>
             </li>
-            @endif
-
-            @if (Auth::user()->hasRole('wali kelas'))
             <li class="{{ Route::is('kenaikan-kelas.index*') ? 'active' : '' }}">
                 <a href="{{ route('kenaikan-kelas.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Kenaikan Kelas</span></a>
             </li>

@@ -15,8 +15,10 @@ class PenggunaController extends Controller
      */
     public function index()
     {
-        // Fetch all users
-        $users = User::all();
+        // Fetch all users except those with 'kepala madrasah' and 'siswa' roles
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->whereIn('name', ['kepala madrasah', 'siswa']);
+        })->with('roles')->get();
 
         // Return the view with users data
         return view('pengguna.index', compact('users'));
@@ -27,7 +29,7 @@ class PenggunaController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::whereNotIn('name', ['kepala madrasah', 'siswa'])->get();
         $rooms = Room::with('major')->get();
         return view('pengguna.create', compact('roles', 'rooms'));
     }
@@ -48,16 +50,6 @@ class PenggunaController extends Controller
         /** assign the role to user */
         $user->assignRole($request->role);
 
-        if ($request->role === 'siswa') {
-            Student::create([
-                'user_id' => $user->id,
-                'nama_lengkap' => $user->name,
-                'nisn' => $request->input('nisn'),
-                'room_id' => $request->input('room_id'),
-                'status' => $request->input('status'),
-            ]);
-        }
-
         toast('Pengguna berhasil dibuat.', 'success')->width('350');
 
         return redirect()->route('pengguna.index');
@@ -77,7 +69,7 @@ class PenggunaController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
-        $roles = Role::all();
+        $roles = Role::whereNotIn('name', ['kepala madrasah', 'siswa'])->get();
 
         return view('pengguna.edit', compact('user', 'roles'));
     }

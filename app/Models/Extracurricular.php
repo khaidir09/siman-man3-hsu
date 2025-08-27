@@ -35,4 +35,19 @@ class Extracurricular extends Model
     {
         return $this->hasMany(ExtracurricularAchievement::class, 'extracurricular_id', 'id');
     }
+
+    public function students_count()
+    {
+        return $this->students()->count();
+    }
+
+    public function achievements_count()
+    {
+        return $this->achievements()->count();
+    }
+
+    public function scopeWithCounts($query)
+    {
+        return $query->withCount(['students', 'achievements']);
+    }
 }
