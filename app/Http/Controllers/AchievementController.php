@@ -60,6 +60,15 @@ class AchievementController extends Controller
             'sertifikat' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // 1. Ambil model siswa berdasarkan student_id yang divalidasi
+        $student = Student::with('room')->find($validatedData['student_id']);
+
+        // 2. Tambahkan nama kelas ke dalam array data yang akan disimpan
+        // Pastikan model Room Anda memiliki atribut 'name' atau sesuaikan
+        if ($student && $student->room) {
+            $validatedData['kelas'] = $student->room->tingkat . '-' . $student->room->rombongan . ' ' . $student->room->nama_jurusan;
+        }
+
         if ($request->hasFile('sertifikat')) {
             // Simpan file ke storage/app/public/sertifikat_prestasi
             // Laravel akan otomatis membuat nama file yang unik
@@ -110,6 +119,15 @@ class AchievementController extends Controller
             'penyelenggara' => 'required|string|max:255',
             'sertifikat' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        // 1. Ambil model siswa berdasarkan student_id yang divalidasi
+        $student = Student::with('room')->find($validatedData['student_id']);
+
+        // 2. Tambahkan nama kelas ke dalam array data yang akan disimpan
+        // Pastikan model Room Anda memiliki atribut 'name' atau sesuaikan
+        if ($student && $student->room) {
+            $validatedData['kelas'] = $student->room->tingkat . '-' . $student->room->rombongan . ' ' . $student->room->nama_jurusan;
+        }
 
         if ($request->hasFile('sertifikat')) {
             // Hapus file lama jika ada
