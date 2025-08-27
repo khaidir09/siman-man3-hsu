@@ -111,7 +111,7 @@
             </li>
             @endif
 
-            @if (Auth::user()->hasRole('guru') || Auth::user()->hasRole('kepala madrasah') || Auth::user()->hasRole('wakamad kurikulum'))
+            @if (Auth::user()->hasRole('guru'))
             <li class="{{ Route::is('mapel-diampu*') ? 'active' : '' }}">
                 <a href="{{ route('mapel-diampu') }}" class="nav-link"><i class="fas fa-clock"></i><span>Mata Pelajaran Diampu</span></a>
             </li>
@@ -132,6 +132,12 @@
             @if (Auth::user()->hasRole('wali kelas'))
             <li class="{{ Route::is('rapor*') ? 'active' : '' }}">
                 <a href="{{ route('rapor.kelas') }}" class="nav-link"><i class="fas fa-clock"></i><span>Rapor Kelas Saya</span></a>
+            </li>
+            @endif
+
+            @if (Auth::user()->hasRole('wali kelas'))
+            <li class="{{ Route::is('kenaikan-kelas.index*') ? 'active' : '' }}">
+                <a href="{{ route('kenaikan-kelas.index') }}" class="nav-link"><i class="fas fa-clock"></i><span>Kenaikan Kelas</span></a>
             </li>
             @endif
 

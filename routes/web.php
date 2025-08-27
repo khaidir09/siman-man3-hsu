@@ -26,6 +26,7 @@ use App\Http\Controllers\RiwayatUjianController;
 use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\Guru\MapelDiampuController;
 use App\Http\Controllers\Guru\NilaiAkhirController;
+use App\Http\Controllers\NaikKelasController;
 use App\Http\Controllers\PembelajaranController;
 use App\Http\Controllers\PrestasiAkademikController;
 use App\Http\Controllers\RaportController;
@@ -139,5 +140,12 @@ Route::patch('/rapor/finalisasi/{reportCard}', [RaportController::class, 'finali
 Route::get('/rapor/cetak/{reportCard}', [RaportController::class, 'printPdf'])
     ->name('raport.print')
     ->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/kenaikan-kelas', [NaikKelasController::class, 'index'])->name('kenaikan-kelas.index');
+    Route::post('/kenaikan-kelas', [NaikKelasController::class, 'store'])->name('kenaikan-kelas.store');
+});
+
+Route::post('/siswa/{student}/pindah-kelas', [StudentController::class, 'transfer'])->name('siswa.transfer');
 
 require __DIR__ . '/auth.php';
