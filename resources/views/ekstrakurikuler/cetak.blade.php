@@ -136,9 +136,9 @@
                 <th>Nama Ekstrakurikuler</th>
                 <th>Nama Pembina</th>
                 <th width="15%">Jadwal</th>
+                <th width="10%">Status</th>
                 <th width="10%">Jumlah Anggota</th>
                 <th width="10%">Jumlah Prestasi</th>
-                <th width="10%">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -148,9 +148,9 @@
                     <td>{{ $item->nama_ekskul }}</td>
                     <td>{{ $item->pembina->name ?? 'N/A' }}</td>
                     <td>{{ $item->jadwal_hari }}, {{ \Carbon\Carbon::parse($item->jadwal_waktu)->format('H:i') }}</td>
+                    <td class="col-center">{{ $item->status }}</td>
                     <td class="col-center">{{ $item->students_count }}</td>
                     <td class="col-center">{{ $item->achievements_count }}</td>
-                    <td class="col-center">{{ $item->status }}</td>
                 </tr>
             @empty
                 <tr>
@@ -158,6 +158,13 @@
                 </tr>
             @endforelse
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" class="col-center"><strong>Jumlah</strong></td>
+                <td class="col-center">{{ $totalAnggota }}</td>
+                <td class="col-center">{{ $totalPrestasi }}</td>
+            </tr>
+        </tfoot>
     </table>
 
     {{-- TANDA TANGAN --}}

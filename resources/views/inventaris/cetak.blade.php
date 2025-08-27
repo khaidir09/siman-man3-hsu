@@ -78,6 +78,10 @@
             text-align: center;
         }
 
+        .report-table .col-right {
+            text-align: right;
+        }
+
         /* Bagian Tanda Tangan */
         .signature-section {
             width: 40%;
@@ -148,9 +152,9 @@
                     <td>{{ \Carbon\Carbon::parse($item->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
                     <td>{{ $item->jenis_kegiatan }}</td>
                     <td>{{ $item->item }}</td>
-                    <td class="col-center">{{ $item->jumlah }} {{ $item->satuan }}</td>
-                    <td>Rp. {{ number_format($item->biaya, 0, ',', '.') }}</td>
-                    <td>Rp. {{ number_format($item->total_biaya, 0, ',', '.') }}</td>
+                    <td>{{ $item->jumlah }} {{ $item->satuan }}</td>
+                    <td class="col-right">Rp. {{ number_format($item->biaya, 0, ',', '.') }}</td>
+                    <td class="col-right">Rp. {{ number_format($item->total_biaya, 0, ',', '.') }}</td>
                 </tr>
             @empty
                 <tr>
@@ -158,6 +162,12 @@
                 </tr>
             @endforelse
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="col-center"><strong>Jumlah Biaya</strong></td>
+                <td class="col-right">Rp. {{ number_format($totalBiaya, 0, ',', '.') }}</td>
+            </tr>
+        </tfoot>
     </table>
 
     <div class="signature-section">

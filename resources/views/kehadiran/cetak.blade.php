@@ -148,7 +148,7 @@
             @forelse ($kehadiran as $item)
                 <tr>
                     <td class="col-center">{{ $loop->iteration }}</td>
-                    <td class="col-center">{{ $item->room->tingkat }}-{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
+                    <td>{{ $item->room->tingkat }}-{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
                         ({{ $item->room->nama_jurusan }})
                         @endif
                     </td>
@@ -167,6 +167,18 @@
                 </tr>
             @endforelse
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="col-center"><strong>Jumlah</strong></td>
+                <td class="col-center">{{ $totalIzin }}</td>
+                <td class="col-center">{{ $totalSakit }}</td>
+                <td class="col-center">{{ $totalAlpa }}</td>
+                <td class="col-center">{{ $jumlahAbsen }}</td>
+                <td class="col-center">{{ $hariEfektif }} Hari</td>
+                <td class="col-center">{{ $totalSiswa }} Orang</td>
+                <td class="col-center">{{ round($totalRataRata, 2) }}%</td>
+            </tr>
+        </tfoot>
     </table>
 
     <div class="signature-section">

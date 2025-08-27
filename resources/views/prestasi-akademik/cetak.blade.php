@@ -244,8 +244,8 @@
                 <td class="col-center">{{ $loop->iteration }}</td>
                 <td class="col-center">{{ $item->nisn }}</td>
                 <td>{{ $item->nama }}</td>
-                <td class="col-center">{{ $item->ortu }}</td>
-                <td class="col-center">{{ $item->room->tingkat }}-{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
+                <td>{{ $item->ortu }}</td>
+                <td>{{ $item->room->tingkat }}-{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
                     ({{ $item->room->nama_jurusan }})
                 @endif</td>
                 <td class="col-center">{{ $item->jumlah_nilai }}</td>

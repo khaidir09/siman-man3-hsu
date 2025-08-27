@@ -146,7 +146,7 @@
                 <tr>
                     <td class="col-center">{{ $loop->iteration }}</td>
                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('d F Y') }}</td>
-                    <td class="col-center">{{ $item->kelas }}</td>
+                    <td>{{ $item->kelas }}</td>
                     <td>{{ $item->nama_siswa }}/{{ $item->orang_tua }}</td>
                     <td>{{ $item->alamat }}</td>
                     <td>{{ $item->keluhan }}</td>
@@ -154,7 +154,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="col-center">Tidak ada data UKS untuk periode ini.</td>
+                    <td colspan="7" class="col-center">Tidak ada data UKS untuk periode ini.</td>
                 </tr>
             @endforelse
         </tbody>

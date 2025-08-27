@@ -56,10 +56,15 @@ class ExtracurricularController extends Controller
         $tanggalCetakFormatted = Carbon::parse($validated['tanggal_cetak'])->locale('id')->translatedFormat('d F Y');
         $periodeFormatted = "Semester " . $academicPeriod->semester . " Tahun Pelajaran " . $academicPeriod->tahun_ajaran;
 
+        $totalAnggota = $ekstrakurikuler->sum('students_count');
+        $totalPrestasi = $ekstrakurikuler->sum('achievements_count');
+
         // 6. Kumpulkan semua data untuk dikirim ke view
         $data = [
             'imagePath' => $imagePath,
             'ekstrakurikuler' => $ekstrakurikuler,
+            'totalAnggota' => $totalAnggota,
+            'totalPrestasi' => $totalPrestasi,
             'kepala_madrasah' => $kepalaMadrasah,
             'wakamad_kesiswaan' => $wakamadKesiswaan,
             'periode' => $periodeFormatted,

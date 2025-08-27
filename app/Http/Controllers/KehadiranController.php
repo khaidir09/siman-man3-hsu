@@ -76,10 +76,30 @@ class KehadiranController extends Controller
         // Format tanggal cetak (tanggal hari ini)
         $tanggalCetakFormatted = Carbon::now()->locale('id')->translatedFormat('d F Y');
 
+        $totalIzin = $kehadiran->sum('izin');
+        $totalSakit = $kehadiran->sum('sakit');
+        $totalAlpa = $kehadiran->sum('alpa');
+        $jumlahAbsen = $kehadiran->sum('jumlah_absen');
+        $totalSiswa = $kehadiran->sum('jumlah_siswa');
+
+        $hariEfektif = $kehadiran->first()->hari_efektif ?? 0;
+
+        $totalSeharusnyaHadir = $totalSiswa * $hariEfektif;
+        $totalHadir = $totalSeharusnyaHadir - $jumlahAbsen;
+        $totalRataRata = 0.00;
+        $totalRataRata = ($totalHadir / $totalSeharusnyaHadir) * 100;
+
         // 4. Kumpulkan semua data untuk dikirim ke view
         $data = [
             'imagePath' => $imagePath,
             'kehadiran' => $kehadiran,
+            'totalIzin' => $totalIzin,
+            'totalSakit' => $totalSakit,
+            'totalAlpa' => $totalAlpa,
+            'jumlahAbsen' => $jumlahAbsen,
+            'hariEfektif' => $hariEfektif,
+            'totalSiswa' => $totalSiswa,
+            'totalRataRata' => $totalRataRata,
             'kepala_madrasah' => $kepalaMadrasah,
             'periode' => $periodeFormatted,
             'tanggal_cetak' => $tanggalCetakFormatted,
