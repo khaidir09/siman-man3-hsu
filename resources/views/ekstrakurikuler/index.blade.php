@@ -149,7 +149,7 @@
                 "targets": [7] // Menonaktifkan sorting untuk kolom 'Aksi' (kolom ke-8, index 7)
             }],
              // Mengurutkan berdasarkan Nama Ekskul (kolom kedua, index 1) secara ascending (A-Z)
-            "order": [[ 1, "asc" ]]
+            "order": [[ 0, "asc" ]]
         });
     </script>
 @endpush

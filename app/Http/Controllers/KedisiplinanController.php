@@ -62,7 +62,7 @@ class KedisiplinanController extends Controller
         // 3. Ambil semua data yang diperlukan untuk laporan
 
         // Ganti 'BimbinganKonseling' dengan nama model Anda yang sebenarnya
-        $kedisiplinan = LateArrival::with(['room'])
+        $kedisiplinan = LateArrival::with(['student'])
             ->whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)
             ->orderBy('tanggal', 'asc')

@@ -23,9 +23,9 @@
                             <tbody>
                                 @forelse ($scores as $score)
                                     <tr>
-                                        <td>{{ $score->exam->name }} {{ $score->exam->academicPeriod->semester }} {{ $score->exam->academicPeriod->tahun_ajaran }}</td>
-                                        <td>{{ $score->exam->teacher->name }}</td>
-                                        <td>{{ $score->exam->subject->nama_mapel }}</td>
+                                        <td>{{ $score->exam->name }} {{ $score->exam->learning->academicPeriod->semester }} {{ $score->exam->learning->academicPeriod->tahun_ajaran }}</td>
+                                        <td>{{ $score->exam->learning->user->name }}</td>
+                                        <td>{{ $score->exam->learning->subject->nama_mapel }}</td>
                                         <td>{{ \Carbon\Carbon::parse($score->exam->exam_date)->locale('id')->isoFormat('D MMMM YYYY') }}</td>
                                         <td>
                                             <div class="badge badge-primary" style="font-size: 14px;">{{ $score->score }}</div>

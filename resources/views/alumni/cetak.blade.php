@@ -164,16 +164,16 @@
                     <td class="col-center">{{ $loop->iteration }}</td>
                     <td class="col-center">{{ $item->academicPeriod->tahun_ajaran }}</td>
                     <td class="col-center">{{ $item->no_induk }}</td>
-                    <td class="col-center">{{ $item->nama_siswa }}</td>
-                    <td class="col-center">{{ $item->room->tingkat }}-{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
+                    <td>{{ $item->nama_siswa }}</td>
+                    <td>{{ $item->room->tingkat }}-{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
                         ({{ $item->room->nama_jurusan }})
                     @endif</td>
-                    <td class="col-center">{{ $item->melanjutkan }}</td>
+                    <td>{{ $item->melanjutkan }}</td>
                     <td>{{ $item->nama_tempat }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="col-center">Tidak ada data alumni untuk periode ini.</td>
+                    <td colspan="7" class="col-center">Tidak ada data alumni untuk periode ini.</td>
                 </tr>
             @endforelse
         </tbody>

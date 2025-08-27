@@ -174,7 +174,7 @@
                         <td class="col-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->nisn }}</td>
                         <td>{{ $item->nama_lengkap }}</td>
-                        <td class="col-center">{{ $item->room->tingkat }} -{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
+                        <td>{{ $item->room->tingkat }} -{{ $item->room->rombongan }} @if ($item->room->nama_jurusan)
                             ({{ $item->room->nama_jurusan }})
                             @endif</td>
                         <td>{{ $item->pivot->jabatan }}</td>
@@ -208,8 +208,8 @@
                     <tr>
                         <td class="col-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->nama_lomba }}</td>
-                        <td class="col-center">{{ $item->peringkat }}</td>
-                        <td class="col-center">{{ $item->tingkat }}</td>
+                        <td>{{ $item->peringkat }}</td>
+                        <td>{{ $item->tingkat }}</td>
                         <td class="col-center">{{ $item->tahun }}</td>
                         <td>{{ $item->student->nama_lengkap ?? 'N/A' }}</td>
                     </tr>

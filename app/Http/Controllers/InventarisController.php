@@ -43,6 +43,8 @@ class InventarisController extends Controller
         // Ambil data kepala madrasah
         $kepalaMadrasah = User::role('kepala madrasah')->first();
 
+        $totalBiaya = $inventaris->sum('total_biaya');
+
         // Format periode laporan (contoh: OKTOBER 2024)
         $periodeFormatted = strtoupper(Carbon::createFromFormat('Y-m', $validated['bulan'])->locale('id')->translatedFormat('F Y'));
 
@@ -53,6 +55,7 @@ class InventarisController extends Controller
         $data = [
             'imagePath' => $imagePath,
             'inventaris' => $inventaris,
+            'totalBiaya' => $totalBiaya,
             'kepala_madrasah' => $kepalaMadrasah,
             'periode' => $periodeFormatted,
             'tanggal_cetak' => $tanggalCetakFormatted,

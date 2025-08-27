@@ -19,7 +19,7 @@ class RiwayatUjianController extends Controller
         $studentId = Auth::user()->student->id;
 
         $scores = ExamScore::where('student_id', $studentId)
-            ->with(['exam.subject']) // Eager load untuk menampilkan nama mapel
+            ->with(['exam.learning']) // Eager load untuk menampilkan nama mapel
             ->orderByDesc('created_at')
             ->get();
 

@@ -70,7 +70,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">Belum ada prestasi yang dicatat.</td>
+                                    <td colspan="8" class="text-center">Belum ada prestasi yang dicatat.</td>
                                 </tr>
                             @endforelse
                         </tbody>
