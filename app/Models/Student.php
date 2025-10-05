@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\PresensiController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +10,11 @@ class Student extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function getRouteKeyName()
+    {
+        return 'nisn';
+    }
 
     public function room()
     {
@@ -45,5 +51,10 @@ class Student extends Model
     public function healthcare()
     {
         return $this->hasMany(HealthCare::class, 'student_id', 'id');
+    }
+
+    public function presence()
+    {
+        return $this->hasMany(PresensiController::class, 'student_id', 'id');
     }
 }

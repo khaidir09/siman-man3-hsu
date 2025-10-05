@@ -129,7 +129,7 @@
                 "targets": [7] // Sesuaikan target jika jumlah kolom berubah (Aksi di kolom ke-7, index 6)
             }],
             // Mengurutkan berdasarkan tanggal (kolom kedua, index 1) secara descending (terbaru dulu)
-            "order": [[ 1, "desc" ]]
+            "order": [[ 0, "asc" ]]
         });
     </script>
 @endpush

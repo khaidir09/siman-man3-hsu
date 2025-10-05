@@ -5,6 +5,7 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\UjianController;
 use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\RaportController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\KoperasiController;
@@ -16,20 +17,20 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\KesehatanController;
 use App\Http\Controllers\KonselingController;
+use App\Http\Controllers\NaikKelasController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\JadwalUmumController;
 use App\Http\Controllers\NilaiUjianController;
 use App\Http\Controllers\WaktuMapelController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\KedisiplinanController;
-use App\Http\Controllers\RiwayatUjianController;
-use App\Http\Controllers\ExtracurricularController;
-use App\Http\Controllers\Guru\MapelDiampuController;
-use App\Http\Controllers\Guru\NilaiAkhirController;
-use App\Http\Controllers\NaikKelasController;
 use App\Http\Controllers\PembelajaranController;
+use App\Http\Controllers\RiwayatUjianController;
+use App\Http\Controllers\PublicStudentController;
+use App\Http\Controllers\ExtracurricularController;
+use App\Http\Controllers\Guru\NilaiAkhirController;
+use App\Http\Controllers\Guru\MapelDiampuController;
 use App\Http\Controllers\PrestasiAkademikController;
-use App\Http\Controllers\RaportController;
 use App\Http\Controllers\TujuanPembelajaranController;
 
 Route::redirect('/', 'login');
@@ -147,5 +148,14 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/siswa/{student}/pindah-kelas', [StudentController::class, 'transfer'])->name('siswa.transfer');
+
+// 1. Route untuk menampilkan form pengecekan NIS
+Route::get('/cek-riwayat-siswa', [PublicStudentController::class, 'showForm'])->name('siswa.riwayat.form');
+
+// 2. Route untuk memproses data dari form
+Route::post('/cek-riwayat-siswa', [PublicStudentController::class, 'checkData'])->name('siswa.riwayat.check');
+
+// 3. Route untuk menampilkan halaman hasil riwayat siswa
+Route::get('/riwayat-siswa/{student:nisn}', [PublicStudentController::class, 'showHistory'])->name('siswa.riwayat.show');
 
 require __DIR__ . '/auth.php';

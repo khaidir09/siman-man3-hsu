@@ -39,7 +39,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                     <td>{{ $achievement->tahun }}</td>
                                     <td>{{ $achievement->peringkat }} {{ $achievement->nama_lomba }}</td>
-                                    <td>{{ $achievement->student->nama_lengkap }} ({{ $achievement->kelas }})</td>
+                                    <td>{{ $achievement->student->nama_lengkap }}</td>
                                     <td>{{ $achievement->tingkat }}</td>
                                     <td>{{ $achievement->penyelenggara }}</td>
                                     <td>{{ $achievement->extracurricular->nama_ekskul }}</td>

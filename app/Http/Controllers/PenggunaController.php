@@ -39,6 +39,14 @@ class PenggunaController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate the request data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8',
+            'role' => 'required|exists:roles,name',
+            'nip' => 'nullable|string|max:50|unique:users,nip',
+        ]);
         // Create a new user
         $user = User::create([
             'name' => $request->input('name'),
@@ -120,7 +128,7 @@ class PenggunaController extends Controller
             // Kembalikan respons dalam format JSON
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data Kelas Berhasil Dihapus!'
+                'message' => 'Data Pengguna Berhasil Dihapus!'
             ]);
         } catch (\Exception $e) {
             // Jika terjadi error saat menghapus, kirim respons error

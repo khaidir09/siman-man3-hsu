@@ -13,7 +13,7 @@ class MapelController extends Controller
      */
     public function index()
     {
-        $subjects = Subject::orderBy('nama_mapel')->get();
+        $subjects = Subject::latest()->get();
         return view('mapel.index', compact('subjects'));
     }
 
@@ -87,10 +87,10 @@ class MapelController extends Controller
         $subject = Subject::findOrFail($id);
 
         try {
-            if ($subject->schedules()->exists()) {
-                toast('Mata pelajaran tidak dapat dihapus karena masih digunakan di jadwal.', 'error')->width('450');
-                return redirect()->back();
-            }
+            // if ($subject->schedules()->exists()) {
+            //     toast('Mata pelajaran tidak dapat dihapus karena masih digunakan di jadwal.', 'error')->width('450');
+            //     return redirect()->back();
+            // }
 
             // Hapus record dari database
             $subject->delete();

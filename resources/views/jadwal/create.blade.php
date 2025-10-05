@@ -22,7 +22,7 @@
                                     <option value="">Pilih Pembelajaran</option>
                                     @foreach ($learnings as $item)
                                         <option value="{{ $item->id }}" {{ old('learning_id') == $item->id ? 'selected' : '' }}>
-                                            {{ $item->subject->nama_mapel }} - {{ $item->user->name}} ({{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->nama_jurusan }})
+                                            {{ $item->subject->nama_mapel }} - {{ $item->user ? $item->user->name : 'Data guru sudah tidak ada' }} ({{ $item->room->tingkat }}-{{ $item->room->rombongan }} {{ $item->room->nama_jurusan }})
                                         </option>
                                     @endforeach
                                 </select>

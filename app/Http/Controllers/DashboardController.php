@@ -42,8 +42,7 @@ class DashboardController extends Controller
             'uks' => HealthCare::count(),
             'jumlahEkskul' => Extracurricular::where('status', 'Aktif')->count(),
             'jumlahPrestasiEkskul' => ExtracurricularAchievement::where('tahun', now()->year)->count(),
-            'jumlahAnggotaEkskul' => ExtracurricularStudent::whereYear('tanggal_bergabung', now()->year)
-                ->whereMonth('tanggal_bergabung', now()->month)->count(),
+            'jumlahAnggotaEkskul' => ExtracurricularStudent::whereYear('tanggal_bergabung', now()->year)->count(),
         ];
 
         // --- Logika Khusus untuk Sisa Kas Koperasi ---

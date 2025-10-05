@@ -16,13 +16,13 @@
                     @csrf
                     <div class="form-group">
                         <label for="">Tingkat <span class="text-danger">*</span></label>
-                        <input name="tingkat" type="text" class="form-control" >
+                        <input name="tingkat" type="text" class="form-control" value="{{ old('tingkat') }}">
                         @error('tingkat')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Rombongan <span class="text-danger">*</span></label>
-                        <input name="rombongan" type="text" class="form-control" >
+                        <input name="rombongan" type="text" class="form-control" value="{{ old('rombongan') }}">
                         @error('rombongan')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror

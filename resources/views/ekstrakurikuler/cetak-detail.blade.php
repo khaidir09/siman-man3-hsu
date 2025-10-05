@@ -10,7 +10,7 @@
             font-family: 'Times New Roman', Times, serif;
             font-size: 12pt;
             margin: 0;
-            padding: 2cm; /* Menambahkan padding agar ada margin saat dicetak */
+            padding: 0.5cm; /* Menambahkan padding agar ada margin saat dicetak */
         }
 
         /* Pengaturan Kop Surat - Sesuai style Anda */

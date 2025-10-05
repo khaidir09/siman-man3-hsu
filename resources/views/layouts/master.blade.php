@@ -21,6 +21,8 @@
 
   <link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap-iconpicker.min.css') }}">
 
+  <link rel="stylesheet" href="{{ asset('admin/assets/modules/izitoast/css/iziToast.min.css') }}">
+
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('admin/assets/css/components.css') }}">
@@ -55,6 +57,8 @@
   <script src="{{ asset('admin/assets/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
   <script src="{{ asset('admin/assets/js/stisla.js') }}"></script>
 
+  <script src="{{ asset('admin/assets/modules/izitoast/js/iziToast.min.js') }}"></script>
+
   <!-- JS Libraies -->
   <script src="{{ asset('admin/assets/modules/upload-preview/assets/js/jquery.uploadPreview.min.js') }}"></script>
   <script src="{{ asset('admin/assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
@@ -76,71 +80,74 @@
   <script src="{{ asset('admin/assets/js/custom.js') }}"></script>
   <script>
     // Add csrf token in ajax request
-    $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            })
-
     /** Handle Dynamic delete **/
     $(document).ready(function() {
+      // CSRF Token
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
 
-    $('.delete-item').on('click', function(e) {
-        e.preventDefault();
-        Swal.fire({
-            title: 'Apakah kamu yakin?',
-            text: "Anda tidak dapat mengembalikannya!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#009e0f',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Batal',
-            confirmButtonText: 'Ya, hapus!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let url = $(this).attr('href');
-                console.log(url);
-                $.ajax({
-                    method: 'DELETE',
-                    url: url,
-                    success: function(data) {
-                        if (data.status === 'success') {
-                            Swal.fire(
-                                'Terhapus!',
-                                data.message,
-                                'success'
-                            )
-                            window.location.reload();
-                        } else if (data.status === 'error') {
-                            Swal.fire(
-                                'Error!',
-                                data.message,
-                                'error'
-                            )
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    }
-                });
+      $('.delete-item').on('click', function(e) {
+          e.preventDefault();
+          Swal.fire({
+              title: 'Apakah kamu yakin?',
+              text: "Anda tidak dapat mengembalikannya!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#009e0f',
+              cancelButtonColor: '#d33',
+              cancelButtonText: 'Batal',
+              confirmButtonText: 'Ya, hapus!'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  let url = $(this).attr('href');
+                  console.log(url);
+                  $.ajax({
+                      method: 'DELETE',
+                      url: url,
+                      success: function(data) {
+                          if (data.status === 'success') {
+                              // --- AWAL PERUBAHAN ---
+                              Swal.fire({
+                                  title: 'Terhapus!',
+                                  text: data.message,
+                                  icon: 'success',
+                                  timer: 2000, // Notifikasi akan hilang setelah 2 detik
+                                  showConfirmButton: false
+                              }).then(function() {
+                                  window.location.reload(); // Muat ulang halaman setelah notifikasi hilang
+                              });
+                              // --- AKHIR PERUBAHAN ---
+                          } else if (data.status === 'error') {
+                              Swal.fire(
+                                  'Error!',
+                                  data.message,
+                                  'error'
+                              )
+                          }
+                      },
+                      error: function(xhr, status, error) {
+                          console.error(error);
+                      }
+                  });
 
 
-            }
-        })
+              }
+          })
+      })
+    
     })
-    })
+  </script>
+  <script>
+      @if (session('login-success'))
+          iziToast.success({
+              title: 'Berhasil!',
+              message: '{{ session('login-success') }}',
+              position: 'topRight'
+          });
+      @endif
   </script>
   
   @stack('scripts')

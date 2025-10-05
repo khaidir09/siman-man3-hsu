@@ -16,7 +16,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="">Tanggal <span class="text-danger">*</span></label>
-                        <input name="tanggal" type="date" class="form-control" >
+                        <input name="tanggal" type="date" class="form-control" value="{{ old('tanggal') }}">
                         @error('tanggal')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -33,13 +33,13 @@
                         @enderror
 
                         <label for="" class="mt-3">Uraian Masalah <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="uraian_masalah" id="" cols="30" rows="10"></textarea>
+                        <textarea class="form-control" name="uraian_masalah" id="" cols="30" rows="10">{{ old('uraian_masalah') }}</textarea>
                         @error('uraian_masalah')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Pemecahan Masalah <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="pemecahan_masalah" id="" cols="30" rows="10"></textarea>
+                        <textarea class="form-control" name="pemecahan_masalah" id="" cols="30" rows="10">{{ old('pemecahan_masalah') }}</textarea>
                         @error('pemecahan_masalah')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror

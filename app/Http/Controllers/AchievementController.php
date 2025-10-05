@@ -19,7 +19,7 @@ class AchievementController extends Controller
      */
     public function index()
     {
-        $achievements = ExtracurricularAchievement::with('extracurricular')->latest('tahun')->get();
+        $achievements = ExtracurricularAchievement::with('extracurricular', 'student')->latest('tahun')->get();
         return view('prestasi-ekskul.index', compact('achievements'));
     }
 
@@ -62,12 +62,6 @@ class AchievementController extends Controller
 
         // 1. Ambil model siswa berdasarkan student_id yang divalidasi
         $student = Student::with('room')->find($validatedData['student_id']);
-
-        // 2. Tambahkan nama kelas ke dalam array data yang akan disimpan
-        // Pastikan model Room Anda memiliki atribut 'name' atau sesuaikan
-        if ($student && $student->room) {
-            $validatedData['kelas'] = $student->room->tingkat . '-' . $student->room->rombongan . ' ' . $student->room->nama_jurusan;
-        }
 
         if ($request->hasFile('sertifikat')) {
             // Simpan file ke storage/app/public/sertifikat_prestasi
@@ -122,12 +116,6 @@ class AchievementController extends Controller
 
         // 1. Ambil model siswa berdasarkan student_id yang divalidasi
         $student = Student::with('room')->find($validatedData['student_id']);
-
-        // 2. Tambahkan nama kelas ke dalam array data yang akan disimpan
-        // Pastikan model Room Anda memiliki atribut 'name' atau sesuaikan
-        if ($student && $student->room) {
-            $validatedData['kelas'] = $student->room->tingkat . '-' . $student->room->rombongan . ' ' . $student->room->nama_jurusan;
-        }
 
         if ($request->hasFile('sertifikat')) {
             // Hapus file lama jika ada

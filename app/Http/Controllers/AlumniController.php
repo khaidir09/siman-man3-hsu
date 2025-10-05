@@ -62,7 +62,7 @@ class AlumniController extends Controller
         $pdf = Pdf::loadView('alumni.cetak', $data);
 
         // 5. Atur orientasi kertas (opsional, default portrait)
-        $pdf->setPaper('a4', 'landscape');
+        $pdf->setPaper('a4');
 
         // 6. Tampilkan PDF di browser (stream) atau download
         return $pdf->stream('laporan-alumni-' . $academicPeriod->tahun_ajaran . '.pdf');
@@ -164,7 +164,7 @@ class AlumniController extends Controller
             // Kembalikan respons dalam format JSON
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data Kelas Berhasil Dihapus!'
+                'message' => 'Data Alumni Berhasil Dihapus!'
             ]);
         } catch (\Exception $e) {
             // Jika terjadi error saat menghapus, kirim respons error

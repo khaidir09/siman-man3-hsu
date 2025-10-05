@@ -21,10 +21,10 @@ class StudentController extends Controller
         // 1. Ambil user yang sedang login
         $user = Auth::user();
 
-        $students = Student::with('room.major')->latest()->get();
+
 
         // 2. Mulai query dasar dengan eager loading
-        $query = Student::with('room.major')->latest();
+        $query = Student::with('room.major')->get();
 
         // 3. Tambahkan kondisi JIKA user adalah 'wali kelas'
         if ($user->hasRole('wali kelas')) {
@@ -45,7 +45,7 @@ class StudentController extends Controller
         //    maka kondisi if di atas tidak dijalankan, dan semua siswa akan ditampilkan.
 
         // 5. Eksekusi query dengan paginasi
-        $students = $query->paginate(10);
+        $students = $query;
 
         // Data rooms mungkin tidak lagi relevan jika wali kelas hanya melihat 1 kelas,
         // tapi bisa tetap dikirim untuk keperluan lain.
@@ -113,9 +113,9 @@ class StudentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Student $siswa)
+    public function edit(string $id)
     {
-        // Menggunakan Route Model Binding
+        $siswa = Student::findOrFail($id);
         $rooms = Room::all();
         return view('siswa.edit', compact('siswa', 'rooms'));
     }

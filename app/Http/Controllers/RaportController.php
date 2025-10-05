@@ -42,8 +42,11 @@ class RaportController extends Controller
         return view('raport.kelas', compact('room', 'students', 'active_period', 'reportCards'));
     }
 
-    public function process(Student $student, AcademicPeriod $period)
+    public function process($student_id, $period_id)
     {
+        $student = Student::findOrFail($student_id);
+        $period = AcademicPeriod::findOrFail($period_id);
+
         // 1. Ambil atau buat master rapor (status: Draft)
         // Ini memastikan selalu ada record rapor untuk dikelola
         $reportCard = ReportCard::firstOrCreate(
@@ -57,15 +60,13 @@ class RaportController extends Controller
 
         // 2. Ambil semua detail nilai yang sudah diinput oleh Guru Mata Pelajaran
         $details = ReportCardDetail::where('report_card_id', $reportCard->id)
-            ->with(['learning.learningObjectives' => function ($query) use ($period) {
-                $query->where('academic_period_id', $period->id);
-            }, 'learningObjectives'])
+            ->with('subject')
             ->get();
 
         // 4. Agregasi Data Ekstrakurikuler
         $ekskul = $student->extracurriculars; // Asumsi relasi sudah ada
 
-        return view('raport.proses', compact('student', 'reportCard', 'details', 'ekskul'));
+        return view('raport.proses', compact('student', 'period', 'reportCard', 'details', 'ekskul'));
     }
 
     public function finalize(Request $request, ReportCard $reportCard)

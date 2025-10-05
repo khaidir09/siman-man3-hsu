@@ -85,27 +85,21 @@ class WaktuMapelController extends Controller
     {
         $time_slot = TimeSlot::findOrFail($id);
         // 1. Validasi input dari form
-        $validatedData = $request->validate([
-            // 'jam_ke' divalidasi unik, namun mengabaikan record yang sedang diedit
-            'jam_ke' => 'required|integer|unique:time_slots,jam_ke,' . $time_slot->id,
-            'waktu_mulai' => 'required|date_format:H:i',
-            'keterangan' => 'nullable|string|max:255',
-        ]);
 
         // 2. Ambil waktu mulai dari data yang sudah divalidasi
-        $waktuMulai = $validatedData['waktu_mulai'];
+        $waktuMulai = $request->input('waktu_mulai');
 
         // 3. Hitung ulang waktu selesai
-        $waktuSelesai = Carbon::createFromFormat('H:i', $waktuMulai)
+        $waktuSelesai = Carbon::createFromFormat('H:i:s', $waktuMulai)
             ->addMinutes(45)
             ->format('H:i:s');
 
         // 4. Update data di database
         $time_slot->update([
-            'jam_ke' => $validatedData['jam_ke'],
+            'jam_ke' => $request->input('jam_ke'),
             'waktu_mulai' => $waktuMulai,
             'waktu_selesai' => $waktuSelesai,
-            'keterangan' => $validatedData['keterangan'],
+            'keterangan' => $request->input('keterangan'),
         ]);
 
         toast('Data Jam Pelajaran berhasil diperbarui.', 'success')->width('350');
@@ -121,10 +115,10 @@ class WaktuMapelController extends Controller
         $time_slot = TimeSlot::findOrFail($id);
 
         try {
-            if ($time_slot->schedules()->exists()) {
-                toast('Jam pelajaran tidak dapat dihapus karena masih digunakan di jadwal.', 'error')->width('450');
-                return redirect()->back();
-            }
+            // if ($time_slot->schedules()->exists()) {
+            //     toast('Jam pelajaran tidak dapat dihapus karena masih digunakan di jadwal.', 'error')->width('450');
+            //     return redirect()->back();
+            // }
 
             // Hapus record dari database
             $time_slot->delete();

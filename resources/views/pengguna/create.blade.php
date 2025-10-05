@@ -21,7 +21,7 @@
                         @enderror
 
                         <label for="" class="mt-3">Alamat Email <span class="text-danger">*</span></label>
-                        <input name="email" type="email" class="form-control" >
+                        <input name="email" type="email" class="form-control" value="{{ old('email') }}">
                         @error('email')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror

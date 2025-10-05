@@ -28,25 +28,25 @@
                         @enderror
 
                         <label for="" class="mt-3">Nama Item <span class="text-danger">*</span></label>
-                        <input name="item" type="text" class="form-control" >
+                        <input name="item" type="text" class="form-control" value="{{ old('item') }}">
                         @error('item')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Jumlah <span class="text-danger">*</span></label>
-                        <input name="jumlah" type="text" class="form-control" placeholder="Jika desimal gunakan pemisah titik (.)">
+                        <input name="jumlah" type="text" class="form-control" placeholder="Jika desimal gunakan pemisah titik (.)" value="{{ old('jumlah') }}">
                         @error('jumlah')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Satuan <span class="text-danger">*</span></label>
-                        <input name="satuan" type="text" class="form-control" placeholder="Contoh: pcs, unit, buah, kg, dll">
+                        <input name="satuan" type="text" class="form-control" placeholder="Contoh: pcs, unit, buah, kg, dll" value="{{ old('satuan') }}">
                         @error('satuan')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Biaya <span class="text-danger">*</span></label>
-                        <input name="biaya" type="number" class="form-control" placeholder="Masukkan angka tanpa tanda Rp / pemisah titik">
+                        <input name="biaya" type="number" class="form-control" placeholder="Masukkan angka tanpa tanda Rp / pemisah titik" value="{{ old('biaya') }}">
                         @error('biaya')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror

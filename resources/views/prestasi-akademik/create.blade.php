@@ -25,19 +25,19 @@
                     @csrf
                     <div class="form-group">
                         <label for="">NISN <span class="text-danger">*</span></label>
-                        <input name="nisn" type="number" class="form-control" >
+                        <input name="nisn" type="number" class="form-control" value="{{ old('nisn') }}">
                         @error('nisn')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Nama <span class="text-danger">*</span></label>
-                        <input name="nama" type="text" class="form-control" >
+                        <input name="nama" type="text" class="form-control" value="{{ old('nama') }}">
                         @error('nama')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Orang Tua <span class="text-danger">*</span></label>
-                        <input name="ortu" type="text" class="form-control" >
+                        <input name="ortu" type="text" class="form-control" value="{{ old('ortu') }}">
                         @error('ortu')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -54,13 +54,13 @@
                         @enderror
 
                         <label for="" class="mt-3">Jumlah Nilai <span class="text-danger">*</span></label>
-                        <input name="jumlah_nilai" type="number" class="form-control" >
+                        <input name="jumlah_nilai" type="number" class="form-control" value="{{ old('jumlah_nilai') }}">
                         @error('jumlah_nilai')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
 
                         <label for="" class="mt-3">Nilai rata-rata <span class="text-danger">*</span></label>
-                        <input name="rata_rata" type="text" class="form-control" placeholder="Gunakan titik sebagai pemisah desimal (contoh: 89.93)">
+                        <input name="rata_rata" type="text" class="form-control" placeholder="Gunakan titik sebagai pemisah desimal (contoh: 89.93)" value="{{ old('rata_rata') }}">
                         @error('rata_rata')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror

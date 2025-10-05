@@ -102,7 +102,7 @@ class SemesterController extends Controller
             // Kembalikan respons dalam format JSON
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data Kelas Berhasil Dihapus!'
+                'message' => 'Data Semester Berhasil Dihapus!'
             ]);
         } catch (\Exception $e) {
             // Jika terjadi error saat menghapus, kirim respons error

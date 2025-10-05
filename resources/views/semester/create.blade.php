@@ -16,7 +16,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="">Tahun Ajaran <span class="text-danger">*</span></label>
-                        <input name="tahun_ajaran" type="text" class="form-control" >
+                        <input name="tahun_ajaran" type="text" class="form-control" value="{{ old('tahun_ajaran') }}">
                         @error('tahun_ajaran')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror

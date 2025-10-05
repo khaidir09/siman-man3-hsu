@@ -189,7 +189,7 @@ class ExtracurricularController extends Controller
 
         // 6. Render view ke dalam PDF
         $pdf = Pdf::loadView('ekstrakurikuler.cetak-detail', $data);
-        $pdf->setPaper('a4', 'landscape');
+        $pdf->setPaper('a4', 'portrait');
 
         // 7. Buat nama file yang dinamis dan tampilkan PDF
         $fileName = 'laporan-' . Str::slug($ekskul->nama_ekskul) . '-' . Str::slug($academicPeriod->tahun_ajaran) . '.pdf';
@@ -308,7 +308,7 @@ class ExtracurricularController extends Controller
             // Kembalikan respons dalam format JSON
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data Kelas Berhasil Dihapus!'
+                'message' => 'Data Ekstrakurikuler Berhasil Dihapus!'
             ]);
         } catch (\Exception $e) {
             // Jika terjadi error saat menghapus, kirim respons error
